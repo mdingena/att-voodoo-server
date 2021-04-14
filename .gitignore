@@ -1,3 +1,9 @@
+# Secrets
+src/altaApiConfig.js
+
+# Build files
+build/
+
 # Logs
 logs
 *.log
