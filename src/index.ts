@@ -1,10 +1,10 @@
-const altaApiConfig = require('./altaApiConfig');
-
 import ApiConnection from 'js-tale/dist/Core/ApiConnection';
 import SubscriptionManager from 'js-tale/dist/Core/SubscriptionManager';
 import ServerConnection from 'js-tale/dist/Groups/ServerConnection';
 import GroupManager from 'js-tale/dist/Groups/GroupManager';
 import Logger, { initLogger } from 'js-tale/dist/logger';
+
+import altaApiConfig from './altaApiConfig';
 
 initLogger();
 
