@@ -1,7 +1,7 @@
 import { AltaManager } from './AltaManager';
-import { api } from './api';
+import { createApi } from './api';
 
 const altaManager = new AltaManager();
 altaManager.init();
 
-api();
+createApi();
