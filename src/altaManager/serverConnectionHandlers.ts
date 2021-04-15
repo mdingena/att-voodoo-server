@@ -1,7 +1,6 @@
 import ServerConnection from 'js-tale/dist/Groups/ServerConnection';
-import Logger, { initLogger } from 'js-tale/dist/logger';
+import Logger from 'js-tale/dist/logger';
 
-initLogger();
 const logger = new Logger('AltaManager');
 
 export const handleServerConnectionOpened = (connection: ServerConnection) => {
