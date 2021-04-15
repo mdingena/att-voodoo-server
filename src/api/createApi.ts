@@ -1,4 +1,7 @@
 import express from 'express';
+import Logger from 'js-tale/dist/logger';
+
+const logger = new Logger('Express');
 
 const port = process.env.PORT || 3000;
 const webServer = express();
@@ -11,7 +14,7 @@ export const createApi = () => {
   });
 
   webServer.listen(port, () => {
-    console.log(`Webserver listening on port ${port}`);
+    logger.log(`Webserver listening on port ${port}`);
   });
 
   return webServer;
