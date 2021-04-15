@@ -1,6 +1,6 @@
 {
-  "name": "att",
-  "version": "1.0.0",
+  "name": "att-voodoo-server",
+  "version": "0.1.0",
   "description": "",
   "main": "build/index.js",
   "scripts": {
