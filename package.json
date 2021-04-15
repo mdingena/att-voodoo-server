@@ -6,7 +6,8 @@
   "scripts": {
     "prebuild": "rimraf build/",
     "build": "tsc",
-    "start": "ts-node ./src/index.ts"
+    "dev": "ts-node ./src/index.ts",
+    "start": "node ./build/index.js"
   },
   "author": "",
   "license": "ISC",
