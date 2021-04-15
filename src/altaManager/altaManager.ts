@@ -2,7 +2,7 @@ import ApiConnection from 'js-tale/dist/Core/ApiConnection';
 import SubscriptionManager from 'js-tale/dist/Core/SubscriptionManager';
 import GroupManager from 'js-tale/dist/Groups/GroupManager';
 import { handleServerConnectionOpened } from './serverConnectionHandlers';
-import altaApiConfig from './altaApiConfig';
+import { altaApiConfig } from './altaApiConfig';
 
 const config = {
   ...altaApiConfig,
