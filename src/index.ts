@@ -1,8 +1,8 @@
-import { bot } from './bot';
+import { createBot } from './bot';
 import { createApi } from './api';
 
 (async () => {
-  await bot.init();
+  await createBot();
 
   createApi();
 })();

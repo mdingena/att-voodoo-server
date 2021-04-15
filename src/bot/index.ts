@@ -1,1 +1,1 @@
-export { bot } from './bot';
+export { createBot } from './createBot';

@@ -9,7 +9,7 @@ const api: ApiConnection = new ApiConnection();
 const subscriptions: SubscriptionManager = new SubscriptionManager(api);
 const groupManager: GroupManager = new GroupManager(subscriptions);
 
-const init = async () => {
+export const createBot = async () => {
   initLogger();
 
   await api.login(config);
@@ -19,5 +19,3 @@ const init = async () => {
 
   groupManager.automaticConsole(handleServerConnectionOpened);
 };
-
-export const bot = { init };
