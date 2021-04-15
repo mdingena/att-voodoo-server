@@ -1,0 +1,1 @@
+export { AltaManager } from './AltaManager';
