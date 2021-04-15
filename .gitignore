@@ -1,5 +1,5 @@
 # Secrets
-src/altaApiConfig.js
+src/altaApiConfig.ts
 
 # Build files
 build/
