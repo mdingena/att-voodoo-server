@@ -7,8 +7,8 @@ const port = process.env.PORT || 3000;
 const logger = new Logger('Express');
 
 const webServer = express();
-webServer.use(express.json());
 webServer.use(auth);
+webServer.use(express.json());
 
 export const createApi = () => {
   webServer.post('/token', postAccessToken);
