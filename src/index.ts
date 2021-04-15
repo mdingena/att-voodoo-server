@@ -1,8 +1,8 @@
-import { altaManager } from './altaManager';
+import { bot } from './bot';
 import { createApi } from './api';
 
 (async () => {
-  await altaManager.init();
+  await bot.init();
 
   createApi();
 })();

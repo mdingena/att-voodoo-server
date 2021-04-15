@@ -20,4 +20,4 @@ const init = async () => {
   groupManager.automaticConsole(handleServerConnectionOpened);
 };
 
-export const altaManager = { init };
+export const bot = { init };
