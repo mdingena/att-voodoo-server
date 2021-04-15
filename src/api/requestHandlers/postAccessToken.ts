@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 
-export const postAccessToken = (request: Request, response: Response) => {
+export const postAccessToken: RequestHandler = (request, response) => {
   response.json({ thing: 'Hello World!' });
 };
