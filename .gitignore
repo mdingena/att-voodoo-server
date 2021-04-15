@@ -1,5 +1,5 @@
-# Secrets
-src/altaManager/altaApiConfig.ts
+# Secret environment variables
+.env
 
 # Build files
 build/
