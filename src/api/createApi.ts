@@ -1,4 +1,5 @@
 import express from 'express';
+import { auth } from './middleware';
 import { postAccessToken } from './requestHandlers';
 import Logger from 'js-tale/dist/logger';
 
@@ -7,6 +8,7 @@ const logger = new Logger('Express');
 
 const webServer = express();
 webServer.use(express.json());
+webServer.use(auth);
 
 export const createApi = () => {
   webServer.post('/token', postAccessToken);
