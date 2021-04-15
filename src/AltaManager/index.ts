@@ -1,1 +1,1 @@
-export { AltaManager } from './AltaManager';
+export { altaManager } from './altaManager';

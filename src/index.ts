@@ -1,7 +1,8 @@
-import { AltaManager } from './AltaManager';
+import { altaManager } from './altaManager';
 import { createApi } from './api';
 
-const altaManager = new AltaManager();
-altaManager.init();
+(async () => {
+  await altaManager.init();
 
-createApi();
+  createApi();
+})();
