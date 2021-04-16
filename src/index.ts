@@ -2,7 +2,6 @@ import { createBot } from './bot';
 import { createApi } from './api';
 
 (async () => {
-  await createBot();
-
-  createApi();
+  const bot = await createBot();
+  const api = createApi();
 })();
