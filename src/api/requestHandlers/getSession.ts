@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import fetch from 'node-fetch';
 import { db } from '../../db';
-import { upsertSession } from '../../db/sql';
+import { upsertSession, upsertHeartbeat } from '../../db/sql';
 
 const userInfoApiUrl = 'https://accounts.townshiptale.com/connect/userinfo';
 
@@ -19,6 +19,7 @@ export const getSession: RequestHandler = async (clientRequest, clientResponse) 
     const accessToken = auth.replace(/Bearer\s+/i, '');
 
     await db.query(upsertSession, [accountId, accessToken]);
+    await db.query(upsertHeartbeat, [accessToken]);
 
     clientResponse.json({ ok: true, result: { accountId } });
   } catch (error) {
