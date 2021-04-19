@@ -1,1 +1,1 @@
-export { postAccessToken } from './postAccessToken';
+export { getSession } from './getSession';

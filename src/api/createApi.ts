@@ -1,6 +1,6 @@
 import express from 'express';
 import { auth } from './middleware';
-import { postAccessToken } from './requestHandlers';
+import { getSession } from './requestHandlers';
 import Logger from 'js-tale/dist/logger';
 
 const port = process.env.PORT || 3000;
@@ -11,7 +11,8 @@ api.use(auth);
 api.use(express.json());
 
 export const createApi = () => {
-  api.post('/token', postAccessToken);
+  // @todo pass bot into request handlers to make use of the alread-established ApiConnection.
+  api.get('/session', getSession);
 
   api.listen(port, () => {
     logger.success(`API listening on port ${port}`);
