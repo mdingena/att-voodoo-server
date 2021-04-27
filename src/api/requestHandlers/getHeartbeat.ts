@@ -4,6 +4,7 @@ import { upsertHeartbeat } from '../../db/sql';
 
 export const getHeartbeat: RequestHandler = async (clientRequest, clientResponse) => {
   const auth = clientRequest.headers.authorization ?? '';
+
   try {
     const accessToken = auth.replace(/Bearer\s+/i, '');
 

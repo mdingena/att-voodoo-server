@@ -1,7 +1,9 @@
+import { createVoodooServer } from './voodoo';
 import { createBot } from './bot';
 import { createApi } from './api';
 
 (async () => {
-  const bot = await createBot();
-  const api = createApi();
+  const voodoo = createVoodooServer();
+  await createBot(voodoo);
+  createApi(voodoo);
 })();
