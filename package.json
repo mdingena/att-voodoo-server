@@ -40,5 +40,8 @@
   },
   "lint-staged": {
     "**/*.{js,ts,jsx,tsx,json,css,html}": "prettier --write"
+  },
+  "engines": {
+    "npm": "6.x"
   }
 }
