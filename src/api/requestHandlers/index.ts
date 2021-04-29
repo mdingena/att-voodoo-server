@@ -1,3 +1,3 @@
 export { getHeartbeat } from './getHeartbeat';
 export { getSession } from './getSession';
-export { postVerbalComponent } from './postVerbalComponent';
+export { postIncantation } from './postIncantation';

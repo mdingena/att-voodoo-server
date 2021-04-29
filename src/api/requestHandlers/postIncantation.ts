@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer } from '../../voodoo';
+import { VoodooServer, Incantation } from '../../voodoo';
 import { selectSession } from '../../db/sql';
 
-export const postVerbalComponent = (voodoo: VoodooServer): RequestHandler => async (clientRequest, clientResponse) => {
+export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (clientRequest, clientResponse) => {
   const auth = clientRequest.headers.authorization ?? '';
 
   try {
@@ -16,26 +16,27 @@ export const postVerbalComponent = (voodoo: VoodooServer): RequestHandler => asy
     const accountId = session.rows[0].account_id;
 
     /* Verify player is near a Spellcrafting Conduit. */
-    const { Result: surroundingPrefabs } = await voodoo.command({ accountId, command: `select find ${accountId} 4` });
-    const nearConduit = surroundingPrefabs.find(
+    const findResponse = await voodoo.command({ accountId, command: `select find ${accountId} 4` });
+
+    if (!findResponse.ok) return clientResponse.status(400).json(findResponse);
+
+    const nearConduit = findResponse.result.find(
       ({ Name }: { Name: string }) => !!Name.match(/Green_Crystal_cluster_03/i)
     );
 
     if (!nearConduit) return clientResponse.json({ ok: false, error: 'Not near a Spellcrafting Conduit' });
 
     /* Get verbal spell component. */
-    const { verbalComponent, requiresMaterialComponent } = clientRequest.body;
+    const [verbalComponent, materialComponent]: Incantation = clientRequest.body;
 
     /* Get material spell component. */
-    let materialComponent: number | undefined;
-    if (requiresMaterialComponent) {
+    if (materialComponent > 0) {
       const {
-        Result: { Belt: materialComponents }
+        result: { Belt: materialComponents }
       } = await voodoo.command({ accountId, command: `player inventory ${accountId}` });
       const beltIndex = 3 - voodoo.players[accountId].incantations.length;
-      materialComponent = materialComponents[beltIndex]?.prefabHash;
 
-      if (!materialComponent)
+      if (materialComponent !== materialComponents[beltIndex]?.prefabHash ?? 0)
         return clientResponse.json({
           ok: false,
           error: `Requires material spell component in belt slot ${beltIndex + 1}`
@@ -43,7 +44,7 @@ export const postVerbalComponent = (voodoo: VoodooServer): RequestHandler => asy
     }
 
     /* Append to player's incantations. */
-    const incantations = voodoo.addIncantation({ accountId, incantation: [verbalComponent, materialComponent ?? 0] });
+    const incantations = voodoo.addIncantation({ accountId, incantation: [verbalComponent, materialComponent] });
 
     /* Search for spell in spellbook matching player's incantations. */
     const spell = voodoo.spellbook.get(incantations);

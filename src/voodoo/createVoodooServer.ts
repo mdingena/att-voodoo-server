@@ -34,7 +34,7 @@ interface SetVoodooClient {
 
 interface AddIncantation {
   accountId: number;
-  incantation: [string, number];
+  incantation: Incantation;
 }
 
 interface ClearIncantations {
@@ -119,7 +119,7 @@ export const createVoodooServer = (): VoodooServer => ({
       [accountId]: { ...player, incantations: newIncantations }
     };
 
-    logger.success(`${accountId}@${player.serverId} incanted '${incantation}'`);
+    logger.success(`${accountId}@${player.serverId} incanted ${JSON.stringify(incantation)}`);
 
     return newIncantations;
   },
@@ -134,11 +134,13 @@ export const createVoodooServer = (): VoodooServer => ({
     logger.success(`Cleared all incantations of ${accountId}@${player.serverId}`);
   },
 
-  command: function ({ accountId, command }) {
+  command: async function ({ accountId, command }) {
     const player = this.players[accountId];
 
-    if (!player) return Promise.reject(new Error('Player not found'));
+    if (!player) return Promise.reject({ ok: false, error: new Error('Player not found') });
 
-    return player.serverConnection.send(command);
+    const response = await player.serverConnection.send(command);
+
+    return { ok: true, result: response.Result };
   }
 });
