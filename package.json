@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "att-voodoo-spellbook": "github:mdingena/att-voodoo-spellbook",
     "bitwise": "^2.1.0",
     "express": "^4.17.1",
     "ieee754": "^1.2.1",
