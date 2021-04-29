@@ -1,6 +1,5 @@
 import { ServerConnection } from 'js-tale';
-import { spawnFrom } from '../spawnFrom';
-import { potionEmpty } from '../strings';
+import { spawnFrom, potionEmpty } from '../strings';
 
 export const craftFlask = async (connection: ServerConnection, accountId: number) => {
   const { result: player } = await connection.send(`player detailed ${accountId}`);

@@ -1,9 +1,8 @@
 import { ServerConnection } from 'js-tale';
 import { Vector3 } from 'three';
-import { spawnFrom } from '../spawnFrom';
-import { crystalWyrmSpit } from '../strings';
+import { spawnFrom, crystalCrystalWyrmSpit } from '../strings';
 
-export const shootWyrmSpit = async (connection: ServerConnection, accountId: number): Promise<void> => {
+export const castCrystalWyrmSpit = async (connection: ServerConnection, accountId: number): Promise<void> => {
   const response = await connection.send(`player detailed ${accountId}`);
 
   const [px, py, pz] = spawnFrom(response.Result, 'rightPalm', 0.4);
@@ -30,5 +29,5 @@ export const shootWyrmSpit = async (connection: ServerConnection, accountId: num
     avz: 0
   };
 
-  const results = await connection.send(`spawn string-raw ${crystalWyrmSpit(transform)}`);
+  const results = await connection.send(`spawn string-raw ${crystalCrystalWyrmSpit(transform)}`);
 };
