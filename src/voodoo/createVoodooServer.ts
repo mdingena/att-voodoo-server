@@ -1,15 +1,17 @@
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
+import { spellbook, Spellbook, Incantation } from './spellbook';
 
 const logger = new Logger('Voodoo');
 
-interface Player {
-  accountId: number;
-  serverId: number;
-  serverConnection: ServerConnection;
-  isVoodooClient: boolean;
-  invocations: string[];
-}
+type Players = {
+  [accountId: number]: {
+    serverId: number;
+    serverConnection: ServerConnection;
+    isVoodooClient: boolean;
+    incantations: Incantation[];
+  };
+};
 
 interface AddPlayer {
   accountId: number;
@@ -30,24 +32,31 @@ interface SetVoodooClient {
   isVoodooClient: boolean;
 }
 
-interface AddInvocation {
+interface AddIncantation {
   accountId: number;
-  invocation: string;
+  incantation: [string, number];
 }
 
-interface ClearInvocations {
+interface ClearIncantations {
   accountId: number;
+}
+
+interface Command {
+  accountId: number;
+  command: string;
 }
 
 export type VoodooServer = {
   logger: Logger;
-  players: Player[];
+  players: Players;
+  spellbook: Spellbook;
   addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
   setVoodooClient: ({ accountId, isVoodooClient }: SetVoodooClient) => void;
-  addInvocation: ({ accountId, invocation }: AddInvocation) => string[];
-  clearInvocations: ({ accountId }: ClearInvocations) => void;
+  addIncantation: ({ accountId, incantation }: AddIncantation) => Incantation[];
+  clearIncantations: ({ accountId }: ClearIncantations) => void;
+  command: ({ accountId, command }: Command) => Promise<any>;
 };
 
 export const createVoodooServer = (): VoodooServer => ({
@@ -55,70 +64,81 @@ export const createVoodooServer = (): VoodooServer => ({
 
   players: [],
 
+  spellbook,
+
   addPlayer: function ({ accountId, serverId, serverConnection }) {
     const newPlayer = {
-      accountId,
       serverId,
       serverConnection,
       isVoodooClient: false,
-      invocations: []
+      incantations: []
     };
 
-    this.players = [...this.players.filter(player => player.accountId !== accountId), newPlayer];
+    this.players = { ...this.players, [accountId]: newPlayer };
 
-    logger.success(`Added player ${accountId}`);
+    logger.success(`Added ${accountId}@${serverId}`);
   },
 
   removePlayer: function ({ accountId }) {
-    this.players = [...this.players.filter(player => player.accountId !== accountId)];
+    delete this.players[accountId];
 
-    logger.warn(`Removed player ${accountId}`);
+    logger.warn(`Removed ${accountId}`);
   },
 
   removePlayers: function ({ serverId }) {
-    this.players = [...this.players.filter(player => player.serverId !== serverId)];
+    const accountIds = Object.entries(this.players)
+      .filter(([_, player]) => player.serverId === serverId)
+      .forEach(([accountId]) => delete this.players[Number(accountId)]);
 
     logger.warn(`Removed all players of server ${serverId}`);
   },
 
   setVoodooClient: function ({ accountId, isVoodooClient }) {
-    const player = this.players.find(player => player.accountId === accountId);
+    const player = this.players[accountId];
 
     if (!player) return;
 
-    this.players = [...this.players.filter(player => player.accountId !== accountId), { ...player, isVoodooClient }];
+    this.players = { ...this.players, [accountId]: { ...player, isVoodooClient } };
 
     if (isVoodooClient) {
-      logger.success(`Player ${accountId} is a Voodoo Client`);
+      logger.success(`${accountId}@${player.serverId} is a Voodoo Client`);
     } else {
-      logger.warn(`Player ${accountId} is not a Voodoo Client`);
+      logger.warn(`${accountId}@${player.serverId} is not a Voodoo Client`);
     }
   },
 
-  addInvocation: function ({ accountId, invocation }) {
-    const player = this.players.find(player => player.accountId === accountId);
+  addIncantation: function ({ accountId, incantation }) {
+    const player = this.players[accountId];
 
     if (!player) return [];
 
-    const newInvocations = [...player.invocations, invocation];
+    const newIncantations = [...player.incantations, incantation];
 
-    this.players = [
-      ...this.players.filter(player => player.accountId !== accountId),
-      { ...player, invocations: newInvocations }
-    ];
+    this.players = {
+      ...this.players,
+      [accountId]: { ...player, incantations: newIncantations }
+    };
 
-    logger.success(`Player ${accountId} invocated '${invocation}'`);
+    logger.success(`${accountId}@${player.serverId} incanted '${incantation}'`);
 
-    return newInvocations;
+    return newIncantations;
   },
 
-  clearInvocations: function ({ accountId }) {
-    const player = this.players.find(player => player.accountId === accountId);
+  clearIncantations: function ({ accountId }) {
+    const player = this.players[accountId];
 
     if (!player) return;
 
-    this.players = [...this.players.filter(player => player.accountId !== accountId), { ...player, invocations: [] }];
+    this.players = { ...this.players, [accountId]: { ...player, incantations: [] } };
 
-    logger.success(`Cleared all invocations of player ${accountId}`);
+    logger.success(`Cleared all incantations of ${accountId}@${player.serverId}`);
+  },
+
+  command: function ({ accountId, command }) {
+    const player = this.players[accountId];
+
+    if (!player) return Promise.reject(new Error('Player not found'));
+
+    return player.serverConnection.send(command);
   }
 });
