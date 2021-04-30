@@ -155,9 +155,11 @@ export const createVoodooServer = (): VoodooServer => ({
 
     if (!player) throw Error('Player not found');
 
-    const response = await player.serverConnection.send(command);
+    const result = await player.serverConnection.send(command);
 
-    return { ok: true, result: response.Result };
+    logger.info(`${accountId}@${player.serverId}: ${command}`);
+
+    return result;
   },
 
   prepareSpell: async function ({ accountId, incantations, spell }) {
@@ -180,6 +182,8 @@ export const createVoodooServer = (): VoodooServer => ({
 
     await db.query(upsertPreparedSpells, [accountId, newPreparedSpells]);
 
-    return { ok: true, result: { preparedSpellCount } };
+    logger.info(`${accountId} prepared a spell`);
+
+    return preparedSpellCount;
   }
 });
