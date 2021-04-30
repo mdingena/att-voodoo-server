@@ -1,13 +1,13 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer, Incantation } from '../../voodoo';
 import { selectSession } from '../../db/sql';
+import { VoodooServer } from '../../voodoo';
 
 export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (clientRequest, clientResponse) => {
   const auth = clientRequest.headers.authorization ?? '';
 
   try {
-    /* Verif the player. */
+    /* Verify the player. */
     const accessToken = auth.replace(/Bearer\s+/i, '');
     const session = await db.query(selectSession, [accessToken]);
 
@@ -20,40 +20,64 @@ export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (
 
     if (!findResponse.ok) return clientResponse.status(400).json(findResponse);
 
-    const nearConduit = findResponse.result.find(
-      ({ Name }: { Name: string }) => !!Name.match(/Green_Crystal_cluster_03/i)
+    const nearConduit = findResponse.result.find(({ Name }: { Name: string }) =>
+      /Green_Crystal_cluster_03/i.test(Name)
     );
 
     if (!nearConduit) return clientResponse.json({ ok: false, error: 'Not near a Spellcrafting Conduit' });
 
     /* Get verbal spell component. */
-    const [verbalComponent, materialComponent]: Incantation = clientRequest.body;
+    const [verbalComponent, oneOfMaterialComponents]: [string, number[]] = clientRequest.body;
 
     /* Get material spell component. */
-    if (materialComponent > 0) {
+    const beltIndex = 3 - voodoo.players[accountId].incantations.length;
+    let materialComponent: number = 0;
+    let inventory = [];
+    if (oneOfMaterialComponents.length) {
       const {
-        result: { Belt: materialComponents }
+        result: { Belt }
       } = await voodoo.command({ accountId, command: `player inventory ${accountId}` });
-      const beltIndex = 3 - voodoo.players[accountId].incantations.length;
+      inventory = Belt;
 
-      if (materialComponent !== materialComponents[beltIndex]?.prefabHash ?? 0)
+      if (!oneOfMaterialComponents.includes(inventory[beltIndex]?.PrefabHash ?? 0)) {
         return clientResponse.json({
           ok: false,
           error: `Requires material spell component in belt slot ${beltIndex + 1}`
         });
+      }
+
+      materialComponent = inventory[beltIndex]?.PrefabHash ?? 0;
     }
 
     /* Append to player's incantations. */
     const incantations = voodoo.addIncantation({ accountId, incantation: [verbalComponent, materialComponent] });
 
-    /* Search for spell in spellbook matching player's incantations. */
-    const spell = voodoo.spellbook.get(incantations);
+    /* Remove material component */
+    if (materialComponent > 0) {
+      const networkId = inventory[beltIndex]?.Identifier ?? 0;
 
-    /* Cast the spell. */
-    if (spell) {
-      await spell(voodoo.players[accountId].serverConnection, accountId);
-      voodoo.clearIncantations({ accountId });
-    } else if (voodoo.players[accountId].incantations.length === 4) {
+      if (networkId) {
+        await voodoo.command({ accountId, command: `select ${networkId}` });
+        await voodoo.command({ accountId, command: `select destroy` }); // @todo Very risky! See if we can get a select destroy <networkid> command
+      }
+    }
+
+    /* Automatically seal the spell if player has 4 incancations now. */
+    if (voodoo.players[accountId].incantations.length === 4) {
+      /* Search for spell in spellbook matching player's incantations. */
+      const spell = voodoo.spellbook.get(incantations);
+
+      if (spell) {
+        if (spell.requiresPreparation) {
+          /* Store the spell with a trigger. */
+          await voodoo.prepareSpell({ accountId, incantations, spell });
+        } else {
+          /* Cast the spell immediately. */
+          spell.cast(voodoo, accountId);
+        }
+      }
+
+      /* Clear player's incantations. */
       voodoo.clearIncantations({ accountId });
     }
 

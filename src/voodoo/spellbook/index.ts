@@ -1,1 +1,1 @@
-export { spellbook, Spellbook, Incantation } from './spellbook';
+export { spellbook, Spellbook, Incantation, Spell } from './spellbook';

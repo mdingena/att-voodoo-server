@@ -1,6 +1,8 @@
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { spellbook, Spellbook, Incantation } from './spellbook';
+import { spellbook, Spellbook, Incantation, Spell } from './spellbook';
+import { db } from '../db';
+import { selectPreparedSpells, upsertPreparedSpells } from '../db/sql';
 
 const logger = new Logger('Voodoo');
 
@@ -12,6 +14,13 @@ type Players = {
     incantations: Incantation[];
   };
 };
+
+export type PreparedSpells = [
+  {
+    verbalTrigger: string;
+    incantations: Incantation[];
+  }
+];
 
 interface AddPlayer {
   accountId: number;
@@ -46,6 +55,12 @@ interface Command {
   command: string;
 }
 
+interface PrepareSpell {
+  accountId: number;
+  incantations: Incantation[];
+  spell: Spell;
+}
+
 export type VoodooServer = {
   logger: Logger;
   players: Players;
@@ -57,6 +72,7 @@ export type VoodooServer = {
   addIncantation: ({ accountId, incantation }: AddIncantation) => Incantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => void;
   command: ({ accountId, command }: Command) => Promise<any>;
+  prepareSpell: ({ accountId, incantations, spell }: PrepareSpell) => Promise<any>;
 };
 
 export const createVoodooServer = (): VoodooServer => ({
@@ -137,10 +153,33 @@ export const createVoodooServer = (): VoodooServer => ({
   command: async function ({ accountId, command }) {
     const player = this.players[accountId];
 
-    if (!player) return Promise.reject({ ok: false, error: new Error('Player not found') });
+    if (!player) throw Error('Player not found');
 
     const response = await player.serverConnection.send(command);
 
     return { ok: true, result: response.Result };
+  },
+
+  prepareSpell: async function ({ accountId, incantations, spell }) {
+    const storedSpells = await db.query(selectPreparedSpells, [accountId]);
+
+    if (!storedSpells.rows.length) throw Error('Problem getting prepared spells');
+
+    const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0].prepared_spells);
+    const maxPreparedSpells = 10; // @todo Base this off player level / skills
+
+    if (preparedSpells.length >= maxPreparedSpells) preparedSpells.shift();
+
+    const preparedSpell = {
+      verbalTrigger: spell.verbalTrigger ?? '',
+      incantations
+    };
+
+    const preparedSpellCount = preparedSpells.push(preparedSpell);
+    const newPreparedSpells = JSON.stringify(preparedSpells);
+
+    await db.query(upsertPreparedSpells, [accountId, newPreparedSpells]);
+
+    return { ok: true, result: { preparedSpellCount } };
   }
 });

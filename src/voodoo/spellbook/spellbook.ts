@@ -1,24 +1,28 @@
-import { ServerConnection } from 'js-tale';
 import { pages } from 'att-voodoo-spellbook';
 import { spells } from './spells';
+import { VoodooServer } from '../index';
+
+export type Spell = {
+  cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
+  requiresPreparation: boolean;
+  verbalTrigger?: string;
+};
 
 export type Incantation = [string, number];
 
 export type Spellbook = {
-  spells: Map<string, (connection: ServerConnection, accountId: number) => Promise<void>>;
-  get: (
-    incantations: Incantation[]
-  ) => ((connection: ServerConnection, accountId: number) => Promise<void>) | undefined;
+  spells: Map<string, Spell>;
+  get: (incantations: Incantation[]) => Spell | undefined;
 };
 
 export const spellbook: Spellbook = {
   spells: new Map(
     Object.entries(spells)
-      .filter(([spellName]) => pages.has(spellName))
+      .filter(([spellName]) => pages.hasOwnProperty(spellName))
       .map(([spellName, spell]) => {
-        const incantations = JSON.stringify(pages.get(spellName) ?? [[]]);
+        const { incantations, requiresPreparation, verbalTrigger } = pages[spellName];
 
-        return [incantations, spell];
+        return [JSON.stringify(incantations), { cast: spell, requiresPreparation, verbalTrigger }];
       })
   ),
 
