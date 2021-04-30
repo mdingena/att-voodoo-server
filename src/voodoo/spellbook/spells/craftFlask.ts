@@ -2,15 +2,20 @@ import { spawnFrom, potionEmpty } from '../strings';
 import { VoodooServer } from '../../index';
 
 export const craftFlask = async (voodoo: VoodooServer, accountId: number) => {
-  const { Result: player } = await voodoo.command({ accountId, command: `player detailed ${accountId}` });
-  console.log({ player });
-  const [px, py, pz] = spawnFrom(player, 'rightPalm', 0.3);
+  const { Result: player } = await voodoo.command({
+    accountId,
+    command: `player detailed ${accountId}`
+  });
 
-  // some quaternion stuff here?
+  const origin = spawnFrom(player, 'rightPalm', 0.3);
 
-  const transform = { px, py, pz, qx: 0, qy: 0, qz: 0, qw: 1, s: 1 };
+  const transform = {
+    ...origin,
+    s: 1
+  };
 
-  const results = await voodoo.command({ accountId, command: `spawn string-raw ${potionEmpty(transform)}` });
-
-  console.log({ results });
+  return await voodoo.command({
+    accountId,
+    command: `spawn string-raw ${potionEmpty(transform)}`
+  });
 };
