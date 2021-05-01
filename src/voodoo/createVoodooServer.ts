@@ -157,7 +157,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const result = await player.serverConnection.send(command);
 
-    logger.info(`${accountId}@${player.serverId}: ${command}`);
+    logger.log(`${accountId}@${player.serverId}: ${command}`);
 
     return result;
   },
