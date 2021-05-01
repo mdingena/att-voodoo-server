@@ -7,7 +7,7 @@ export const craftFlask = async (voodoo: VoodooServer, accountId: number) => {
     command: `player detailed ${accountId}`
   });
 
-  const origin = spawnFrom(player, 'rightPalm', 0.3);
+  const origin = spawnFrom(player, 'rightPalm', 0.05);
 
   const transform = {
     ...origin,
