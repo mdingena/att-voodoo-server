@@ -165,9 +165,7 @@ export const createVoodooServer = (): VoodooServer => ({
   prepareSpell: async function ({ accountId, incantations, spell }) {
     const storedSpells = await db.query(selectPreparedSpells, [accountId]);
 
-    if (!storedSpells.rows.length) throw Error('Problem getting prepared spells');
-
-    const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0].prepared_spells);
+    const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0]?.prepared_spells ?? '[]');
     const maxPreparedSpells = 10; // @todo Base this off player level / skills
 
     if (preparedSpells.length >= maxPreparedSpells) preparedSpells.shift();
