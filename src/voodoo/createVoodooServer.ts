@@ -15,12 +15,10 @@ type Players = {
   };
 };
 
-export type PreparedSpells = [
-  {
-    verbalTrigger: string;
-    incantations: Incantation[];
-  }
-];
+export type PreparedSpells = {
+  verbalTrigger: string;
+  incantations: Incantation[];
+}[];
 
 interface AddPlayer {
   accountId: number;
