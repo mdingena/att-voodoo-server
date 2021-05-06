@@ -12,8 +12,9 @@ export const replaceVelocityString = ({ string, transform, isKinematic, isServer
   const integers = string.split(',');
   const bits = integers.reduce((bits, integer) => `${bits}${Number(integer).toString(2).padStart(32, '0')}`, '');
 
-  const isKinematicBit = typeof isKinematic === 'undefined' ? bits.substr(0, 1) : Number(isKinematic);
-  const isServerSleepingBit = typeof isServerSleeping === 'undefined' ? bits.substr(1, 1) : Number(isServerSleeping);
+  const isKinematicBit = typeof isKinematic === 'undefined' ? bits.substr(0, 1) : Number(isKinematic).toString();
+  const isServerSleepingBit =
+    typeof isServerSleeping === 'undefined' ? bits.substr(1, 1) : Number(isServerSleeping).toString();
   const trailingBitsPosition = 2 + 32 * 6; // leadingBits + velocity * 3 + angularVelocity * 3
   const trailingBits = bits.substr(trailingBitsPosition);
 
