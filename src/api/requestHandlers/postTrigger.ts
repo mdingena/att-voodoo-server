@@ -57,8 +57,9 @@ export const postTrigger = (voodoo: VoodooServer): RequestHandler => async (clie
         incantations
       });
 
+    // @todo abstract casting prepared spell into VoodooServer
     /* Cast the prepared spell. */
-    const result = spell.cast(voodoo, accountId);
+    spell.cast(voodoo, accountId);
 
     /* Remove prepared spell. */
     preparedSpells.splice(spellIndex, 1);
@@ -67,7 +68,7 @@ export const postTrigger = (voodoo: VoodooServer): RequestHandler => async (clie
     const newPreparedSpells = JSON.stringify(preparedSpells);
     await db.query(upsertPreparedSpells, [accountId, newPreparedSpells]);
 
-    clientResponse.json({ ok: true, result });
+    clientResponse.json({ ok: true, result: preparedSpells });
   } catch (error) {
     voodoo.logger.error(error);
     clientResponse.status(500).json({ ok: false, error: error.message });
