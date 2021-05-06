@@ -32,7 +32,7 @@ export const postTrigger = (voodoo: VoodooServer): RequestHandler => async (clie
     const preparedSpells: PreparedSpells = storedSpells.rows[0].prepared_spells;
 
     /* Get verbal spell trigger. */
-    const { verbalTrigger } = clientRequest.body;
+    const [verbalTrigger] = clientRequest.body;
 
     /* Find the spell matching the verbal spell trigger. */
     const spellIndex = preparedSpells.findIndex(preparedSpell => preparedSpell.verbalTrigger === verbalTrigger) ?? {};
