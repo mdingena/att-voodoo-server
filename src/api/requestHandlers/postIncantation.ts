@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
-import { VoodooServer } from '../../voodoo';
+import { VoodooServer, PreparedSpells } from '../../voodoo';
 
 export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (clientRequest, clientResponse) => {
   const auth = clientRequest.headers.authorization ?? '';
@@ -59,11 +59,11 @@ export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (
     }
 
     /* Append to player's incantations. */
-    const incantations = voodoo.addIncantation({ accountId, incantation: [verbalComponent, materialComponent] });
+    let incantations = voodoo.addIncantation({ accountId, incantation: [verbalComponent, materialComponent] });
 
     /* Remove material component */
     if (materialComponent > 0) {
-      const networkId = inventory[beltIndex]?.Identifier ?? 0;
+      const networkId: number = inventory[beltIndex]?.Identifier ?? 0;
 
       if (networkId) {
         await voodoo.command({ accountId, command: `select ${networkId}` });
@@ -73,24 +73,41 @@ export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (
 
     /* Automatically seal the spell if player has 4 incancations now. */
     if (voodoo.players[accountId].incantations.length === 4) {
+      let preparedSpells: PreparedSpells = [];
+
       /* Search for spell in spellbook matching player's incantations. */
       const spell = voodoo.spellbook.get(incantations);
 
       if (spell) {
         if (spell.requiresPreparation) {
           /* Store the spell with a trigger. */
-          await voodoo.prepareSpell({ accountId, incantations, spell });
+          preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
         } else {
           /* Cast the spell immediately. */
           spell.cast(voodoo, accountId);
         }
+      } else {
+        // @todo somehow feedback that there was no spell associated
       }
 
       /* Clear player's incantations. */
-      voodoo.clearIncantations({ accountId });
-    }
+      const newIncantations = voodoo.clearIncantations({ accountId });
 
-    clientResponse.json({ ok: true, result: incantations });
+      if (newIncantations.length) {
+        return clientResponse.status(500).json({
+          ok: false,
+          error: "Couldn't clear your incantations"
+        });
+      }
+
+      if (preparedSpells.length) {
+        clientResponse.json({ ok: true, result: { incantations, preparedSpells } });
+      } else {
+        clientResponse.json({ ok: true, result: { incantations } });
+      }
+    } else {
+      clientResponse.json({ ok: true, result: { incantations } });
+    }
   } catch (error) {
     voodoo.logger.error(error);
     clientResponse.status(500).json({ ok: false, error: error.message });
