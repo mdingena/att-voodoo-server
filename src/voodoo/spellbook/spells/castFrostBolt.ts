@@ -1,7 +1,7 @@
-import { spawnFrom, spawnVelocity, crystalWyrmSpit } from '../strings';
+import { spawnFrom, spawnVelocity, frostBolt } from '../strings';
 import { VoodooServer } from '../../index';
 
-export const castCrystalWyrmSpit = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const castFrostBolt = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
   const { Result: player } = await voodoo.command({
     accountId,
     command: `player detailed ${accountId}`
@@ -17,6 +17,6 @@ export const castCrystalWyrmSpit = async (voodoo: VoodooServer, accountId: numbe
 
   return await voodoo.command({
     accountId,
-    command: `spawn string-raw ${crystalWyrmSpit(transform)}`
+    command: `spawn string-raw ${frostBolt(transform)}`
   });
 };

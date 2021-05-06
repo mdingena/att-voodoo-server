@@ -1,7 +1,7 @@
-import { castCrystalWyrmSpit } from './castCrystalWyrmSpit';
+import { castFrostBolt } from './castFrostBolt';
 import { craftFlask } from './craftFlask';
 
 export const spells = {
-  castCrystalWyrmSpit,
+  castFrostBolt,
   craftFlask
 };
