@@ -68,9 +68,9 @@ export type VoodooServer = {
   removePlayers: ({ serverId }: RemovePlayers) => void;
   setVoodooClient: ({ accountId, isVoodooClient }: SetVoodooClient) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => Incantation[];
-  clearIncantations: ({ accountId }: ClearIncantations) => void;
+  clearIncantations: ({ accountId }: ClearIncantations) => Incantation[];
   command: ({ accountId, command }: Command) => Promise<any>;
-  prepareSpell: ({ accountId, incantations, spell }: PrepareSpell) => Promise<any>;
+  prepareSpell: ({ accountId, incantations, spell }: PrepareSpell) => Promise<PreparedSpells>;
 };
 
 export const createVoodooServer = (): VoodooServer => ({
@@ -141,11 +141,13 @@ export const createVoodooServer = (): VoodooServer => ({
   clearIncantations: function ({ accountId }) {
     const player = this.players[accountId];
 
-    if (!player) return;
+    if (!player) return [];
 
     this.players = { ...this.players, [accountId]: { ...player, incantations: [] } };
 
     logger.success(`Cleared all incantations of ${accountId}@${player.serverId}`);
+
+    return this.players[accountId].incantations;
   },
 
   command: async function ({ accountId, command }) {
@@ -173,13 +175,13 @@ export const createVoodooServer = (): VoodooServer => ({
       incantations
     };
 
-    const preparedSpellCount = preparedSpells.push(preparedSpell);
+    preparedSpells.push(preparedSpell);
     const newPreparedSpells = JSON.stringify(preparedSpells);
 
     await db.query(upsertPreparedSpells, [accountId, newPreparedSpells]);
 
     logger.info(`${accountId} prepared a spell`);
 
-    return preparedSpellCount;
+    return preparedSpells;
   }
 });
