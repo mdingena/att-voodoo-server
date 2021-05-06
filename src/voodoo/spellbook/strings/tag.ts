@@ -31,12 +31,21 @@ export type Transform = {
  * const rawString = prefab(transform);
  * // "123,5,123,3294797824,1126334464,1121779712,etc..."
  */
-export const tag = (substrings: TemplateStringsArray, ...keys: string[]) => (transform: Transform) => {
+export const tag = (substrings: TemplateStringsArray, ...keys: string[]) => (
+  transform: Transform,
+  isKinematic?: boolean,
+  isServerSleeping?: boolean
+) => {
   const hasVelocity = transform.vx || transform.vy || transform.vz || transform.avx || transform.avy || transform.avz;
 
   return keys.reduce((string, key, index) => {
     if (key === 'velocityStart' && hasVelocity) {
-      const velocityString = replaceVelocityString(substrings[index + 1], transform);
+      const velocityString = replaceVelocityString({
+        string: substrings[index + 1],
+        transform,
+        isKinematic,
+        isServerSleeping
+      });
 
       return `${string}${velocityString}`;
     } else if (key === 'velocityEnd' && hasVelocity) {
