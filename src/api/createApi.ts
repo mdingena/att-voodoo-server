@@ -2,7 +2,15 @@ import express from 'express';
 import Logger from 'js-tale/dist/logger';
 import { VoodooServer } from '../voodoo';
 import { auth } from './middleware';
-import { getSession, getHeartbeat, postIncantation, deleteIncantations, getSeal, postTrigger } from './requestHandlers';
+import {
+  getInfo,
+  getSession,
+  getHeartbeat,
+  postIncantation,
+  deleteIncantations,
+  getSeal,
+  postTrigger
+} from './requestHandlers';
 
 const port = process.env.PORT || 3000;
 const logger = new Logger('Express');
@@ -12,6 +20,7 @@ api.use(auth);
 api.use(express.json());
 
 export const createApi = async (voodoo: VoodooServer) => {
+  api.get('/', getInfo);
   api.get('/heartbeat', getHeartbeat);
   api.get('/session', getSession(voodoo));
   api.post('/incantation', postIncantation(voodoo));
