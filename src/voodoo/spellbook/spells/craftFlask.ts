@@ -1,5 +1,6 @@
-import { spawnFrom, potionEmpty } from '../strings';
 import { VoodooServer } from '../../index';
+import { potionEmpty } from '../strings';
+import { spawnFrom } from '../spawnFrom';
 
 export const craftFlask = async (voodoo: VoodooServer, accountId: number) => {
   const { Result: player } = await voodoo.command({
@@ -16,6 +17,6 @@ export const craftFlask = async (voodoo: VoodooServer, accountId: number) => {
 
   return await voodoo.command({
     accountId,
-    command: `spawn string-raw ${potionEmpty(transform)}`
+    command: `spawn string-raw ${potionEmpty({ transform })}`
   });
 };

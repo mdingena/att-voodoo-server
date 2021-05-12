@@ -1,5 +1,6 @@
-import { packFloat } from './packFloat';
-import { Transform } from './tag';
+import { Transform } from '..';
+import { floatToBits } from './floatToBits';
+import { bitsToUInts } from './bitsToUInts';
 
 type StringOptions = {
   string: string;
@@ -19,32 +20,20 @@ export const replaceVelocityString = ({ string, transform, isKinematic, isServer
   const trailingBits = bits.substr(trailingBitsPosition);
 
   const velocity = [
-    packFloat(transform.vx ?? 0)
-      .toString(2)
-      .padStart(32, '0'),
-    packFloat(transform.vy ?? 0)
-      .toString(2)
-      .padStart(32, '0'),
-    packFloat(transform.vz ?? 0)
-      .toString(2)
-      .padStart(32, '0')
+    floatToBits(transform.vx ?? 0),
+    floatToBits(transform.vy ?? 0),
+    floatToBits(transform.vz ?? 0)
   ].join('');
 
   const angularVelocity = [
-    packFloat(transform.avx ?? 0)
-      .toString(2)
-      .padStart(32, '0'),
-    packFloat(transform.avy ?? 0)
-      .toString(2)
-      .padStart(32, '0'),
-    packFloat(transform.avz ?? 0)
-      .toString(2)
-      .padStart(32, '0')
+    floatToBits(transform.avx ?? 0),
+    floatToBits(transform.avy ?? 0),
+    floatToBits(transform.avz ?? 0)
   ].join('');
 
-  const newBits = `${isKinematicBit}${isServerSleepingBit}${velocity}${angularVelocity}${trailingBits}`;
+  const newBits = [isKinematicBit, isServerSleepingBit, velocity, angularVelocity, trailingBits].join('');
 
-  const newIntegers = newBits.match(/.{32}/g)?.map(integer => Number(`0b${integer}`)) || [];
+  const newIntegers = bitsToUInts(newBits);
 
   return `${newIntegers.join(',')}`;
 };

@@ -1,23 +1,6 @@
+import { SpawnOptions } from '..';
 import { packFloat } from './packFloat';
 import { replaceVelocityString } from './replaceVelocityString';
-
-export type Transform = {
-  [key: string]: number | undefined;
-  px: number;
-  py: number;
-  pz: number;
-  qx?: number;
-  qy?: number;
-  qz?: number;
-  qw?: number;
-  s?: number;
-  vx?: number;
-  vy?: number;
-  vz?: number;
-  avx?: number;
-  avy?: number;
-  avz?: number;
-};
 
 /**
  * Tags a template literal with a transform.
@@ -31,11 +14,11 @@ export type Transform = {
  * const rawString = prefab(transform);
  * // "123,5,123,3294797824,1126334464,1121779712,etc..."
  */
-export const tag = (substrings: TemplateStringsArray, ...keys: string[]) => (
-  transform: Transform,
-  isKinematic?: boolean,
-  isServerSleeping?: boolean
-) => {
+export const tag = (substrings: TemplateStringsArray, ...keys: string[]) => ({
+  transform,
+  isKinematic,
+  isServerSleeping
+}: SpawnOptions) => {
   const hasVelocity = transform.vx || transform.vy || transform.vz || transform.avx || transform.avy || transform.avz;
 
   return keys.reduce((string, key, index) => {

@@ -1,5 +1,7 @@
-import { spawnFrom, spawnVelocity, frostBolt } from '../strings';
 import { VoodooServer } from '../../index';
+import { frostBolt } from '../strings';
+import { spawnFrom } from '../spawnFrom';
+import { spawnVelocity } from '../spawnVelocity';
 
 export const castFrostBolt = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
   const { Result: player } = await voodoo.command({
@@ -17,6 +19,6 @@ export const castFrostBolt = async (voodoo: VoodooServer, accountId: number): Pr
 
   return await voodoo.command({
     accountId,
-    command: `spawn string-raw ${frostBolt(transform)}`
+    command: `spawn string-raw ${frostBolt({ transform })}`
   });
 };
