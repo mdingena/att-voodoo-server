@@ -47,6 +47,13 @@ export const createString = (prefabHash: number) => ({
 }: SpawnOptions) => {
   const rigidBodyBits = createRigidBody({ transform, isKinematic, isServerSleeping });
 
+  /* Pad 418 bits with trailing zeroes to make it % 32. */
+  // const paddedRigidBodyBits = rigidBodyBits.padEnd(
+  //   rigidBodyBits.length + (32 - (rigidBodyBits.length % 32 === 0 ? 32 : rigidBodyBits.length % 32)),
+  //   '0'
+  // );
+  const paddedRigidBodyBits = rigidBodyBits.padEnd(448, '0');
+
   return `${[
     prefabHash,
     BYTE_SIZE,
@@ -61,6 +68,6 @@ export const createString = (prefabHash: number) => ({
     floatToUInt(transform.s ?? 1),
     RIGID_BODY_HASH,
     RIGID_BODY_SIZE,
-    ...bitsToUInts(rigidBodyBits)
+    ...bitsToUInts(paddedRigidBodyBits)
   ].join(',')},`;
 };

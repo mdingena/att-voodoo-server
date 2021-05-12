@@ -40,12 +40,5 @@ export const createRigidBody = ({ transform, isKinematic, isServerSleeping }: Sp
     angularVelocityBits
   ].join('');
 
-  /* Pad 418 bits with trailing zeroes to make it % 32. */
-  // const paddedRigidBodyBits = rigidBodyBits.padEnd(
-  //   rigidBodyBits.length + (32 - (rigidBodyBits.length % 32 === 0 ? 32 : rigidBodyBits.length % 32)),
-  //   '0'
-  // );
-  const paddedRigidBodyBits = rigidBodyBits.padEnd(448, '0');
-
-  return paddedRigidBodyBits;
+  return rigidBodyBits;
 };
