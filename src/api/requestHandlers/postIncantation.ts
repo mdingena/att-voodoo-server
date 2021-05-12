@@ -48,14 +48,14 @@ export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (
       } = await voodoo.command({ accountId, command: `player inventory ${accountId}` });
       inventory = Belt;
 
-      if (!oneOfMaterialComponents.includes(inventory[beltIndex]?.PrefabHash ?? 0)) {
+      materialComponent = inventory[beltIndex]?.PrefabHash ?? 0;
+
+      if (!oneOfMaterialComponents.includes(materialComponent)) {
         return clientResponse.json({
           ok: false,
           error: `Requires associated material spell component in belt slot ${4 - beltIndex}`
         });
       }
-
-      materialComponent = inventory[beltIndex]?.PrefabHash ?? 0;
     }
 
     /* Append to player's incantations. */
