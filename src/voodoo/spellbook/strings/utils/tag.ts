@@ -1,5 +1,5 @@
 import { SpawnOptions } from '..';
-import { packFloat } from './packFloat';
+import { floatToUInt } from './floatToUInt';
 import { replaceVelocityString } from './replaceVelocityString';
 
 /**
@@ -34,7 +34,7 @@ export const tag = (substrings: TemplateStringsArray, ...keys: string[]) => ({
     } else if (key === 'velocityEnd' && hasVelocity) {
       return `${string}${substrings[index + 1]}`;
     } else {
-      const packedFloat = packFloat(Number(transform[key]));
+      const packedFloat = floatToUInt(Number(transform[key]));
 
       return `${string}${packedFloat}${substrings[index + 1]}`;
     }

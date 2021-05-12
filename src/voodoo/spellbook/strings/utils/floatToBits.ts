@@ -1,3 +1,3 @@
-import { packFloat } from './packFloat';
+import { floatToUInt } from './floatToUInt';
 
-export const floatToBits = (float: number): string => packFloat(float).toString(2).padStart(32, '0');
+export const floatToBits = (float: number): string => floatToUInt(float).toString(2).padStart(32, '0');

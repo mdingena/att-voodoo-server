@@ -1,7 +1,7 @@
 import { SpawnOptions } from '..';
 import { createRigidBody } from './createRigidBody';
 import { bitsToUInts } from './bitsToUInts';
-import { packFloat } from './packFloat';
+import { floatToUInt } from './floatToUInt';
 
 /**
  * Byte size is the sum of:
@@ -51,14 +51,14 @@ export const createString = (prefabHash: number) => ({
     prefabHash,
     BYTE_SIZE,
     prefabHash,
-    packFloat(transform.px),
-    packFloat(transform.py),
-    packFloat(transform.pz),
-    packFloat(transform.qx ?? 0),
-    packFloat(transform.qy ?? 0),
-    packFloat(transform.qz ?? 0),
-    packFloat(transform.qw ?? 1),
-    packFloat(transform.s ?? 1),
+    floatToUInt(transform.px ?? 0),
+    floatToUInt(transform.py ?? 0),
+    floatToUInt(transform.pz ?? 0),
+    floatToUInt(transform.qx ?? 0),
+    floatToUInt(transform.qy ?? 0),
+    floatToUInt(transform.qz ?? 0),
+    floatToUInt(transform.qw ?? 1),
+    floatToUInt(transform.s ?? 1),
     RIGID_BODY_HASH,
     RIGID_BODY_SIZE,
     ...bitsToUInts(rigidBodyBits)

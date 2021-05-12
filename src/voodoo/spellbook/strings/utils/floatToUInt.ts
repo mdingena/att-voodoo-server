@@ -2,7 +2,7 @@ import ieee754 from 'ieee754';
 import bitwise from 'bitwise';
 import { Bit } from 'bitwise/types';
 
-export const packFloat = (unpackedFloat: number) => {
+export const floatToUInt = (unpackedFloat: number) => {
   const buffer = Buffer.from(new Uint8Array(4));
   let bits: number = 0;
 
