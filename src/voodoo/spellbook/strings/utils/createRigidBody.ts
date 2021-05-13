@@ -5,7 +5,7 @@ import { floatToBinary } from './floatToBinary';
 const HASH = 2290978823;
 const HASH_BITS = numberToBinary(HASH);
 
-export const createRigidBody = ({ transform, isKinematic, isServerSleeping }: SpawnOptions): string => {
+export const createRigidBody = ({ transform, isKinematic = false, isServerSleeping = false }: SpawnOptions): string => {
   const positionBits = [
     floatToBinary(transform.px ?? 0),
     floatToBinary(transform.py ?? 0),
@@ -19,9 +19,9 @@ export const createRigidBody = ({ transform, isKinematic, isServerSleeping }: Sp
     floatToBinary(transform.qw ?? 1)
   ].join('');
 
-  const isKinematicBit = isKinematic ? '0' : Number(isKinematic).toString();
+  const isKinematicBit = Number(isKinematic).toString();
 
-  const isServerSleepingBit = isServerSleeping ? '0' : Number(isServerSleeping).toString();
+  const isServerSleepingBit = Number(isServerSleeping).toString();
 
   const velocityBits = [
     floatToBinary(transform.vx ?? 0),
