@@ -1,9 +1,10 @@
 import { SpawnOptions } from '..';
+import { numberToBinary } from './numberToBinary';
 import { floatToBinary } from './floatToBinary';
 
 export const createPrefabObject = (prefabHash: number, { transform }: SpawnOptions): string =>
   [
-    prefabHash.toString(2).padStart(8, '0'),
+    numberToBinary(prefabHash),
     floatToBinary(transform.px ?? 0),
     floatToBinary(transform.py ?? 0),
     floatToBinary(transform.pz ?? 0),
