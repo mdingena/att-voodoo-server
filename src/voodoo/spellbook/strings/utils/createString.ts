@@ -3,13 +3,17 @@ import { createPrefabObject } from './createPrefabObject';
 import { createRigidBody, VERSION as rigidBodyVersion } from './createRigidBody';
 import { binaryToUInts } from './binaryToUInts';
 
-export const createString = (prefabHash: number) => (options: SpawnOptions) => {
+export const COMPONENTS = {
+  RigidBody: 'RigidBody'
+};
+
+export const createString = (prefabHash: number, prefabComponents: string[] = []) => (options: SpawnOptions) => {
   /* Create prefab components. */
   const prefabObject = createPrefabObject(prefabHash, options);
-  const rigidBody = createRigidBody(options);
+  const rigidBody = prefabComponents.includes(COMPONENTS.RigidBody) && createRigidBody(options);
 
   /* Join all components. */
-  const binary = [prefabObject, rigidBody].join('');
+  const binary = [prefabObject, rigidBody].filter(Boolean).join('');
 
   /* Pad bits with trailing zeroes to make it % 32. */
   const missingBits = binary.length + (32 - (binary.length % 32 === 0 ? 32 : binary.length % 32));
@@ -25,9 +29,10 @@ export const createString = (prefabHash: number) => (options: SpawnOptions) => {
   const components = [prefabHash, bytes, ...uInts].join(',');
 
   /* Construct the versions string. */
-  const componentVersions = [rigidBodyVersion];
-  const versions = [componentVersions.length, ...componentVersions].join(',');
+  const componentVersions = [prefabComponents.includes(COMPONENTS.RigidBody) && rigidBodyVersion].filter(Boolean);
+  const versions = componentVersions.length && [componentVersions.length, ...componentVersions].join(',');
 
   /* Return spawn string. */
-  return `${components},|${versions},`;
+  const strings = [components, versions].filter(Boolean);
+  return `${strings.join(',|')},`;
 };
