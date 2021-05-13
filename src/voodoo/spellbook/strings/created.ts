@@ -1,3 +1,3 @@
-import { createString } from './utils/createString';
+import { createString, COMPONENTS } from './utils/createString';
 
-export const testArrowTwo = createString(52366);
+export const etheralArrow = createString(52366, [COMPONENTS.RigidBody]);
