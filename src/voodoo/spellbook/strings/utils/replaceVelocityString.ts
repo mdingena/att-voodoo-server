@@ -1,6 +1,6 @@
 import { Transform } from '..';
-import { floatToBits } from './floatToBits';
-import { bitsToUInts } from './bitsToUInts';
+import { floatToBinary } from './floatToBinary';
+import { binaryToUInts } from './binaryToUInts';
 
 type StringOptions = {
   string: string;
@@ -20,20 +20,20 @@ export const replaceVelocityString = ({ string, transform, isKinematic, isServer
   const trailingBits = bits.substr(trailingBitsPosition);
 
   const velocity = [
-    floatToBits(transform.vx ?? 0),
-    floatToBits(transform.vy ?? 0),
-    floatToBits(transform.vz ?? 0)
+    floatToBinary(transform.vx ?? 0),
+    floatToBinary(transform.vy ?? 0),
+    floatToBinary(transform.vz ?? 0)
   ].join('');
 
   const angularVelocity = [
-    floatToBits(transform.avx ?? 0),
-    floatToBits(transform.avy ?? 0),
-    floatToBits(transform.avz ?? 0)
+    floatToBinary(transform.avx ?? 0),
+    floatToBinary(transform.avy ?? 0),
+    floatToBinary(transform.avz ?? 0)
   ].join('');
 
   const newBits = [isKinematicBit, isServerSleepingBit, velocity, angularVelocity, trailingBits].join('');
 
-  const newIntegers = bitsToUInts(newBits);
+  const newIntegers = binaryToUInts(newBits);
 
   return `${newIntegers.join(',')}`;
 };
