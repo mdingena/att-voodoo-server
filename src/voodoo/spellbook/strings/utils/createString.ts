@@ -1,6 +1,6 @@
 import { SpawnOptions } from '..';
 import { createPrefabObject } from './createPrefabObject';
-import { createRigidBody } from './createRigidBody';
+import { createRigidBody, VERSION as rigidBodyVersion } from './createRigidBody';
 import { binaryToUInts } from './binaryToUInts';
 
 export const createString = (prefabHash: number) => (options: SpawnOptions) => {
@@ -21,9 +21,13 @@ export const createString = (prefabHash: number) => (options: SpawnOptions) => {
   /* Convert binary to array of UInts. */
   const uInts = binaryToUInts(paddedBinary);
 
-  /* Construct the string. */
-  const string = [prefabHash, bytes, ...uInts].join(',');
+  /* Construct the components string. */
+  const components = [prefabHash, bytes, ...uInts].join(',');
 
-  /* Add trailing comma. */
-  return `${string},`;
+  /* Construct the versions string. */
+  const componentVersions = [rigidBodyVersion];
+  const versions = [componentVersions.length, ...componentVersions].join(',');
+
+  /* Return spawn string. */
+  return `${components},|${versions},`;
 };

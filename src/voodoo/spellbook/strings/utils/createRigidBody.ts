@@ -2,7 +2,9 @@ import { SpawnOptions } from '..';
 import { numberToBinary } from './numberToBinary';
 import { floatToBinary } from './floatToBinary';
 
-const HASH = 2290978823;
+export const HASH = 2290978823;
+export const VERSION = [HASH, 1].join(',');
+
 const HASH_BITS = numberToBinary(HASH);
 
 export const createRigidBody = ({ transform, isKinematic = false, isServerSleeping = false }: SpawnOptions): string => {
