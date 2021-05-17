@@ -1,4 +1,4 @@
-import { BinaryReader, componentMap } from '../utils';
+import { BinaryReader, componentMap, uIntToNumber } from '../utils';
 
 export type PrefabObject = {
   name: string | undefined;
@@ -25,17 +25,25 @@ export const decodePrefabObject = (readBinary: BinaryReader): PrefabObject => {
   const sBits = readBinary(32);
 
   const hash = Number(`0b${hashBits}`);
+  const px = Number(`0b${pxBits}`);
+  const py = Number(`0b${pyBits}`);
+  const pz = Number(`0b${pzBits}`);
+  const qx = Number(`0b${qxBits}`);
+  const qy = Number(`0b${qyBits}`);
+  const qz = Number(`0b${qzBits}`);
+  const qw = Number(`0b${qwBits}`);
+  const s = Number(`0b${sBits}`);
 
   return {
     name: componentMap[hash],
     hash,
-    px: Number(`0b${pxBits}`),
-    py: Number(`0b${pyBits}`),
-    pz: Number(`0b${pzBits}`),
-    qx: Number(`0b${qxBits}`),
-    qy: Number(`0b${qyBits}`),
-    qz: Number(`0b${qzBits}`),
-    qw: Number(`0b${qwBits}`),
-    s: Number(`0b${sBits}`)
+    px: uIntToNumber(px),
+    py: uIntToNumber(py),
+    pz: uIntToNumber(pz),
+    qx: uIntToNumber(qx),
+    qy: uIntToNumber(qy),
+    qz: uIntToNumber(qz),
+    qw: uIntToNumber(qw),
+    s: uIntToNumber(s)
   };
 };
