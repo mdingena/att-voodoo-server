@@ -22,5 +22,5 @@ export interface SpawnOptions {
   isServerSleeping?: boolean;
 }
 
-export * from './created';
+export * from './strings';
 export * from './captured';
