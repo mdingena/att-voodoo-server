@@ -3,7 +3,14 @@ import { binaryToUInts } from './utils';
 import { encodePrefabObject, encodeComponents } from './encoders';
 import * as componentEncoders from './encoders/components';
 
-export const COMPONENTS = Object.keys(componentEncoders).reduce((map, key) => ({ ...map, [key]: key }), {});
+type ComponentMap = {
+  [key: string]: keyof typeof componentEncoders;
+};
+
+export const COMPONENTS: ComponentMap = Object.keys(componentEncoders).reduce(
+  (map, key) => ({ ...map, [key]: key }),
+  {}
+);
 
 type Component = keyof typeof componentEncoders;
 
