@@ -1,6 +1,6 @@
 import { SpawnOptions } from '.';
 import { binaryToUInts } from './utils';
-import { encodePrefabObject, encodeComponents } from './encoders';
+import { encodePrefabObject, encodeComponents, encodeEmbeddedEntities, encodeChildPrefabs } from './encoders';
 import * as componentEncoders from './encoders/components';
 
 type ComponentMap = {
@@ -14,7 +14,12 @@ export const COMPONENTS: ComponentMap = Object.keys(componentEncoders).reduce(
 
 type Component = keyof typeof componentEncoders;
 
-export const createString = (hash: number, components: Component[] = []) => (options: SpawnOptions): string => {
+export const createString = (
+  hash: number,
+  components: Component[] = [],
+  embeddedEntities: string[] = [],
+  childPrefabs: string[] = []
+) => (options: SpawnOptions): string => {
   let binary: string = '';
 
   /* Create prefab object. */
@@ -22,6 +27,12 @@ export const createString = (hash: number, components: Component[] = []) => (opt
 
   /* Create components. */
   binary += encodeComponents(components.map(name => ({ name, options })));
+
+  /* Create embedded entities. */
+  binary += encodeEmbeddedEntities(embeddedEntities.map(name => ({ name, options })));
+
+  /* Create child prefabs. */
+  binary += encodeChildPrefabs(childPrefabs.map(name => ({ name, options })));
 
   /* Pad bits with trailing zeroes to make it % 32. */
   const missingBits = binary.length + (32 - (binary.length % 32 === 0 ? 32 : binary.length % 32));
