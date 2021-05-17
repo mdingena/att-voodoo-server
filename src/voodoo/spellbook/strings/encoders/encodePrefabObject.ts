@@ -1,8 +1,7 @@
 import { SpawnOptions } from '..';
-import { numberToBinary } from './numberToBinary';
-import { floatToBinary } from './floatToBinary';
+import { numberToBinary, floatToBinary } from '../utils';
 
-export const createPrefabObject = (prefabHash: number, { transform }: SpawnOptions): string =>
+export const encodePrefabObject = (prefabHash: number, { transform }: SpawnOptions): string =>
   [
     numberToBinary(prefabHash),
     floatToBinary(transform.px ?? 0),

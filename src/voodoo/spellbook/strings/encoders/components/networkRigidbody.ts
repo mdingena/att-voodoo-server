@@ -1,13 +1,18 @@
-import { SpawnOptions } from '..';
-import { numberToBinary } from './numberToBinary';
-import { floatToBinary } from './floatToBinary';
+import { Transform } from '../..';
+import { numberToBinary, floatToBinary } from '../../utils';
 
 export const HASH = 2290978823;
 export const VERSION = [HASH, 1].join(',');
 
 const HASH_BITS = numberToBinary(HASH);
 
-export const createRigidBody = ({ transform, isKinematic = false, isServerSleeping = false }: SpawnOptions): string => {
+export interface Options {
+  transform: Transform;
+  isKinematic?: boolean;
+  isServerSleeping?: boolean;
+}
+
+export const encode = ({ transform, isKinematic = false, isServerSleeping = false }: Options): string => {
   const positionBits = [
     floatToBinary(transform.px ?? 0),
     floatToBinary(transform.py ?? 0),
