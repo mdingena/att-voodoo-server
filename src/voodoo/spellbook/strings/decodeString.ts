@@ -24,7 +24,7 @@ export const decodeString = (rawString: string): DecodeStringResult => {
   const size = 8 * Number(uInts.shift() ?? 0);
 
   /* Convert remaining UInts to binary. */
-  let binary = uInts.reduce((bits, uInt) => `${bits}${numberToBinary(Number(uInt))}`, '');
+  const binary = uInts.reduce((bits, uInt) => `${bits}${numberToBinary(Number(uInt))}`, '');
 
   /* Create binary reader. */
   const readBinary = createBinaryReader(binary, size);
