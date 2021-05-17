@@ -2,7 +2,7 @@ import { Transform } from '../..';
 import { numberToBinary, floatToBinary } from '../../utils';
 
 export const HASH = 2290978823;
-export const VERSION = [HASH, 1].join(',');
+export const VERSION = 1;
 
 const HASH_BITS = numberToBinary(HASH);
 

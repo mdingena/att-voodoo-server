@@ -37,7 +37,7 @@ export const createString = (hash: number, components: Component[] = []) => (opt
   const uIntString = [hash, bytes, ...uInts].join(',');
 
   /* Construct the versions string. */
-  const versions = components.map(name => componentEncoders[name].VERSION);
+  const versions = components.map(name => `${componentEncoders[name].HASH},${componentEncoders[name].VERSION}`);
   const versionString = versions.length && [versions.length, ...versions].join(',');
 
   /* Return spawn string. */
