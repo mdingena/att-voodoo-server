@@ -1,8 +1,7 @@
-export const spawnVelocity = (dx: number, dy: number, dz: number, v: number) => ({
-  vx: dx * v,
-  vy: dy * v,
-  vz: dz * v,
-  avx: 0,
-  avy: 0,
-  avz: 0
+type Vector3 = { x: number; y: number; z: number };
+
+export const spawnVelocity = (direction: Vector3, velocity: number): Vector3 => ({
+  x: direction.x * velocity,
+  y: direction.y * velocity,
+  z: direction.z * velocity
 });

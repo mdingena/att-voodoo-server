@@ -27,15 +27,21 @@ export const spawnFrom = (player: any, from: Origin, distance: number = 0) => {
   prefab.lookAt(direction);
 
   return {
-    px: position.x + direction.x * sign * distance,
-    py: position.y + direction.y * sign * distance,
-    pz: position.z + direction.z * sign * distance,
-    qx: prefab.quaternion.x,
-    qy: prefab.quaternion.y,
-    qz: prefab.quaternion.z,
-    qw: prefab.quaternion.w,
-    dx: direction.x * sign,
-    dy: direction.y * sign,
-    dz: direction.z * sign
+    position: {
+      x: position.x + direction.x * sign * distance,
+      y: position.y + direction.y * sign * distance,
+      z: position.z + direction.z * sign * distance
+    },
+    rotation: {
+      x: prefab.quaternion.x,
+      y: prefab.quaternion.y,
+      z: prefab.quaternion.z,
+      w: prefab.quaternion.w
+    },
+    direction: {
+      x: direction.x * sign,
+      y: direction.y * sign,
+      z: direction.z * sign
+    }
   };
 };

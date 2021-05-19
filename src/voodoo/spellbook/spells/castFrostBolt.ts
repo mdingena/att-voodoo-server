@@ -1,5 +1,5 @@
 import { VoodooServer } from '../../index';
-import { frostBolt } from '../strings';
+import { createString, crystalWyrmSpit } from '../strings';
 import { spawnFrom } from '../spawnFrom';
 import { spawnVelocity } from '../spawnVelocity';
 
@@ -9,16 +9,26 @@ export const castFrostBolt = async (voodoo: VoodooServer, accountId: number): Pr
     command: `player detailed ${accountId}`
   });
 
-  const origin = spawnFrom(player, 'rightPalm', 0.4);
+  const { position, rotation, direction } = spawnFrom(player, 'rightPalm', 0.05);
+  const velocity = spawnVelocity(direction, 15);
 
-  const transform = {
-    ...origin,
-    ...spawnVelocity(origin.dx, origin.dy, origin.dz, 15),
-    s: 1
-  };
+  const spawnString = createString({
+    prefabObject: {
+      hash: crystalWyrmSpit,
+      position,
+      rotation
+    },
+    components: {
+      NetworkRigidbody: {
+        position,
+        rotation,
+        velocity
+      }
+    }
+  });
 
   return await voodoo.command({
     accountId,
-    command: `spawn string-raw ${frostBolt({ transform })}`
+    command: `spawn string-raw ${spawnString}`
   });
 };

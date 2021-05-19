@@ -1,8 +1,11 @@
 import * as encoders from './components';
 
-export type Component = {
-  name: keyof typeof encoders;
-  options: encoders.NetworkRigidbody.Options;
+export type ComponentName = keyof typeof encoders;
+export type ComponentOptions = encoders.LiquidContainer.Options | encoders.NetworkRigidbody.Options;
+
+type Component = {
+  name: ComponentName;
+  options: ComponentOptions;
 };
 
 const terminator = '0'.repeat(32);

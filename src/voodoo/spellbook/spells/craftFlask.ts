@@ -1,5 +1,5 @@
 import { VoodooServer } from '../../index';
-import { potionEmpty } from '../strings';
+import { createString, potionMedium } from '../strings';
 import { spawnFrom } from '../spawnFrom';
 
 export const craftFlask = async (voodoo: VoodooServer, accountId: number) => {
@@ -8,15 +8,27 @@ export const craftFlask = async (voodoo: VoodooServer, accountId: number) => {
     command: `player detailed ${accountId}`
   });
 
-  const origin = spawnFrom(player, 'rightPalm', 0.05);
+  const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-  const transform = {
-    ...origin,
-    s: 1
-  };
+  const spawnString = createString({
+    prefabObject: {
+      hash: potionMedium,
+      position,
+      rotation
+    },
+    components: {
+      NetworkRigidbody: {
+        position,
+        rotation
+      },
+      LiquidContainer: {
+        dataBits: '011000000000000000000000000000000000000000000000000000000000000000001'
+      }
+    }
+  });
 
   return await voodoo.command({
     accountId,
-    command: `spawn string-raw ${potionEmpty({ transform })}`
+    command: `spawn string-raw ${spawnString}`
   });
 };

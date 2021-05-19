@@ -1,4 +1,3 @@
-import { Transform } from '../..';
 import { numberToBinary, floatToBinary } from '../../utils';
 
 export const HASH = 2290978823;
@@ -7,44 +6,65 @@ export const VERSION = 1;
 const HASH_BITS = numberToBinary(HASH);
 
 export interface Options {
-  transform: Transform;
+  position?: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  rotation?: {
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+  };
   isKinematic?: boolean;
   isServerSleeping?: boolean;
+  velocity?: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  angularVelocity?: {
+    x: number;
+    y: number;
+    z: number;
+  };
 }
 
-export const encode = ({ transform, isKinematic = false, isServerSleeping = false }: Options): string => {
-  const positionBits = [
-    floatToBinary(transform.px ?? 0),
-    floatToBinary(transform.py ?? 0),
-    floatToBinary(transform.pz ?? 0)
-  ].join('');
+export const encode = ({
+  position = { x: 0, y: 0, z: 0 },
+  rotation = { x: 0, y: 0, z: 0, w: 1 },
+  isKinematic = false,
+  isServerSleeping = false,
+  velocity = { x: 0, y: 0, z: 0 },
+  angularVelocity = { x: 0, y: 0, z: 0 }
+}: Options): string => {
+  const positionBits = [floatToBinary(position.x), floatToBinary(position.y ?? 0), floatToBinary(position.z ?? 0)].join(
+    ''
+  );
 
-  const quaternionBits = [
-    floatToBinary(transform.qx ?? 0),
-    floatToBinary(transform.qy ?? 0),
-    floatToBinary(transform.qz ?? 0),
-    floatToBinary(transform.qw ?? 1)
+  const rotationBits = [
+    floatToBinary(rotation.x),
+    floatToBinary(rotation.y),
+    floatToBinary(rotation.z),
+    floatToBinary(rotation.w)
   ].join('');
 
   const isKinematicBit = Number(isKinematic).toString();
 
   const isServerSleepingBit = Number(isServerSleeping).toString();
 
-  const velocityBits = [
-    floatToBinary(transform.vx ?? 0),
-    floatToBinary(transform.vy ?? 0),
-    floatToBinary(transform.vz ?? 0)
-  ].join('');
+  const velocityBits = [floatToBinary(velocity.x), floatToBinary(velocity.y), floatToBinary(velocity.z)].join('');
 
   const angularVelocityBits = [
-    floatToBinary(transform.avx ?? 0),
-    floatToBinary(transform.avy ?? 0),
-    floatToBinary(transform.avz ?? 0)
+    floatToBinary(angularVelocity.x),
+    floatToBinary(angularVelocity.y),
+    floatToBinary(angularVelocity.z)
   ].join('');
 
   const dataBits = [
     positionBits,
-    quaternionBits,
+    rotationBits,
     isKinematicBit,
     isServerSleepingBit,
     velocityBits,
