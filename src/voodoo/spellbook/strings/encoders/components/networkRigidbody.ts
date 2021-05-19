@@ -39,9 +39,7 @@ export const encode = ({
   velocity = { x: 0, y: 0, z: 0 },
   angularVelocity = { x: 0, y: 0, z: 0 }
 }: Options): string => {
-  const positionBits = [floatToBinary(position.x), floatToBinary(position.y ?? 0), floatToBinary(position.z ?? 0)].join(
-    ''
-  );
+  const positionBits = [floatToBinary(position.x), floatToBinary(position.y), floatToBinary(position.z)].join('');
 
   const rotationBits = [
     floatToBinary(rotation.x),
