@@ -8,9 +8,16 @@ type AltaApiConfig = {
   owner_id: number;
 };
 
+const environment = !!process.env.ON_HEROKU ? 'PRODUCTION' : 'STAGING';
+
+const client = {
+  id: process.env[`ALTA_CLIENT_${environment}_ID`] || '',
+  secret: process.env[`ALTA_CLIENT_${environment}_SECRET`] || ''
+};
+
 export const config: AltaApiConfig = {
-  client_id: process.env.ALTA_CLIENT_ID || '',
-  client_secret: process.env.ALTA_CLIENT_SECRET || '',
+  client_id: client.id,
+  client_secret: client.secret,
   client_name: 'Voodoo Server',
   grant_types: ['client_credentials'],
   redirect_uris: [],
