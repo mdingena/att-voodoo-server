@@ -27,7 +27,7 @@ export const decodeString = (rawString: string): DecodeStringResult => {
   const binary = uInts.reduce((bits, uInt) => `${bits}${numberToBinary(Number(uInt))}`, '');
 
   /* Create binary reader. */
-  const readBinary = createBinaryReader(binary, size);
+  const readBinary = createBinaryReader(binary);
 
   const prefab = decodePrefab(readBinary);
 
