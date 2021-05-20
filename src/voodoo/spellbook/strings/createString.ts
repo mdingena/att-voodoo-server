@@ -13,9 +13,7 @@ import * as componentEncoders from './encoders/components';
 interface Options {
   prefabObject: PrefabObjectOptions;
   components: {
-    [key in keyof typeof componentEncoders]?:
-      | componentEncoders.LiquidContainer.Options
-      | componentEncoders.NetworkRigidbody.Options;
+    [key in ComponentName]?: ComponentOptions;
   };
 }
 
