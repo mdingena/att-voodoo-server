@@ -1,8 +1,8 @@
-import { componentMap, numberToBinary, createBinaryReader } from './utils';
+import { numberToBinary, createBinaryReader } from './utils';
 import { decodePrefab, Prefab } from './decoders/decodePrefab';
 
 export type DecodeStringResult = {
-  name: string | undefined;
+  hash: number;
   size: number;
   prefab: Prefab;
 };
@@ -32,7 +32,7 @@ export const decodeString = (rawString: string): DecodeStringResult => {
   const prefab = decodePrefab(readBinary);
 
   return {
-    name: componentMap[hash],
+    hash,
     size,
     prefab
   };
