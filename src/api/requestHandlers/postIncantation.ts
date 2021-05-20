@@ -66,8 +66,7 @@ export const postIncantation = (voodoo: VoodooServer): RequestHandler => async (
       const networkId: number = inventory[beltIndex]?.Identifier ?? 0;
 
       if (networkId) {
-        await voodoo.command({ accountId, command: `select ${networkId}` });
-        await voodoo.command({ accountId, command: `select destroy` }); // @todo Very risky! See if we can get a select destroy <networkid> command
+        await voodoo.command({ accountId, command: `wacky destroy ${networkId}` });
       }
     }
 
