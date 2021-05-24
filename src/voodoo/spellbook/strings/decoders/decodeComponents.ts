@@ -1,4 +1,5 @@
-import { BinaryReader, componentMap } from '../utils';
+import { names } from '../components/components';
+import { BinaryReader } from '../utils';
 
 export type Component = {
   hash: number;
@@ -27,7 +28,7 @@ export const decodeComponents = (readBinary: BinaryReader): Component[] => {
     const data = readBinary(size);
 
     /* Save component. */
-    components.push({ hash, name: componentMap[hash], size, data });
+    components.push({ hash, name: names[hash], size, data });
   }
 
   return components;
