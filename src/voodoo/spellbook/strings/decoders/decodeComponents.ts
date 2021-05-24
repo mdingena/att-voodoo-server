@@ -1,11 +1,14 @@
+import { transcoders, TranscoderName, TranscoderProperties } from '../components';
 import { names } from '../components/components';
 import { BinaryReader, binaryToNumber } from '../utils';
+
+type EncodedProperties = string;
 
 export type Component = {
   hash: number;
   name: string;
   size: number;
-  data: string;
+  data: TranscoderProperties | EncodedProperties;
 };
 
 export const decodeComponents = (readBinary: BinaryReader): Component[] => {
@@ -25,7 +28,8 @@ export const decodeComponents = (readBinary: BinaryReader): Component[] => {
     const size = binaryToNumber(sizeBits);
 
     /* Get the component's data. */
-    const data = readBinary(size);
+    const componentName = <TranscoderName>names[hash];
+    const data = transcoders?.[componentName] ? transcoders[componentName].decode(readBinary) : readBinary(size);
 
     /* Save component. */
     components.push({ hash, name: names[hash], size, data });

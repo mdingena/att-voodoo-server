@@ -3,21 +3,19 @@ import {
   encodePrefabObject,
   PrefabObjectOptions,
   encodeComponents,
-  ComponentName,
-  ComponentOptions,
   encodeEmbeddedEntities,
   encodeChildPrefabs
 } from './encoders';
-import * as componentEncoders from './components';
+import { transcoders, TranscoderName, TranscoderProperties } from './components';
 
-interface Options {
+type Properties = {
   prefabObject: PrefabObjectOptions;
   components: {
-    [key in ComponentName]?: ComponentOptions;
+    [key in TranscoderName]?: TranscoderProperties;
   };
-}
+};
 
-export const createString = (options: Options): string => {
+export const createString = (options: Properties): string => {
   const hash = options.prefabObject.hash;
 
   let binary: string = '';
@@ -27,8 +25,8 @@ export const createString = (options: Options): string => {
 
   /* Create components. */
   const components = Object.entries(options.components).map(([name, options]) => ({
-    name: <ComponentName>name,
-    options: <ComponentOptions>options
+    name: <TranscoderName>name,
+    properties: <TranscoderProperties>options
   }));
   binary += encodeComponents(components);
 
@@ -52,7 +50,7 @@ export const createString = (options: Options): string => {
   const uIntString = [hash, bytes, ...uInts].join(',');
 
   /* Construct the versions string. */
-  const versions = components.map(({ name }) => `${componentEncoders[name].HASH},${componentEncoders[name].VERSION}`);
+  const versions = components.map(({ name }) => `${transcoders[name].HASH},${transcoders[name].VERSION}`);
   const versionString = versions.length && [versions.length, ...versions].join(',');
 
   /* Return spawn string. */

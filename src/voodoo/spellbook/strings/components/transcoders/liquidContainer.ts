@@ -1,12 +1,12 @@
-import { hashes } from './components';
-import { numberToBinaryUInt, numberToBinary, binaryToNumber, BinaryReader } from '../utils';
+import { hashes } from '../components';
+import { numberToBinary, binaryToNumber, BinaryReader } from '../../utils';
 
 export const HASH = hashes.LiquidContainer;
 export const VERSION = 1;
 
-const HASH_BITS = numberToBinaryUInt(HASH);
+const HASH_BITS = numberToBinary(HASH).padStart(32, '0');
 
-export type Options = {
+export type Properties = {
   canAddTo?: boolean;
   canRemoveFrom?: boolean;
   contentLevel?: number;
@@ -14,7 +14,7 @@ export type Options = {
   isCustom?: boolean;
 };
 
-export const decode = (readBinary: BinaryReader): Options => ({
+export const decode = (readBinary: BinaryReader): Properties => ({
   canAddTo: Boolean(readBinary(1)),
   canRemoveFrom: Boolean(readBinary(1)),
   contentLevel: binaryToNumber(readBinary(32)),
@@ -28,12 +28,12 @@ export const encode = ({
   contentLevel = 0,
   hasContent = !!contentLevel,
   isCustom = false
-}: Options): string => {
+}: Properties): string => {
   const canAddToBit = Number(canAddTo).toString();
 
   const canRemoveFromBit = Number(canRemoveFrom).toString();
 
-  const contentLevelBit = numberToBinary(contentLevel);
+  const contentLevelBit = numberToBinary(contentLevel).padStart(32, '0');
 
   const hasContentBit = Number(hasContent).toString();
 
@@ -41,7 +41,7 @@ export const encode = ({
 
   const dataBits = [canAddToBit, canRemoveFromBit, contentLevelBit, hasContentBit, isCustomBit].join('');
 
-  const sizeBits = numberToBinaryUInt(dataBits.length);
+  const sizeBits = numberToBinary(dataBits.length).padStart(32, '0');
 
   return [HASH_BITS, sizeBits, dataBits].join('');
 };
