@@ -1,7 +1,6 @@
-import { BinaryReader, componentMap, uIntToNumber } from '../utils';
+import { BinaryReader, uIntToNumber } from '../utils';
 
 export type PrefabObject = {
-  name: string | undefined;
   hash: number;
   px: number;
   py: number;
@@ -35,7 +34,6 @@ export const decodePrefabObject = (readBinary: BinaryReader): PrefabObject => {
   const s = Number(`0b${sBits}`);
 
   return {
-    name: componentMap[hash],
     hash,
     px: uIntToNumber(px),
     py: uIntToNumber(py),
