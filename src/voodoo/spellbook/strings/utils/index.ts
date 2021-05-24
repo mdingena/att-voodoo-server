@@ -1,6 +1,5 @@
 export { binaryToUInts } from './binaryToUInts';
-export { componentMap } from './componentMap';
 export { createBinaryReader, BinaryReader } from './createBinaryReader';
-export { floatToBinary } from './floatToBinary';
+export { numberToBinaryUInt } from './numberToBinaryUInt';
 export { numberToBinary } from './numberToBinary';
 export { uIntToNumber } from './uIntToNumber';

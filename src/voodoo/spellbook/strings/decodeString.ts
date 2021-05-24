@@ -1,4 +1,4 @@
-import { numberToBinary, createBinaryReader } from './utils';
+import { numberToBinaryUInt, createBinaryReader } from './utils';
 import { decodePrefab, Prefab } from './decoders/decodePrefab';
 
 export type DecodeStringResult = {
@@ -24,7 +24,7 @@ export const decodeString = (rawString: string): DecodeStringResult => {
   const size = 8 * Number(uInts.shift() ?? 0);
 
   /* Convert remaining UInts to binary. */
-  const binary = uInts.reduce((bits, uInt) => `${bits}${numberToBinary(Number(uInt))}`, '');
+  const binary = uInts.reduce((bits, uInt) => `${bits}${numberToBinaryUInt(Number(uInt))}`, '');
 
   /* Create binary reader. */
   const readBinary = createBinaryReader(binary);

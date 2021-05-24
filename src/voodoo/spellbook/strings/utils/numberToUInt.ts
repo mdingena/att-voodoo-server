@@ -2,11 +2,11 @@ import ieee754 from 'ieee754';
 import bitwise from 'bitwise';
 import { Bit } from 'bitwise/types';
 
-export const floatToUInt = (unpackedFloat: number) => {
+export const numberToUInt = (number: number) => {
   const buffer = Buffer.from(new Uint8Array(4));
   let bits: number = 0;
 
-  ieee754.write(buffer, unpackedFloat, 0, true, 23, 4);
+  ieee754.write(buffer, number, 0, true, 23, 4);
 
   const integer = buffer.readUInt32LE(0);
 

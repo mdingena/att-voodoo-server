@@ -1,4 +1,4 @@
-import { numberToBinary, floatToBinary } from '../utils';
+import { numberToBinaryUInt, numberToBinary } from '../utils';
 
 export interface PrefabObjectOptions {
   hash: number;
@@ -22,18 +22,18 @@ export const encodePrefabObject = ({
   rotation = { x: 0, y: 0, z: 0, w: 1 },
   scale = 1
 }: PrefabObjectOptions): string => {
-  const hashBits = numberToBinary(hash);
+  const hashBits = numberToBinaryUInt(hash);
 
-  const positionBits = [floatToBinary(position.x), floatToBinary(position.y), floatToBinary(position.z)].join('');
+  const positionBits = [numberToBinary(position.x), numberToBinary(position.y), numberToBinary(position.z)].join('');
 
   const rotationBits = [
-    floatToBinary(rotation.x),
-    floatToBinary(rotation.y),
-    floatToBinary(rotation.z),
-    floatToBinary(rotation.w)
+    numberToBinary(rotation.x),
+    numberToBinary(rotation.y),
+    numberToBinary(rotation.z),
+    numberToBinary(rotation.w)
   ].join('');
 
-  const scaleBits = floatToBinary(scale);
+  const scaleBits = numberToBinary(scale);
 
   return [hashBits, positionBits, rotationBits, scaleBits].join('');
 };
