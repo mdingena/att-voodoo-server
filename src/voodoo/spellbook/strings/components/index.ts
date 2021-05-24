@@ -4,6 +4,7 @@ export type TranscoderName = keyof typeof transcoders;
 export type TranscoderProperties =
   | transcoders.LiquidContainer.Properties
   | transcoders.NetworkRigidbody.Properties
+  | transcoders.PickupDock.Properties;
 
 export type Component = {
   name: TranscoderName;
