@@ -1,4 +1,4 @@
-import * as encoders from './components';
+import * as encoders from '../components';
 
 export type ComponentName = keyof typeof encoders;
 export type ComponentOptions = encoders.LiquidContainer.Options | encoders.NetworkRigidbody.Options;

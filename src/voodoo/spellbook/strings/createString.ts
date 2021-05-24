@@ -8,7 +8,7 @@ import {
   encodeEmbeddedEntities,
   encodeChildPrefabs
 } from './encoders';
-import * as componentEncoders from './encoders/components';
+import * as componentEncoders from './components';
 
 interface Options {
   prefabObject: PrefabObjectOptions;
