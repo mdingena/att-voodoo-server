@@ -1,4 +1,4 @@
-import { BinaryReader } from '../utils';
+import { BinaryReader, binaryToNumber } from '../utils';
 import { decodePrefab, Prefab } from './decodePrefab';
 
 export type ChildPrefab = {
@@ -20,7 +20,7 @@ export const decodeChildPrefabs = (readBinary: BinaryReader): ChildPrefab[] => {
 
     /* Get the parent entity hash. */
     const parentHashBits = readBinary(32);
-    const parentHash = Number(`0b${parentHashBits}`);
+    const parentHash = binaryToNumber(parentHashBits);
 
     /* Get the child prefab. */
     const prefab = decodePrefab(readBinary);

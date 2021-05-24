@@ -1,4 +1,4 @@
-import { BinaryReader, uIntToNumber } from '../utils';
+import { BinaryReader, binaryToNumber, uIntToNumber } from '../utils';
 
 export type PrefabObject = {
   hash: number;
@@ -23,15 +23,15 @@ export const decodePrefabObject = (readBinary: BinaryReader): PrefabObject => {
   const qwBits = readBinary(32);
   const sBits = readBinary(32);
 
-  const hash = Number(`0b${hashBits}`);
-  const px = Number(`0b${pxBits}`);
-  const py = Number(`0b${pyBits}`);
-  const pz = Number(`0b${pzBits}`);
-  const qx = Number(`0b${qxBits}`);
-  const qy = Number(`0b${qyBits}`);
-  const qz = Number(`0b${qzBits}`);
-  const qw = Number(`0b${qwBits}`);
-  const s = Number(`0b${sBits}`);
+  const hash = binaryToNumber(hashBits);
+  const px = binaryToNumber(pxBits);
+  const py = binaryToNumber(pyBits);
+  const pz = binaryToNumber(pzBits);
+  const qx = binaryToNumber(qxBits);
+  const qy = binaryToNumber(qyBits);
+  const qz = binaryToNumber(qzBits);
+  const qw = binaryToNumber(qwBits);
+  const s = binaryToNumber(sBits);
 
   return {
     hash,

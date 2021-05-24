@@ -1,5 +1,5 @@
 import { names } from '../components/components';
-import { BinaryReader } from '../utils';
+import { BinaryReader, binaryToNumber } from '../utils';
 
 export type Component = {
   hash: number;
@@ -15,14 +15,14 @@ export const decodeComponents = (readBinary: BinaryReader): Component[] => {
   while (true) {
     /* Get the component hash. */
     const hashBits = readBinary(32);
-    const hash = Number(`0b${hashBits}`);
+    const hash = binaryToNumber(hashBits);
 
     /* Break if we reached the end of the components loop. */
     if (hash === 0) break;
 
     /* Get the component's data length. */
     const sizeBits = readBinary(32);
-    const size = Number(`0b${sizeBits}`);
+    const size = binaryToNumber(sizeBits);
 
     /* Get the component's data. */
     const data = readBinary(size);

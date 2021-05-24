@@ -1,4 +1,4 @@
-import { BinaryReader } from '../utils';
+import { BinaryReader, binaryToNumber } from '../utils';
 import { decodeComponents, Component } from './decodeComponents';
 
 export type EmbeddedEntity = {
@@ -15,14 +15,14 @@ export const decodeEmbeddedEntities = (readBinary: BinaryReader): EmbeddedEntity
   while (true) {
     /* Get the entity hash. */
     const hashBits = readBinary(32);
-    const hash = Number(`0b${hashBits}`);
+    const hash = binaryToNumber(hashBits);
 
     /* Break if we reached the end of the entities loop. */
     if (hash === 0) break;
 
     /* Get the entity's data length. */
     const sizeBits = readBinary(32);
-    const size = Number(`0b${sizeBits}`);
+    const size = binaryToNumber(sizeBits);
 
     /* Check if entity is still alive. */
     const isAliveBit = readBinary(1);
