@@ -20,10 +20,15 @@ export const craftFlask = async (voodoo: VoodooServer, accountId: number) => {
       NetworkRigidbody: {
         position,
         rotation
-      },
-      LiquidContainer: {
-        dataBits: '011000000000000000000000000000000000000000000000000000000000000000001'
       }
+      // @todo This is broken, since I don't have the complete picture of the data shape yet.
+      // LiquidContainer: {
+      //   canAddTo: false,
+      //   canRemoveFrom: true,
+      //   contentLevel: binaryToNumber('1000000000000000000000000000000000000000000000000000000000000000'),
+      //   hasContent: false,
+      //   dataBits: '001'
+      // }
     }
   });
 
