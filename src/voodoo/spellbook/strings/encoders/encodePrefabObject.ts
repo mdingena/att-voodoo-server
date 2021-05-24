@@ -22,18 +22,22 @@ export const encodePrefabObject = ({
   rotation = { x: 0, y: 0, z: 0, w: 1 },
   scale = 1
 }: PrefabObjectOptions): string => {
-  const hashBits = numberToBinaryUInt(hash);
+  const hashBits = numberToBinary(hash).padStart(32, '0');
 
-  const positionBits = [numberToBinary(position.x), numberToBinary(position.y), numberToBinary(position.z)].join('');
-
-  const rotationBits = [
-    numberToBinary(rotation.x),
-    numberToBinary(rotation.y),
-    numberToBinary(rotation.z),
-    numberToBinary(rotation.w)
+  const positionBits = [
+    numberToBinaryUInt(position.x),
+    numberToBinaryUInt(position.y),
+    numberToBinaryUInt(position.z)
   ].join('');
 
-  const scaleBits = numberToBinary(scale);
+  const rotationBits = [
+    numberToBinaryUInt(rotation.x),
+    numberToBinaryUInt(rotation.y),
+    numberToBinaryUInt(rotation.z),
+    numberToBinaryUInt(rotation.w)
+  ].join('');
+
+  const scaleBits = numberToBinaryUInt(scale);
 
   return [hashBits, positionBits, rotationBits, scaleBits].join('');
 };
