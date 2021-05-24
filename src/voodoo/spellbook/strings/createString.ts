@@ -1,7 +1,7 @@
 import { binaryToUIntArray } from './utils';
 import {
   encodePrefabObject,
-  PrefabObjectOptions,
+  PrefabObjectProperties,
   encodeComponents,
   encodeEmbeddedEntities,
   encodeChildPrefabs
@@ -9,7 +9,7 @@ import {
 import { transcoders, TranscoderName, TranscoderProperties } from './components';
 
 type Properties = {
-  prefabObject: PrefabObjectOptions;
+  prefabObject: PrefabObjectProperties;
   components: {
     [key in TranscoderName]?: TranscoderProperties;
   };

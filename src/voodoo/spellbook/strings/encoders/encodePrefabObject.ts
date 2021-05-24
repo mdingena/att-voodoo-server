@@ -1,6 +1,6 @@
 import { numberToBinaryUInt, numberToBinary } from '../utils';
 
-export interface PrefabObjectOptions {
+export type PrefabObjectProperties = {
   hash: number;
   position?: {
     x: number;
@@ -14,14 +14,14 @@ export interface PrefabObjectOptions {
     w: number;
   };
   scale?: number;
-}
+};
 
 export const encodePrefabObject = ({
   hash,
   position = { x: 0, y: 0, z: 0 },
   rotation = { x: 0, y: 0, z: 0, w: 1 },
   scale = 1
-}: PrefabObjectOptions): string => {
+}: PrefabObjectProperties): string => {
   const hashBits = numberToBinary(hash).padStart(32, '0');
 
   const positionBits = [
