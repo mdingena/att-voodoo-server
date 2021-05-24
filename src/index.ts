@@ -9,6 +9,22 @@ if (!!process.env.SENTRY_DSN) {
     dsn: process.env.SENTRY_DSN,
     tracesSampleRate: 1.0
   });
+
+  const transaction = Sentry.startTransaction({
+    op: 'test',
+    name: 'My First Test Transaction'
+  });
+
+  setTimeout(() => {
+    try {
+      // @ts-ignore
+      foo();
+    } catch (e) {
+      Sentry.captureException(e);
+    } finally {
+      transaction.finish();
+    }
+  }, 99);
 }
 
 (async () => {
