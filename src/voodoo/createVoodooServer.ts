@@ -100,7 +100,7 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   removePlayers: function ({ serverId }) {
-    const accountIds = Object.entries(this.players)
+    Object.entries(this.players)
       .filter(([_, player]) => player.serverId === serverId)
       .forEach(([accountId]) => delete this.players[Number(accountId)]);
 
