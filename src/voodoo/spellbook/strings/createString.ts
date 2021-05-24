@@ -1,4 +1,4 @@
-import { binaryToUInts } from './utils';
+import { binaryToUIntArray } from './utils';
 import {
   encodePrefabObject,
   PrefabObjectOptions,
@@ -46,7 +46,7 @@ export const createString = (options: Options): string => {
   const bytes = paddedBinary.length / 8;
 
   /* Convert binary to array of UInts. */
-  const uInts = binaryToUInts(paddedBinary);
+  const uInts = binaryToUIntArray(paddedBinary);
 
   /* Construct the UInts string. */
   const uIntString = [hash, bytes, ...uInts].join(',');
