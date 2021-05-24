@@ -1,5 +1,5 @@
 import { hashes } from '../components';
-import { numberToBinary, binaryToNumber, BinaryReader } from '../../utils';
+import { numberToBinary, binaryToSignedNumber, BinaryReader } from '../../utils';
 
 export const HASH = hashes.LiquidContainer;
 export const VERSION = 1;
@@ -17,7 +17,7 @@ export type Properties = {
 export const decode = (readBinary: BinaryReader): Properties => ({
   canAddTo: Boolean(readBinary(1)),
   canRemoveFrom: Boolean(readBinary(1)),
-  contentLevel: binaryToNumber(readBinary(32)),
+  contentLevel: binaryToSignedNumber(readBinary(32)),
   hasContent: Boolean(readBinary(1)),
   isCustom: Boolean(readBinary(1))
 });
