@@ -4,5 +4,5 @@ INSERT INTO
   VALUES ( $1, $2 )
 ON CONFLICT ( account_id )
 DO UPDATE SET
-prepared_spells = $2
+  prepared_spells = $2
 ;`;
