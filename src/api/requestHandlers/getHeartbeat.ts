@@ -12,7 +12,6 @@ export const getHeartbeat: RequestHandler = async (clientRequest, clientResponse
 
     clientResponse.json({ ok: true });
   } catch (error) {
-    console.log({ error });
-    clientResponse.status(500).json({ ok: false, error });
+    clientResponse.status(500).json({ ok: false, error: error.message });
   }
 };
