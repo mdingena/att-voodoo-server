@@ -6,6 +6,13 @@ import { selectPreparedSpells, upsertPreparedSpells } from '../db/sql';
 
 const logger = new Logger('Voodoo');
 
+type Server = {
+  id: number;
+  name: string;
+  online: boolean;
+  players: number;
+};
+
 type Players = {
   [accountId: number]: {
     serverId: number;
@@ -19,6 +26,10 @@ export type PreparedSpells = {
   verbalTrigger: string;
   incantations: Incantation[];
 }[];
+
+interface RemoveServer {
+  serverId: number;
+}
 
 interface AddPlayer {
   accountId: number;
@@ -61,8 +72,12 @@ interface PrepareSpell {
 
 export type VoodooServer = {
   logger: Logger;
+  servers: Server[];
   players: Players;
   spellbook: Spellbook;
+  addServer: (server: Server) => void;
+  updateServer: (server: Server) => void;
+  removeServer: ({ serverId }: RemoveServer) => void;
   addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
@@ -76,9 +91,24 @@ export type VoodooServer = {
 export const createVoodooServer = (): VoodooServer => ({
   logger,
 
+  servers: [],
+
   players: [],
 
   spellbook,
+
+  addServer: function (server) {
+    this.servers = [...this.servers, server];
+  },
+
+  updateServer: function (server) {
+    const servers = this.servers.filter(({ id }) => id !== server.id);
+    this.servers = [...servers, server];
+  },
+
+  removeServer: function ({ serverId }) {
+    this.servers = this.servers.filter(({ id }) => id !== serverId);
+  },
 
   addPlayer: function ({ accountId, serverId, serverConnection }) {
     const newPlayer = {
