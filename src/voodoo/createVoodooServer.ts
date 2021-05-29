@@ -93,7 +93,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
   servers: [],
 
-  players: [],
+  players: {},
 
   spellbook,
 
