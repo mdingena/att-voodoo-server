@@ -3,6 +3,7 @@ import { spells } from './spells';
 import { VoodooServer } from '../index';
 
 export type Spell = {
+  name: string;
   cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
   requiresPreparation: boolean;
   verbalTrigger?: string;
@@ -20,9 +21,9 @@ export const spellbook: Spellbook = {
     Object.entries(spells)
       .filter(([spellName]) => pages.hasOwnProperty(spellName))
       .map(([spellName, spell]) => {
-        const { incantations, requiresPreparation, verbalTrigger } = pages[spellName];
+        const { name, incantations, requiresPreparation, verbalTrigger } = pages[spellName];
 
-        return [JSON.stringify(incantations), { cast: spell, requiresPreparation, verbalTrigger }];
+        return [JSON.stringify(incantations), { name, cast: spell, requiresPreparation, verbalTrigger }];
       })
   ),
 
