@@ -21,7 +21,7 @@ api.use(express.json());
 
 export const createApi = async (voodoo: VoodooServer) => {
   api.get('/', getInfo);
-  api.get('/heartbeat', getHeartbeat);
+  api.get('/heartbeat', getHeartbeat(voodoo));
   api.get('/session', getSession(voodoo));
   api.post('/incantation', postIncantation(voodoo));
   api.delete('/incantation', deleteIncantations(voodoo));
