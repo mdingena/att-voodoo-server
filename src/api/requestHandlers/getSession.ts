@@ -27,7 +27,13 @@ export const getSession =
 
       voodoo.setVoodooClient({ accountId, isVoodooClient: true });
 
-      clientResponse.json({ ok: true, result: { accountId } });
+      const session = {
+        accountId,
+        playerJoined: voodoo.players[accountId]?.serverId ?? null,
+        servers: [...voodoo.servers]
+      };
+
+      clientResponse.json({ ok: true, result: session });
     } catch (error) {
       voodoo.logger.error(error);
       clientResponse.status(500).json({ ok: false, error: error.message });
