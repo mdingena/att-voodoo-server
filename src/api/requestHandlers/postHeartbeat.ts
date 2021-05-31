@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer } from '../../voodoo';
+import { VoodooServer, Dexterity } from '../../voodoo';
 import { selectSession, upsertHeartbeat } from '../../db/sql';
 
-export const getHeartbeat =
+export const postHeartbeat =
   (voodoo: VoodooServer): RequestHandler =>
   async (clientRequest, clientResponse) => {
     const auth = clientRequest.headers.authorization ?? '';
@@ -18,8 +18,14 @@ export const getHeartbeat =
       /* Save heartbeat. */
       await db.query(upsertHeartbeat, [accessToken]);
 
-      /* Return servers update. */
+      /* Set player's dexterity. */
       const accountId = session.rows[0].account_id;
+      const dexterity: Dexterity = clientRequest.body.dexterity;
+      if (voodoo.players?.[accountId].dexterity !== dexterity) {
+        voodoo.setDexterity({ accountId, dexterity });
+      }
+
+      /* Return servers update. */
       const update = {
         playerJoined: voodoo.players[accountId]?.serverId ?? null,
         servers: [...voodoo.servers]

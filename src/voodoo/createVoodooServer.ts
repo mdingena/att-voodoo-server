@@ -13,11 +13,13 @@ type Server = {
   players: number;
 };
 
+export type Dexterity = 'left' | 'right';
+
 type Players = {
   [accountId: number]: {
     serverId: number;
     serverConnection: ServerConnection;
-    isVoodooClient: boolean;
+    dexterity: Dexterity;
     incantations: Incantation[];
   };
 };
@@ -45,9 +47,9 @@ interface RemovePlayers {
   serverId: number;
 }
 
-interface SetVoodooClient {
+interface SetDexterity {
   accountId: number;
-  isVoodooClient: boolean;
+  dexterity: Dexterity;
 }
 
 interface AddIncantation {
@@ -81,7 +83,7 @@ export type VoodooServer = {
   addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
-  setVoodooClient: ({ accountId, isVoodooClient }: SetVoodooClient) => void;
+  setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => Incantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => Incantation[];
   command: ({ accountId, command }: Command) => Promise<any>;
@@ -114,7 +116,7 @@ export const createVoodooServer = (): VoodooServer => ({
     const newPlayer = {
       serverId,
       serverConnection,
-      isVoodooClient: false,
+      dexterity: 'right' as Dexterity,
       incantations: []
     };
 
@@ -137,18 +139,10 @@ export const createVoodooServer = (): VoodooServer => ({
     logger.warn(`Removed all players of server ${serverId}`);
   },
 
-  setVoodooClient: function ({ accountId, isVoodooClient }) {
-    const player = this.players[accountId];
+  setDexterity: function ({ accountId, dexterity }) {
+    this.players = { ...this.players, [accountId]: { ...this.players[accountId], dexterity } };
 
-    if (!player) return;
-
-    this.players = { ...this.players, [accountId]: { ...player, isVoodooClient } };
-
-    if (isVoodooClient) {
-      logger.success(`${accountId}@${player.serverId} is a Voodoo Client`);
-    } else {
-      logger.warn(`${accountId}@${player.serverId} is not a Voodoo Client`);
-    }
+    logger.log(`Changed ${accountId}'s dexterity to ${dexterity}`);
   },
 
   addIncantation: function ({ accountId, incantation }) {

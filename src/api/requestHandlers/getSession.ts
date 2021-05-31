@@ -25,8 +25,6 @@ export const getSession =
       await db.query(upsertSession, [accountId, accessToken]);
       await db.query(upsertHeartbeat, [accessToken]);
 
-      voodoo.setVoodooClient({ accountId, isVoodooClient: true });
-
       const session = {
         accountId,
         playerJoined: voodoo.players[accountId]?.serverId ?? null,

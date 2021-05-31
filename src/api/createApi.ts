@@ -5,7 +5,7 @@ import { auth } from './middleware';
 import {
   getInfo,
   getSession,
-  getHeartbeat,
+  postHeartbeat,
   postIncantation,
   deleteIncantations,
   getSeal,
@@ -21,7 +21,7 @@ api.use(express.json());
 
 export const createApi = async (voodoo: VoodooServer) => {
   api.get('/', getInfo);
-  api.get('/heartbeat', getHeartbeat(voodoo));
+  api.post('/heartbeat', postHeartbeat(voodoo));
   api.get('/session', getSession(voodoo));
   api.post('/incantation', postIncantation(voodoo));
   api.delete('/incantation', deleteIncantations(voodoo));
