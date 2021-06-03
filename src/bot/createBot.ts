@@ -16,6 +16,12 @@ export const createBot = async (voodoo: VoodooServer): Promise<void> => {
   await api.login(config);
   await subscriptions.init();
   await groupManager.groups.refresh(true);
+
+  // Work-around for reinvite bug - https://github.com/alta-vr/js-tale/issues/8
+  groupManager.groups.on('create', group => {
+    groupManager.invites.items = groupManager.invites.items.filter(item => item.info.id !== group.info.id);
+  });
+
   await groupManager.acceptAllInvites(true);
 
   groupManager.automaticConsole(handleServerConnectionOpened(voodoo));
