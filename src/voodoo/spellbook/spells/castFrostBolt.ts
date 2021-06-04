@@ -1,20 +1,18 @@
-import { VoodooServer } from '../../index';
-import { createString, crystalWyrmSpit } from '../strings';
+import { VoodooServer } from '../..';
+import { PrefabHash } from '../strings';
+import { spawn } from '../spawn';
 import { spawnFrom } from '../spawnFrom';
 import { spawnVelocity } from '../spawnVelocity';
 
 export const castFrostBolt = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
-  const { Result: player } = await voodoo.command({
-    accountId,
-    command: `player detailed ${accountId}`
-  });
+  const player = await voodoo.getPlayerDetailed({ accountId });
 
-  const { position, rotation, direction } = spawnFrom(player, 'rightPalm', 0.05);
+  const { position, rotation, direction } = spawnFrom(player, 'rightPalm', 0.3);
   const velocity = spawnVelocity(direction, 15);
 
-  const spawnString = createString({
+  return spawn(voodoo, accountId, {
     prefabObject: {
-      hash: crystalWyrmSpit,
+      hash: PrefabHash.Crystal_Spit,
       position,
       rotation
     },
@@ -25,10 +23,5 @@ export const castFrostBolt = async (voodoo: VoodooServer, accountId: number): Pr
         velocity
       }
     }
-  });
-
-  return await voodoo.command({
-    accountId,
-    command: `spawn string-raw ${spawnString}`
   });
 };
