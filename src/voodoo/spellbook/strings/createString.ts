@@ -6,16 +6,14 @@ import {
   encodeEmbeddedEntities,
   encodeChildPrefabs
 } from './encoders';
-import { transcoders, TranscoderName, TranscoderProperties } from './components';
+import { transcoders, Components, ComponentName } from './components';
 
-type Properties = {
+export type SpawnPrefab = {
   prefabObject: PrefabObjectProperties;
-  components: {
-    [key in TranscoderName]?: TranscoderProperties;
-  };
+  components?: Components;
 };
 
-export const createString = (options: Properties): string => {
+export const createString = (options: SpawnPrefab): string => {
   const hash = options.prefabObject.hash;
 
   let binary: string = '';
@@ -24,11 +22,7 @@ export const createString = (options: Properties): string => {
   binary += encodePrefabObject(options.prefabObject);
 
   /* Create components. */
-  const components = Object.entries(options.components).map(([name, options]) => ({
-    name: <TranscoderName>name,
-    properties: <TranscoderProperties>options
-  }));
-  binary += encodeComponents(components);
+  binary += encodeComponents(options.components);
 
   /* Create embedded entities. */
   binary += encodeEmbeddedEntities([]); // @todo
@@ -50,7 +44,8 @@ export const createString = (options: Properties): string => {
   const uIntString = [hash, bytes, ...uInts].join(',');
 
   /* Construct the versions string. */
-  const versions = components.map(({ name }) => `${transcoders[name].HASH},${transcoders[name].VERSION}`);
+  const components = Object.keys(options.components ?? {}).filter(name => name !== 'Unknown') as ComponentName[];
+  const versions = components.map(name => `${transcoders[name].HASH},${transcoders[name].VERSION}`);
   const versionString = versions.length && [versions.length, ...versions].join(',');
 
   /* Return spawn string. */
