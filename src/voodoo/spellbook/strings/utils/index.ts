@@ -1,5 +1,5 @@
 export { binaryToNumber } from './binaryToNumber';
-export { binaryToSignedNumber } from './binaryToSignedNumber';
+export { binaryToSignedInteger } from './binaryToSignedInteger';
 export { binaryToUIntArray } from './binaryToUIntArray';
 export { createBinaryReader, BinaryReader } from './createBinaryReader';
 export { numberToBinaryUInt } from './numberToBinaryUInt';

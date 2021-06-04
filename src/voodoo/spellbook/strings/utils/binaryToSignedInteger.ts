@@ -1,4 +1,4 @@
-export const binaryToSignedNumber = (binary: string): number => {
+export const binaryToSignedInteger = (binary: string): number => {
   const isPositive = Boolean(Number(binary.slice(0, 1)));
   const integer = Number(`0b0${binary.slice(1)}`);
 
