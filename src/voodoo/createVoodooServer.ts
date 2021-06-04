@@ -1,6 +1,6 @@
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { spellbook, Spellbook, Incantation, Spell } from './spellbook';
+import { spellbook, Spellbook, Spell, DecodedString } from './spellbook';
 import { db } from '../db';
 import { selectPreparedSpells, upsertPreparedSpells } from '../db/sql';
 
@@ -14,6 +14,12 @@ type Server = {
 };
 
 export type Dexterity = 'left' | 'right';
+
+type Incantation = {
+  verbalSpellComponent: string;
+  materialSpellComponent: string;
+  decodedString: DecodedString;
+};
 
 type Players = {
   [accountId: number]: {
@@ -157,7 +163,11 @@ export const createVoodooServer = (): VoodooServer => ({
       [accountId]: { ...player, incantations: newIncantations }
     };
 
-    logger.success(`${accountId}@${player.serverId} incanted ${JSON.stringify(incantation)}`);
+    logger.success(
+      `${accountId}@${player.serverId} incanted "${incantation.verbalSpellComponent.toUpperCase()}" (${
+        incantation.materialSpellComponent
+      })`
+    );
 
     return newIncantations;
   },
