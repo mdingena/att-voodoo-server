@@ -1,2 +1,2 @@
 export { createVoodooServer, VoodooServer, Dexterity, PreparedSpells } from './createVoodooServer';
-export { Incantation } from './spellbook';
+export { Incantation, decodeString } from './spellbook';
