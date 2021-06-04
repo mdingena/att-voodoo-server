@@ -1,2 +1,2 @@
 export { createVoodooServer, VoodooServer, Dexterity, PreparedSpells } from './createVoodooServer';
-export { decodeString } from './spellbook';
+export { decodeString, parsePrefab } from './spellbook';

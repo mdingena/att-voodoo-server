@@ -1,2 +1,2 @@
 export { spellbook, Spellbook, Spell } from './spellbook';
-export { decodeString, DecodedString } from './strings';
+export { decodeString, DecodedString, parsePrefab } from './strings';
