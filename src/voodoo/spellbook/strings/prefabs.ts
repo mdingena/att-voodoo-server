@@ -1,3 +1,5 @@
-export const crystalWyrmSpit = 37926;
-export const etheralArrow = 52366;
-export const potionMedium = 23644;
+export enum Prefab {
+  CrystalWyrmSpit = 37926,
+  EtheralArrow = 52366,
+  PotionMedium = 23644
+}
