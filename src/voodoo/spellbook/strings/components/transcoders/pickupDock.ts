@@ -1,24 +1,24 @@
-import { hashes } from '../components';
-import { BinaryReader, numberToBinary } from '../../utils';
+import { ComponentHash } from '../ComponentHash';
+import { BinaryReader, numberToBinary, uIntToBinary } from '../../utils';
 
-export const HASH = hashes.PickupDock;
+export const HASH = ComponentHash.PickupDock;
 export const VERSION = 2;
 
-const HASH_BITS = numberToBinary(HASH).padStart(32, '0');
+const HASH_BITS = uIntToBinary(HASH);
 
-export type Properties = {
+export type Component = {
   dockedTypeHash?: number;
-  quantity?: number | string;
-  childIndex?: number | string;
+  quantity?: number;
+  childIndex?: number;
 };
 
-export const decode = (reader: BinaryReader): Properties => ({
+export const decode = (reader: BinaryReader): Component => ({
   dockedTypeHash: reader.uInt(),
   quantity: reader.int(),
   childIndex: reader.int()
 });
 
-export const encode = ({ dockedTypeHash = 0, quantity = 1, childIndex = 0 }: Properties): string => {
+export const encode = ({ dockedTypeHash = 0, quantity = 1, childIndex = 0 }: Component): string => {
   const dockedTypeHashBits = numberToBinary(dockedTypeHash);
 
   const quantityBits = numberToBinary(<number>quantity);

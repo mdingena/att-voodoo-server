@@ -1,7 +1,7 @@
-import { hashes } from '../components';
-import { BinaryReader, binaryToNumber, numberToBinary, uIntToNumber } from '../../utils';
+import { ComponentHash } from '../ComponentHash';
+import { BinaryReader, numberToBinary } from '../../utils';
 
-export const HASH = hashes.StatManager;
+export const HASH = ComponentHash.StatManager;
 export const VERSION = 2;
 
 const HASH_BITS = numberToBinary(HASH).padStart(32, '0');
@@ -31,13 +31,13 @@ type IndirectStatModifier = null | {
   modifiers: IndirectModifierSaveData[];
 };
 
-export type Properties = {
+export type Component = {
   stats?: Stat[];
   modifiers?: TimedModifier[];
   indirectStatModifiers?: IndirectStatModifier[];
 };
 
-export const decode = (reader: BinaryReader): Properties => {
+export const decode = (reader: BinaryReader): Component => {
   /* Get stats array. */
   const statsLength = reader.uInt();
   const stats: Stat[] = [];
@@ -110,7 +110,7 @@ export const decode = (reader: BinaryReader): Properties => {
   return { stats, modifiers, indirectStatModifiers };
 };
 
-export const encode = ({ stats = [], modifiers = [], indirectStatModifiers = [] }: Properties): string => {
+export const encode = ({ stats = [], modifiers = [], indirectStatModifiers = [] }: Component): string => {
   const dataBits = '';
 
   const sizeBits = numberToBinary(dataBits.length).padStart(32, '0');

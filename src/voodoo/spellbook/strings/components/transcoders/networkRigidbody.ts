@@ -1,12 +1,12 @@
-import { hashes } from '../components';
+import { ComponentHash } from '../ComponentHash';
 import { BinaryReader, numberToBinaryUInt, numberToBinary } from '../../utils';
 
-export const HASH = hashes.NetworkRigidbody;
+export const HASH = ComponentHash.NetworkRigidbody;
 export const VERSION = 1;
 
 const HASH_BITS = numberToBinary(HASH).padStart(32, '0');
 
-export type Properties = {
+export type Component = {
   position?: {
     x: number;
     y: number;
@@ -32,7 +32,7 @@ export type Properties = {
   };
 };
 
-export const decode = (reader: BinaryReader): Properties => ({
+export const decode = (reader: BinaryReader): Component => ({
   position: {
     x: reader.float(),
     y: reader.float(),
@@ -65,7 +65,7 @@ export const encode = ({
   isServerSleeping = false,
   velocity = { x: 0, y: 0, z: 0 },
   angularVelocity = { x: 0, y: 0, z: 0 }
-}: Properties): string => {
+}: Component): string => {
   const positionBits = [
     numberToBinaryUInt(position.x),
     numberToBinaryUInt(position.y),
