@@ -1,4 +1,4 @@
-import { BinaryReader, binaryToNumber } from '../utils';
+import { BinaryReader } from '../utils';
 import { decodePrefab, Prefab } from './decodePrefab';
 
 export type ChildPrefab = {
@@ -6,24 +6,22 @@ export type ChildPrefab = {
   prefab: Prefab;
 };
 
-export const decodeChildPrefabs = (readBinary: BinaryReader): ChildPrefab[] => {
+export const decodeChildPrefabs = (reader: BinaryReader): ChildPrefab[] => {
   const childPrefabs: ChildPrefab[] = [];
 
   /* Continue looping until we find a false exists bit. */
   while (true) {
     /* Get the exists bit. */
-    const existsBit = readBinary(1);
-    const exists = existsBit === '1';
+    const exists = reader.boolean();
 
     /* Break if we reached the end of the child prefabs loop. */
     if (!exists) break;
 
     /* Get the parent entity hash. */
-    const parentHashBits = readBinary(32);
-    const parentHash = binaryToNumber(parentHashBits);
+    const parentHash = reader.uInt();
 
     /* Get the child prefab. */
-    const prefab = decodePrefab(readBinary);
+    const prefab = decodePrefab(reader);
 
     /* Save entity. */
     childPrefabs.push({ parentHash, prefab });

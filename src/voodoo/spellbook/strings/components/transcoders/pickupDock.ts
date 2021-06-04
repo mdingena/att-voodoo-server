@@ -1,5 +1,5 @@
 import { hashes } from '../components';
-import { BinaryReader, binaryToNumber, binaryToSignedNumber, numberToBinary } from '../../utils';
+import { BinaryReader, numberToBinary } from '../../utils';
 
 export const HASH = hashes.PickupDock;
 export const VERSION = 2;
@@ -12,10 +12,10 @@ export type Properties = {
   childIndex?: number | string;
 };
 
-export const decode = (readBinary: BinaryReader): Properties => ({
-  dockedTypeHash: binaryToNumber(readBinary(32)),
-  quantity: binaryToSignedNumber(readBinary(32)),
-  childIndex: binaryToSignedNumber(readBinary(32))
+export const decode = (reader: BinaryReader): Properties => ({
+  dockedTypeHash: reader.uInt(),
+  quantity: reader.int(),
+  childIndex: reader.int()
 });
 
 export const encode = ({ dockedTypeHash = 0, quantity = 1, childIndex = 0 }: Properties): string => {

@@ -6,15 +6,13 @@ export const VERSION = 2;
 
 const HASH_BITS = numberToBinary(HASH).padStart(32, '0');
 
-type Stat = {
+type Stat = null | {
   hash: number;
-  unknownBoolean: boolean;
   baseFlat: number;
 };
 
-type TimedModifier = {
+type TimedModifier = null | {
   hash: number;
-  unknownBoolean: boolean;
   value: number;
   isMultiplier: boolean;
   time: string;
@@ -27,9 +25,8 @@ type IndirectModifierSaveData = {
   tick: number;
 };
 
-type IndirectStatModifier = {
+type IndirectStatModifier = null | {
   hash: number;
-  unknownBoolean: boolean;
   time: string;
   modifiers: IndirectModifierSaveData[];
 };
@@ -40,54 +37,71 @@ export type Properties = {
   indirectStatModifiers?: IndirectStatModifier[];
 };
 
-export const decode = (readBinary: BinaryReader): Properties => {
+export const decode = (reader: BinaryReader): Properties => {
   /* Get stats array. */
-  const statsLength = binaryToNumber(readBinary(32));
+  const statsLength = reader.uInt();
   const stats: Stat[] = [];
   for (let index = 0; index < statsLength; ++index) {
+    /* Skip stat if is null. */
+    const isNull = reader.boolean();
+    if (isNull) {
+      stats.push(null);
+      continue;
+    }
+
     stats.push({
-      hash: binaryToNumber(readBinary(32)),
-      unknownBoolean: Boolean(readBinary(1)),
-      baseFlat: uIntToNumber(binaryToNumber(readBinary(32)))
+      hash: reader.uInt(),
+      baseFlat: reader.float()
     });
   }
 
   /* Get modifiers array. */
-  const modifiersLength = binaryToNumber(readBinary(32));
+  const modifiersLength = reader.uInt();
   const modifiers: TimedModifier[] = [];
   for (let index = 0; index < modifiersLength; ++index) {
+    /* Skip modifier if is null. */
+    const isNull = reader.boolean();
+    if (isNull) {
+      modifiers.push(null);
+      continue;
+    }
+
     modifiers.push({
-      hash: binaryToNumber(readBinary(32)),
-      unknownBoolean: Boolean(readBinary(1)),
-      value: uIntToNumber(binaryToNumber(readBinary(32))),
-      isMultiplier: Boolean(readBinary(1)),
-      time: readBinary(64)
+      hash: reader.uInt(),
+      value: reader.float(),
+      isMultiplier: reader.boolean(),
+      time: reader.binary(64)
     });
   }
 
   /* Get indirect stat modifiers array. */
-  const indirectStatModifiersLength = binaryToNumber(readBinary(32));
+  const indirectStatModifiersLength = reader.uInt();
   const indirectStatModifiers: IndirectStatModifier[] = [];
   for (let index = 0; index < indirectStatModifiersLength; ++index) {
-    const hash = binaryToNumber(readBinary(32));
-    const unknownBoolean = Boolean(readBinary(1));
-    const time = readBinary(64);
+    /* Skip indirectStatModifier if is null. */
+    const isNull = reader.boolean();
+    if (isNull) {
+      indirectStatModifiers.push(null);
+      continue;
+    }
+
+    const hash = reader.uInt();
+    const time = reader.binary(64);
 
     /* Get indirect modifier save data array. */
-    const indirectModifiersSaveDataLength = binaryToNumber(readBinary(32));
+    const indirectModifiersSaveDataLength = reader.uInt();
     const indirectModifiersSaveData: IndirectModifierSaveData[] = [];
     for (let index = 0; index < indirectModifiersSaveDataLength; ++index) {
       indirectModifiersSaveData.push({
-        valueOverDurationHash: binaryToNumber(readBinary(32)),
-        baseValue: uIntToNumber(binaryToNumber(readBinary(32))),
-        duration: binaryToNumber(readBinary(32)),
-        tick: binaryToNumber(readBinary(32))
+        valueOverDurationHash: reader.uInt(),
+        baseValue: reader.float(),
+        duration: reader.uInt(),
+        tick: reader.uInt()
       });
     }
 
     indirectStatModifiers.push({
       hash,
-      unknownBoolean,
       time,
       modifiers: indirectModifiersSaveData
     });

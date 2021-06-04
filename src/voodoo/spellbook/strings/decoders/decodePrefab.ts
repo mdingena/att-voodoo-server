@@ -11,11 +11,11 @@ export type Prefab = {
   childPrefabs: ChildPrefab[];
 };
 
-export const decodePrefab = (readBinary: BinaryReader): Prefab => {
-  const prefabObject = decodePrefabObject(readBinary);
-  const components = decodeComponents(readBinary);
-  const embeddedEntities = decodeEmbeddedEntities(readBinary);
-  const childPrefabs = decodeChildPrefabs(readBinary);
+export const decodePrefab = (reader: BinaryReader): Prefab => {
+  const prefabObject = decodePrefabObject(reader);
+  const components = decodeComponents(reader);
+  const embeddedEntities = decodeEmbeddedEntities(reader);
+  const childPrefabs = decodeChildPrefabs(reader);
 
   return {
     prefabObject,

@@ -1,5 +1,5 @@
 import { hashes } from '../components';
-import { BinaryReader, binaryToNumber, numberToBinaryUInt, numberToBinary, uIntToNumber } from '../../utils';
+import { BinaryReader, numberToBinaryUInt, numberToBinary } from '../../utils';
 
 export const HASH = hashes.NetworkRigidbody;
 export const VERSION = 1;
@@ -32,29 +32,29 @@ export type Properties = {
   };
 };
 
-export const decode = (readBinary: BinaryReader): Properties => ({
+export const decode = (reader: BinaryReader): Properties => ({
   position: {
-    x: uIntToNumber(binaryToNumber(readBinary(32))),
-    y: uIntToNumber(binaryToNumber(readBinary(32))),
-    z: uIntToNumber(binaryToNumber(readBinary(32)))
+    x: reader.float(),
+    y: reader.float(),
+    z: reader.float()
   },
   rotation: {
-    x: uIntToNumber(binaryToNumber(readBinary(32))),
-    y: uIntToNumber(binaryToNumber(readBinary(32))),
-    z: uIntToNumber(binaryToNumber(readBinary(32))),
-    w: uIntToNumber(binaryToNumber(readBinary(32)))
+    x: reader.float(),
+    y: reader.float(),
+    z: reader.float(),
+    w: reader.float()
   },
-  isKinematic: Boolean(readBinary(1)),
-  isServerSleeping: Boolean(readBinary(1)),
+  isKinematic: reader.boolean(),
+  isServerSleeping: reader.boolean(),
   velocity: {
-    x: uIntToNumber(binaryToNumber(readBinary(32))),
-    y: uIntToNumber(binaryToNumber(readBinary(32))),
-    z: uIntToNumber(binaryToNumber(readBinary(32)))
+    x: reader.float(),
+    y: reader.float(),
+    z: reader.float()
   },
   angularVelocity: {
-    x: uIntToNumber(binaryToNumber(readBinary(32))),
-    y: uIntToNumber(binaryToNumber(readBinary(32))),
-    z: uIntToNumber(binaryToNumber(readBinary(32)))
+    x: reader.float(),
+    y: reader.float(),
+    z: reader.float()
   }
 });
 
