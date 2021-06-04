@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
-import { VoodooServer, PreparedSpells } from '../../voodoo';
+import { VoodooServer, PreparedSpells, decodeString, parsePrefab } from '../../voodoo';
 
 export const postIncantation =
   (voodoo: VoodooServer): RequestHandler =>
@@ -38,39 +38,50 @@ export const postIncantation =
       }
 
       /* Get verbal spell component. */
-      const [verbalComponent, oneOfMaterialComponents]: [string, number[]] = clientRequest.body;
+      const [verbalSpellComponent, oneOfMaterialSpellComponents]: [string, string[]] = clientRequest.body;
 
       /* Get material spell component. */
       const beltIndex = 3 - voodoo.players[accountId].incantations.length;
-      let materialComponent: number = 0;
-      let inventory = [];
-      if (oneOfMaterialComponents.length) {
-        const {
-          Result: [{ Belt }]
-        } = await voodoo.command({ accountId, command: `player inventory ${accountId}` });
-        inventory = Belt;
+      const {
+        Result: [{ Belt: inventory }]
+      } = await voodoo.command({ accountId, command: `player inventory ${accountId}` });
+      const beltItemId: number = inventory[beltIndex]?.Identifier ?? 0;
 
-        materialComponent = inventory[beltIndex]?.PrefabHash ?? 0;
-
-        if (!oneOfMaterialComponents.includes(materialComponent)) {
-          return clientResponse.json({
-            ok: false,
-            error: `Requires associated material spell component in belt slot ${4 - beltIndex}`
-          });
-        }
+      if (beltItemId === 0) {
+        return clientResponse.json({
+          ok: false,
+          error: `Requires associated material spell component in belt slot ${4 - beltIndex}`
+        });
       }
+
+      /* Get belt item prefab string. */
+      // @todo Risky!! Ask Joel for a single `select tostring id` command!
+      await voodoo.command({ accountId, command: `select ${beltItemId}` });
+      // @todo Risky!! There is no guarantee that the output of this command is actually what was selected on the previous line.
+      const { Result: encodedPrefab }: { Result: string } = await voodoo.command({
+        accountId,
+        command: 'select tostring'
+      });
+
+      /* Decode and parse the prefab string. */
+      const decodedString = decodeString(encodedPrefab);
+      const materialSpellComponent = parsePrefab(decodedString);
+
+      if (!materialSpellComponent || !oneOfMaterialSpellComponents.includes(materialSpellComponent)) {
+        return clientResponse.json({
+          ok: false,
+          error: `Requires associated material spell component in belt slot ${4 - beltIndex}`
+        });
+      }
+
+      /* Destroy material spell component. */
+      await voodoo.command({ accountId, command: `wacky destroy ${beltItemId}` });
 
       /* Append to player's incantations. */
-      let incantations = voodoo.addIncantation({ accountId, incantation: [verbalComponent, materialComponent] });
-
-      /* Remove material component */
-      if (materialComponent > 0) {
-        const networkId: number = inventory[beltIndex]?.Identifier ?? 0;
-
-        if (networkId) {
-          await voodoo.command({ accountId, command: `wacky destroy ${networkId}` });
-        }
-      }
+      let incantations = voodoo.addIncantation({
+        accountId,
+        incantation: { verbalSpellComponent, materialSpellComponent, decodedString }
+      });
 
       /* Automatically seal the spell if player has 4 incancations now. */
       if (voodoo.players[accountId].incantations.length === 4) {

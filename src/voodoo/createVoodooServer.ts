@@ -15,24 +15,26 @@ type Server = {
 
 export type Dexterity = 'left' | 'right';
 
-type Incantation = {
+type DockedIncantation = {
   verbalSpellComponent: string;
   materialSpellComponent: string;
   decodedString: DecodedString;
 };
+
+type SpellpageIncantation = [string, string];
 
 type Players = {
   [accountId: number]: {
     serverId: number;
     serverConnection: ServerConnection;
     dexterity: Dexterity;
-    incantations: Incantation[];
+    incantations: DockedIncantation[];
   };
 };
 
 export type PreparedSpells = {
   verbalTrigger: string;
-  incantations: Incantation[];
+  incantations: [string, string][];
 }[];
 
 interface RemoveServer {
@@ -64,7 +66,7 @@ interface SetDexterity {
 
 interface AddIncantation {
   accountId: number;
-  incantation: Incantation;
+  incantation: DockedIncantation;
 }
 
 interface ClearIncantations {
@@ -78,7 +80,7 @@ interface Command {
 
 interface PrepareSpell {
   accountId: number;
-  incantations: Incantation[];
+  incantations: [string, string][];
   spell: Spell;
 }
 
@@ -95,8 +97,8 @@ export type VoodooServer = {
   removePlayers: ({ serverId }: RemovePlayers) => void;
   getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
-  addIncantation: ({ accountId, incantation }: AddIncantation) => Incantation[];
-  clearIncantations: ({ accountId }: ClearIncantations) => Incantation[];
+  addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
+  clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
   command: ({ accountId, command }: Command) => Promise<any>;
   prepareSpell: ({ accountId, incantations, spell }: PrepareSpell) => Promise<PreparedSpells>;
 };
@@ -183,7 +185,7 @@ export const createVoodooServer = (): VoodooServer => ({
       })`
     );
 
-    return newIncantations;
+    return newIncantations.map(incantation => [incantation.verbalSpellComponent, incantation.materialSpellComponent]);
   },
 
   clearIncantations: function ({ accountId }) {
@@ -195,7 +197,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     logger.success(`Cleared all incantations of ${accountId}@${player.serverId}`);
 
-    return this.players[accountId].incantations;
+    return [];
   },
 
   command: async function ({ accountId, command }) {

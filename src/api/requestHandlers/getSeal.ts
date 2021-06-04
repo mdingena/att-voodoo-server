@@ -22,7 +22,9 @@ export const getSeal =
 
       /* Get the player's current incantations. */
       const accountId = session.rows[0].account_id;
-      const { incantations } = voodoo.players[accountId];
+      const incantations = voodoo.players[accountId].incantations.map(
+        ({ verbalSpellComponent, materialSpellComponent }) => [verbalSpellComponent, materialSpellComponent]
+      ) as [string, string][];
 
       /* Search for spell in spellbook matching player's incantations. */
       const spell = voodoo.spellbook.get(incantations);
