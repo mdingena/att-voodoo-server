@@ -9,7 +9,7 @@ export type Spell = {
   verbalTrigger?: string;
 };
 
-export type Incantation = [string, number];
+export type Incantation = [string, string];
 
 export type Spellbook = {
   spells: Map<string, Spell>;
