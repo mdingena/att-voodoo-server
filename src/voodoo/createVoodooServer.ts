@@ -53,6 +53,10 @@ interface RemovePlayers {
   serverId: number;
 }
 
+interface GetPlayerDetailed {
+  accountId: number;
+}
+
 interface SetDexterity {
   accountId: number;
   dexterity: Dexterity;
@@ -89,6 +93,7 @@ export type VoodooServer = {
   addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
+  getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => Incantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => Incantation[];
@@ -143,6 +148,15 @@ export const createVoodooServer = (): VoodooServer => ({
       .forEach(([accountId]) => delete this.players[Number(accountId)]);
 
     logger.warn(`Removed all players of server ${serverId}`);
+  },
+
+  getPlayerDetailed: async function ({ accountId }) {
+    const { Result: player } = await this.command({
+      accountId,
+      command: `player detailed ${accountId}`
+    });
+
+    return player;
   },
 
   setDexterity: function ({ accountId, dexterity }) {
