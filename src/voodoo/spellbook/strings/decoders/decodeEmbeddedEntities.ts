@@ -1,15 +1,16 @@
 import { BinaryReader } from '../utils';
-import { decodeComponents, Component } from './decodeComponents';
+import { Components } from '../components';
+import { decodeComponents } from './decodeComponents';
 
-export type EmbeddedEntity = {
-  hash: number;
-  size: number;
-  isAlive: boolean;
-  components: Component[];
+export type EmbeddedEntities = {
+  [hash: number]: {
+    isAlive: boolean;
+    components: null | Components;
+  };
 };
 
-export const decodeEmbeddedEntities = (reader: BinaryReader): EmbeddedEntity[] => {
-  const embeddedEntities: EmbeddedEntity[] = [];
+export const decodeEmbeddedEntities = (reader: BinaryReader): EmbeddedEntities => {
+  const embeddedEntities: EmbeddedEntities = {};
 
   /* Continue looping until we find a zero hash. */
   while (true) {
@@ -27,7 +28,7 @@ export const decodeEmbeddedEntities = (reader: BinaryReader): EmbeddedEntity[] =
 
     /* Skip to next entity if this one is dead. */
     if (!isAlive) {
-      embeddedEntities.push({ hash, size, isAlive, components: [] });
+      embeddedEntities[hash] = { isAlive, components: null };
       reader.binary(size);
       continue;
     }
@@ -36,7 +37,7 @@ export const decodeEmbeddedEntities = (reader: BinaryReader): EmbeddedEntity[] =
     const components = decodeComponents(reader);
 
     /* Save entity. */
-    embeddedEntities.push({ hash, size, isAlive, components });
+    embeddedEntities[hash] = { isAlive, components };
   }
 
   return embeddedEntities;

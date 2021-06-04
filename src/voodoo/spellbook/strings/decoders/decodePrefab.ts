@@ -1,14 +1,19 @@
+import { Components } from '../components';
 import { BinaryReader } from '../utils';
 import { decodePrefabObject, PrefabObject } from './decodePrefabObject';
-import { decodeComponents, Component } from './decodeComponents';
-import { decodeEmbeddedEntities, EmbeddedEntity } from './decodeEmbeddedEntities';
-import { decodeChildPrefabs, ChildPrefab } from './decodeChildPrefabs';
+import { decodeComponents } from './decodeComponents';
+import { decodeEmbeddedEntities } from './decodeEmbeddedEntities';
+import { decodeChildPrefabs } from './decodeChildPrefabs';
 
 export type Prefab = {
   prefabObject: PrefabObject;
-  components: Component[];
-  embeddedEntities: EmbeddedEntity[];
-  childPrefabs: ChildPrefab[];
+  components?: Components;
+  embeddedEntities?: {
+    [key: string]: any;
+  };
+  childPrefabs?: {
+    [key: string]: any;
+  }[];
 };
 
 export const decodePrefab = (reader: BinaryReader): Prefab => {

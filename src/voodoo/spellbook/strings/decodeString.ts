@@ -1,7 +1,7 @@
 import { uIntToBinary, createBinaryReader } from './utils';
 import { decodePrefab, Prefab } from './decoders';
 
-export type DecodeStringResult = {
+export type DecodedString = {
   hash: number;
   size: number;
   prefab: Prefab;
@@ -14,7 +14,7 @@ export type DecodeStringResult = {
  * - child entities; and
  * - child prefabs.
  */
-export const decodeString = (rawString: string): DecodeStringResult => {
+export const decodeString = (rawString: string): DecodedString => {
   /* Get the UInts portion of the raw spawn string. */
   const uIntString = rawString.split('|')[0];
   const uInts = uIntString.split(',').filter(Boolean);

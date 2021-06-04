@@ -1,18 +1,11 @@
-import { transcoders, TranscoderName, TranscoderProperties } from '../components';
-import { names } from '../components/components';
+import { transcoders, Components, ComponentName, UnknownComponent } from '../components';
+import { ComponentHash } from '../components/ComponentHash';
 import { BinaryReader } from '../utils';
 
-type EncodedProperties = string;
-
-export type Component = {
-  hash: number;
-  name: string;
-  size: number;
-  data: TranscoderProperties | EncodedProperties;
-};
-
-export const decodeComponents = (reader: BinaryReader): Component[] => {
-  const components: Component[] = [];
+export const decodeComponents = (reader: BinaryReader): Components => {
+  const components: Components = {
+    Unknown: []
+  };
 
   /* Continue looping until we find a zero hash. */
   while (true) {
@@ -25,12 +18,15 @@ export const decodeComponents = (reader: BinaryReader): Component[] => {
     /* Get the component's data length. */
     const size = reader.uInt();
 
-    /* Get the component's data. */
-    const componentName = names[hash] as TranscoderName;
-    const data = transcoders?.[componentName] ? transcoders[componentName].decode(reader) : reader.binary(size);
+    /* Get the component's name. */
+    const componentName = ComponentHash[hash] as ComponentName | undefined;
 
-    /* Save component. */
-    components.push({ hash, name: names[hash], size, data });
+    /* Save the component's data. */
+    if (componentName) {
+      components[componentName] = transcoders[componentName].decode(reader);
+    } else {
+      (components.Unknown as UnknownComponent[]).push({ hash, data: reader.binary(size) });
+    }
   }
 
   return components;
