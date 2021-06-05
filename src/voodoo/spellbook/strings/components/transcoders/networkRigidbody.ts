@@ -1,10 +1,8 @@
 import { ComponentHash } from '../../ComponentHash';
-import { BinaryReader, numberToBinaryUInt, numberToBinary } from '../../utils';
+import { BinaryReader, createBinaryWriter } from '../../utils';
 
 export const HASH = ComponentHash.NetworkRigidbody;
 export const VERSION = 1;
-
-const HASH_BITS = numberToBinary(HASH).padStart(32, '0');
 
 export type Component = {
   position?: {
@@ -66,45 +64,39 @@ export const encode = ({
   velocity = { x: 0, y: 0, z: 0 },
   angularVelocity = { x: 0, y: 0, z: 0 }
 }: Component): string => {
-  const positionBits = [
-    numberToBinaryUInt(position.x),
-    numberToBinaryUInt(position.y),
-    numberToBinaryUInt(position.z)
-  ].join('');
+  const writer = createBinaryWriter();
 
-  const rotationBits = [
-    numberToBinaryUInt(rotation.x),
-    numberToBinaryUInt(rotation.y),
-    numberToBinaryUInt(rotation.z),
-    numberToBinaryUInt(rotation.w)
-  ].join('');
+  /* Component hash. */
+  writer.uInt(ComponentHash.LiquidContainer);
+  const hashBits = writer.flush();
 
-  const isKinematicBit = Number(isKinematic).toString();
+  /* Component data. */
+  writer.float(position.x);
+  writer.float(position.y);
+  writer.float(position.z);
+  writer.float(rotation.x);
+  writer.float(rotation.y);
+  writer.float(rotation.z);
+  writer.float(rotation.w);
+  writer.boolean(isKinematic);
+  writer.boolean(isServerSleeping);
+  writer.float(velocity.x);
+  writer.float(velocity.y);
+  writer.float(velocity.z);
+  writer.float(angularVelocity.x);
+  writer.float(angularVelocity.y);
+  writer.float(angularVelocity.z);
 
-  const isServerSleepingBit = Number(isServerSleeping).toString();
+  const dataBits = writer.flush();
 
-  const velocityBits = [
-    numberToBinaryUInt(velocity.x),
-    numberToBinaryUInt(velocity.y),
-    numberToBinaryUInt(velocity.z)
-  ].join('');
+  /* Component data length. */
+  writer.uInt(dataBits.length);
+  const sizeBits = writer.flush();
 
-  const angularVelocityBits = [
-    numberToBinaryUInt(angularVelocity.x),
-    numberToBinaryUInt(angularVelocity.y),
-    numberToBinaryUInt(angularVelocity.z)
-  ].join('');
+  /* Return encoded component. */
+  writer.binary(hashBits);
+  writer.binary(sizeBits);
+  writer.binary(dataBits);
 
-  const dataBits = [
-    positionBits,
-    rotationBits,
-    isKinematicBit,
-    isServerSleepingBit,
-    velocityBits,
-    angularVelocityBits
-  ].join('');
-
-  const sizeBits = numberToBinary(dataBits.length).padStart(32, '0');
-
-  return [HASH_BITS, sizeBits, dataBits].join('');
+  return writer.flush();
 };
