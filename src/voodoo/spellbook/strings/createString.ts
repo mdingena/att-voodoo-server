@@ -1,31 +1,13 @@
+import { Prefab } from './decoders';
 import { binaryToUIntArray } from './utils';
-import { encodePrefabObject, encodeComponents, encodeEmbeddedEntities, encodeChildPrefabs } from './encoders';
-import { PrefabObject, Components, EmbeddedEntities, ChildPrefabs } from './decoders';
+import { encodePrefab } from './encoders';
 import { transcoders, ComponentName } from './components';
 
-export type SpawnPrefab = {
-  prefabObject: PrefabObject;
-  components?: Components;
-  embeddedEntities?: EmbeddedEntities;
-  childPrefabs?: ChildPrefabs;
-};
+export const createString = (prefab: Prefab): string => {
+  const hash = prefab.prefabObject.hash;
 
-export const createString = (options: SpawnPrefab): string => {
-  const hash = options.prefabObject.hash;
-
-  let binary: string = '';
-
-  /* Create prefab object. */
-  binary += encodePrefabObject(options.prefabObject);
-
-  /* Create components. */
-  binary += encodeComponents(options.components);
-
-  /* Create embedded entities. */
-  binary += encodeEmbeddedEntities(options.embeddedEntities);
-
-  /* Create child prefabs. */
-  binary += encodeChildPrefabs([]); // @todo
+  /* Encode the prefab. */
+  const binary = encodePrefab(prefab);
 
   /* Pad bits with trailing zeroes to make it % 32. */
   const missingBits = binary.length + (32 - (binary.length % 32 === 0 ? 32 : binary.length % 32));
@@ -41,7 +23,7 @@ export const createString = (options: SpawnPrefab): string => {
   const uIntString = [hash, bytes, ...uInts].join(',');
 
   /* Construct the versions string. */
-  const components = Object.keys(options.components ?? {}).filter(name => name !== 'Unknown') as ComponentName[];
+  const components = Object.keys(prefab.components ?? {}).filter(name => name !== 'Unknown') as ComponentName[];
   const versions = components.map(name => `${transcoders[name].HASH},${transcoders[name].VERSION}`);
   const versionString = versions.length && [versions.length, ...versions].join(',');
 

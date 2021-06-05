@@ -1,4 +1,5 @@
-export { encodeChildPrefabs } from './encodeChildPrefabs';
+export { encodePrefab } from './encodePrefab';
+export { encodePrefabObject } from './encodePrefabObject';
 export { encodeComponents } from './encodeComponents';
 export { encodeEmbeddedEntities } from './encodeEmbeddedEntities';
-export { encodePrefabObject } from './encodePrefabObject';
+export { encodeChildPrefabs } from './encodeChildPrefabs';
