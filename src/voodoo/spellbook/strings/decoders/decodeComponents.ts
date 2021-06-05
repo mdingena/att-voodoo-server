@@ -22,7 +22,7 @@ export const decodeComponents = (reader: BinaryReader): Components => {
     const componentName = ComponentHash[hash] as ComponentName | undefined;
 
     /* Save the component's data. */
-    if (componentName) {
+    if (componentName && transcoders[componentName]) {
       components[componentName] = transcoders[componentName].decode(reader);
     } else {
       (components.Unknown as UnknownComponent[]).push({ hash, data: reader.binary(size) });
