@@ -1,10 +1,8 @@
 import { ComponentHash } from '../../ComponentHash';
-import { BinaryReader, numberToBinary, uIntToBinary } from '../../utils';
+import { BinaryReader, createBinaryWriter } from '../../utils';
 
 export const HASH = ComponentHash.PickupDock;
 export const VERSION = 2;
-
-const HASH_BITS = uIntToBinary(HASH);
 
 export type Component = {
   dockedTypeHash?: number;
@@ -19,15 +17,27 @@ export const decode = (reader: BinaryReader): Component => ({
 });
 
 export const encode = ({ dockedTypeHash = 0, quantity = 1, childIndex = 0 }: Component): string => {
-  const dockedTypeHashBits = numberToBinary(dockedTypeHash);
+  const writer = createBinaryWriter();
 
-  const quantityBits = numberToBinary(<number>quantity);
+  /* Component hash. */
+  writer.uInt(ComponentHash.PickupDock);
+  const hashBits = writer.flush();
 
-  const childIndexBits = numberToBinary(<number>childIndex);
+  /* Component data. */
+  writer.uInt(dockedTypeHash);
+  writer.uInt(quantity);
+  writer.uInt(childIndex);
 
-  const dataBits = [dockedTypeHashBits, quantityBits, childIndexBits].join('');
+  const dataBits = writer.flush();
 
-  const sizeBits = numberToBinary(dataBits.length).padStart(32, '0');
+  /* Component data length. */
+  writer.uInt(dataBits.length);
+  const sizeBits = writer.flush();
 
-  return [HASH_BITS, sizeBits, dataBits].join('');
+  /* Return encoded component. */
+  writer.binary(hashBits);
+  writer.binary(sizeBits);
+  writer.binary(dataBits);
+
+  return writer.flush();
 };
