@@ -1,4 +1,4 @@
-import { EmbeddedEntities } from '../embeddedEntities';
+import { EmbeddedEntities } from '../decoders';
 import { createBinaryWriter } from '../utils/createBinaryWriter';
 import { encodeComponents } from './encodeComponents';
 

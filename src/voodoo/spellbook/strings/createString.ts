@@ -1,18 +1,13 @@
 import { binaryToUIntArray } from './utils';
-import {
-  encodePrefabObject,
-  PrefabObjectProperties,
-  encodeComponents,
-  encodeEmbeddedEntities,
-  encodeChildPrefabs
-} from './encoders';
-import { transcoders, Components, ComponentName } from './components';
-import { EmbeddedEntities } from './embeddedEntities';
+import { encodePrefabObject, encodeComponents, encodeEmbeddedEntities, encodeChildPrefabs } from './encoders';
+import { PrefabObject, Components, EmbeddedEntities, ChildPrefabs } from './decoders';
+import { transcoders, ComponentName } from './components';
 
 export type SpawnPrefab = {
-  prefabObject: PrefabObjectProperties;
+  prefabObject: PrefabObject;
   components?: Components;
   embeddedEntities?: EmbeddedEntities;
+  childPrefabs?: ChildPrefabs;
 };
 
 export const createString = (options: SpawnPrefab): string => {

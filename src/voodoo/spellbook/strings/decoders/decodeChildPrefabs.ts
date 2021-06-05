@@ -1,10 +1,12 @@
 import { BinaryReader } from '../utils';
 import { decodePrefab, Prefab } from './decodePrefab';
 
-export type ChildPrefab = {
+type ChildPrefab = {
   parentHash: number;
   prefab: Prefab;
 };
+
+export type ChildPrefabs = ChildPrefab[];
 
 export const decodeChildPrefabs = (reader: BinaryReader): ChildPrefab[] => {
   const childPrefabs: ChildPrefab[] = [];

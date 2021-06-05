@@ -1,6 +1,19 @@
 import { BinaryReader } from '../utils';
-import { EmbeddedEntities } from '../embeddedEntities';
-import { decodeComponents } from './decodeComponents';
+import { decodeComponents, Components } from './decodeComponents';
+
+type DeadEmbeddedEntity = {
+  isAlive: false;
+  components: null;
+};
+
+type AliveEmbeddedEntity = {
+  isAlive: true;
+  components: Components;
+};
+
+export type EmbeddedEntities = {
+  [key: string]: AliveEmbeddedEntity | DeadEmbeddedEntity;
+};
 
 export const decodeEmbeddedEntities = (reader: BinaryReader): EmbeddedEntities => {
   const embeddedEntities: EmbeddedEntities = {};

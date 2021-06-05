@@ -1,6 +1,10 @@
-import { transcoders, Components, ComponentName, UnknownComponent } from '../components';
+import { transcoders, Component, ComponentName, UnknownComponent } from '../components';
 import { ComponentHash } from '../ComponentHash';
 import { BinaryReader } from '../utils';
+
+export type Components = {
+  [key in ComponentName | 'Unknown']?: Component;
+};
 
 export const decodeComponents = (reader: BinaryReader): Components => {
   const components: Components = {
@@ -17,6 +21,8 @@ export const decodeComponents = (reader: BinaryReader): Components => {
 
     /* Get the component's data length. */
     const size = reader.uInt();
+
+    console.log(`decode component: ${ComponentHash[hash]} (hash: ${hash}, size: ${size})`);
 
     /* Get the component's name. */
     const componentName = ComponentHash[hash] as ComponentName | undefined;

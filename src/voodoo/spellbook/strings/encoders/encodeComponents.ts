@@ -1,4 +1,5 @@
-import { transcoders, Components, KnownComponent, UnknownComponent, ComponentName } from '../components';
+import { Components } from '../decoders';
+import { transcoders, KnownComponent, UnknownComponent, ComponentName } from '../components';
 import { createBinaryWriter } from '../utils/createBinaryWriter';
 
 const terminator = '0'.repeat(32);

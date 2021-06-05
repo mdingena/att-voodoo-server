@@ -12,8 +12,4 @@ export type UnknownComponent = { hash: number; data: string };
 
 export type Component = KnownComponent | UnknownComponent[];
 
-export type Components = {
-  [key in ComponentName | 'Unknown']?: Component;
-};
-
 export { transcoders };
