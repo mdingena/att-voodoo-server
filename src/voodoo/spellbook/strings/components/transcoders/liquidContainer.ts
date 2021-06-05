@@ -1,10 +1,8 @@
 import { ComponentHash } from '../../ComponentHash';
-import { BinaryReader, numberToBinaryUInt, signedIntegerToBinary, uIntToBinary, uIntToNumber } from '../../utils';
+import { BinaryReader, createBinaryWriter } from '../../utils';
 
 export const HASH = ComponentHash.LiquidContainer;
 export const VERSION = 1;
-
-const HASH_BITS = uIntToBinary(HASH);
 
 type Color = {
   r: number;
@@ -65,7 +63,7 @@ export const decode = (reader: BinaryReader): Component => {
     };
 
     /* Get the effects array. */
-    const effectsLength = uIntToNumber(reader.uInt());
+    const effectsLength = reader.uInt();
     const effects: Effect[] = [];
     for (let index = 0; index < effectsLength; ++index) {
       /* Skip effect if is null. */
@@ -82,7 +80,7 @@ export const decode = (reader: BinaryReader): Component => {
     }
 
     /* Get the food chunks array. */
-    const foodChunksLength = uIntToNumber(reader.uInt());
+    const foodChunksLength = reader.uInt();
     const foodChunks: FoodChunk[] = [];
     for (let index = 0; index < foodChunksLength; ++index) {
       foodChunks.push(reader.uInt());
@@ -108,73 +106,59 @@ export const encode = ({
   presetHash = 0,
   customData = null
 }: Component): string => {
-  const canAddToBit = Number(canAddTo).toString();
+  const writer = createBinaryWriter();
 
-  const canRemoveFromBit = Number(canRemoveFrom).toString();
+  /* Component hash. */
+  writer.uInt(ComponentHash.LiquidContainer);
+  const hashBits = writer.flush();
 
-  const contentLevelBits = signedIntegerToBinary(Math.round(contentLevel));
-
-  const hasContentBit = Number(hasContent).toString();
-
-  const isCustomBit = Number(isCustom).toString();
-
-  const presetHashBits = uIntToBinary(presetHash);
-
-  let customDataBits: string;
+  /* Component data. */
+  writer.boolean(canAddTo);
+  writer.boolean(canRemoveFrom);
+  writer.int(Math.round(contentLevel));
+  writer.boolean(hasContent);
+  writer.boolean(isCustom);
+  writer.uInt(presetHash);
 
   if (customData === null) {
-    customDataBits = '1'; // isNull bit
+    writer.boolean(true); // isNull bit
   } else {
-    const colorBits = [
-      numberToBinaryUInt(customData.color.r),
-      numberToBinaryUInt(customData.color.g),
-      numberToBinaryUInt(customData.color.b),
-      numberToBinaryUInt(customData.color.a)
-    ].join('');
+    writer.boolean(false); // isNull bit
+    writer.float(customData.color.r);
+    writer.float(customData.color.g);
+    writer.float(customData.color.b);
+    writer.float(customData.color.a);
+    writer.boolean(customData.isConsumableThroughSkin);
+    writer.uInt(customData.visualDataHash);
+    writer.uInt(customData.effects.length);
 
-    const isConsumableThroughSkinBit = Number(customData.isConsumableThroughSkin).toString();
+    for (const effect of customData.effects) {
+      if (effect === null) {
+        writer.boolean(true); // isNull bit
+      } else {
+        writer.boolean(false); // isNull bit
+        writer.uInt(effect.hash);
+        writer.float(effect.strengthMultiplier);
+      }
+    }
 
-    const visualDataHashBits = uIntToBinary(customData.visualDataHash);
+    writer.uInt(customData.foodChunks.length);
 
-    const effectsLengthBits = numberToBinaryUInt(customData.effects.length);
-    const effectsBits = customData.effects
-      .map(effect => {
-        if (effect === null) return '1';
-        else
-          return [
-            '0', // isNull bit
-            uIntToBinary(effect.hash),
-            numberToBinaryUInt(effect.strengthMultiplier)
-          ].join('');
-      })
-      .join('');
-
-    const foodChunksLengthBits = numberToBinaryUInt(customData.foodChunks.length);
-    const foodChunksBits = customData.foodChunks.map(foodChunk => uIntToBinary(foodChunk)).join('');
-
-    customDataBits = [
-      '0', // isNull bit
-      colorBits,
-      isConsumableThroughSkinBit,
-      visualDataHashBits,
-      effectsLengthBits,
-      effectsBits,
-      foodChunksLengthBits,
-      foodChunksBits
-    ].join('');
+    for (const foodChunk of customData.foodChunks) {
+      writer.uInt(foodChunk);
+    }
   }
 
-  const dataBits = [
-    canAddToBit,
-    canRemoveFromBit,
-    contentLevelBits,
-    hasContentBit,
-    isCustomBit,
-    presetHashBits,
-    customDataBits
-  ].join('');
+  const dataBits = writer.flush();
 
-  const sizeBits = uIntToBinary(dataBits.length);
+  /* Component data length. */
+  writer.uInt(dataBits.length);
+  const sizeBits = writer.flush();
 
-  return [HASH_BITS, sizeBits, dataBits].join('');
+  /* Return encoded component. */
+  writer.binary(hashBits);
+  writer.binary(sizeBits);
+  writer.binary(dataBits);
+
+  return writer.flush();
 };
