@@ -1,6 +1,5 @@
 import { transcoders, Components, KnownComponent, UnknownComponent, ComponentName } from '../components';
 import { uIntToBinary } from '../utils/uIntToBinary';
-import { numberToBinaryUInt } from '../utils/numberToBinaryUInt';
 
 const terminator = '0'.repeat(32);
 
@@ -13,7 +12,7 @@ export const encodeComponents = (components: Components = {}): string => {
     if (componentName === 'Unknown') {
       const unknownComponents = value as UnknownComponent[];
       binary += unknownComponents
-        .map(({ hash, data }) => [uIntToBinary(hash), numberToBinaryUInt(data.length), data].join(''))
+        .map(({ hash, data }) => [uIntToBinary(hash), uIntToBinary(data.length), data].join(''))
         .join('');
     } else {
       try {
