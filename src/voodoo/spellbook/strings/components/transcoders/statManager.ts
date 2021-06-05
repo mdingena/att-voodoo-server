@@ -1,10 +1,8 @@
 import { ComponentHash } from '../../ComponentHash';
-import { BinaryReader, numberToBinary } from '../../utils';
+import { BinaryReader, createBinaryWriter } from '../../utils';
 
 export const HASH = ComponentHash.StatManager;
 export const VERSION = 2;
-
-const HASH_BITS = numberToBinary(HASH).padStart(32, '0');
 
 type Stat = null | {
   hash: number;
@@ -111,9 +109,69 @@ export const decode = (reader: BinaryReader): Component => {
 };
 
 export const encode = ({ stats = [], modifiers = [], indirectStatModifiers = [] }: Component): string => {
-  const dataBits = '';
+  const writer = createBinaryWriter();
 
-  const sizeBits = numberToBinary(dataBits.length).padStart(32, '0');
+  /* Component hash. */
+  writer.uInt(ComponentHash.StatManager);
+  const hashBits = writer.flush();
 
-  return [HASH_BITS, sizeBits, dataBits].join('');
+  /* Component data. */
+  writer.uInt(stats.length);
+
+  for (const stat of stats) {
+    if (stat === null) {
+      writer.boolean(true); // isNull bit
+    } else {
+      writer.boolean(false); // isNull bit
+      writer.uInt(stat.hash);
+      writer.float(stat.baseFlat);
+    }
+  }
+
+  writer.uInt(modifiers.length);
+
+  for (const modifier of modifiers) {
+    if (modifier === null) {
+      writer.boolean(true); // isNull bit
+    } else {
+      writer.boolean(false); // isNull bit
+      writer.uInt(modifier.hash);
+      writer.float(modifier.value);
+      writer.boolean(modifier.isMultiplier);
+      writer.binary(modifier.time);
+    }
+  }
+
+  writer.uInt(indirectStatModifiers.length);
+
+  for (const indirectStatModifier of indirectStatModifiers) {
+    if (indirectStatModifier === null) {
+      writer.boolean(true); // isNull bit
+    } else {
+      writer.boolean(false); // isNull bit
+      writer.uInt(indirectStatModifier.hash);
+      writer.binary(indirectStatModifier.time);
+      writer.uInt(indirectStatModifier.modifiers.length);
+
+      for (const modifier of indirectStatModifier.modifiers) {
+        writer.uInt(modifier.valueOverDurationHash);
+        writer.float(modifier.baseValue);
+        writer.uInt(modifier.duration);
+        writer.uInt(modifier.tick);
+      }
+    }
+  }
+
+  const dataBits = writer.flush();
+
+  /* Component data length. */
+  writer.uInt(dataBits.length);
+  const sizeBits = writer.flush();
+
+  /* Return encoded component. */
+  writer.binary(hashBits);
+  writer.binary(sizeBits);
+  writer.binary(dataBits);
+
+  return writer.flush();
 };
