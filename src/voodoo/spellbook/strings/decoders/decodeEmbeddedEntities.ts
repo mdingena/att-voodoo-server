@@ -1,13 +1,6 @@
 import { BinaryReader } from '../utils';
-import { Components } from '../components';
+import { EmbeddedEntities } from '../embeddedEntities';
 import { decodeComponents } from './decodeComponents';
-
-export type EmbeddedEntities = {
-  [hash: number]: {
-    isAlive: boolean;
-    components: null | Components;
-  };
-};
 
 export const decodeEmbeddedEntities = (reader: BinaryReader): EmbeddedEntities => {
   const embeddedEntities: EmbeddedEntities = {};

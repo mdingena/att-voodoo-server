@@ -7,10 +7,12 @@ import {
   encodeChildPrefabs
 } from './encoders';
 import { transcoders, Components, ComponentName } from './components';
+import { EmbeddedEntities } from './embeddedEntities';
 
 export type SpawnPrefab = {
   prefabObject: PrefabObjectProperties;
   components?: Components;
+  embeddedEntities?: EmbeddedEntities;
 };
 
 export const createString = (options: SpawnPrefab): string => {
@@ -25,7 +27,7 @@ export const createString = (options: SpawnPrefab): string => {
   binary += encodeComponents(options.components);
 
   /* Create embedded entities. */
-  binary += encodeEmbeddedEntities([]); // @todo
+  binary += encodeEmbeddedEntities(options.embeddedEntities);
 
   /* Create child prefabs. */
   binary += encodeChildPrefabs([]); // @todo
