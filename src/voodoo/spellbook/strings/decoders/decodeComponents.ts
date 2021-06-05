@@ -1,5 +1,5 @@
 import { transcoders, Components, ComponentName, UnknownComponent } from '../components';
-import { ComponentHash } from '../components/ComponentHash';
+import { ComponentHash } from '../ComponentHash';
 import { BinaryReader } from '../utils';
 
 export const decodeComponents = (reader: BinaryReader): Components => {

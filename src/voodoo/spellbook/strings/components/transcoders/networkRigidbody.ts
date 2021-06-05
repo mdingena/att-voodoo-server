@@ -1,4 +1,4 @@
-import { ComponentHash } from '../ComponentHash';
+import { ComponentHash } from '../../ComponentHash';
 import { BinaryReader, numberToBinaryUInt, numberToBinary } from '../../utils';
 
 export const HASH = ComponentHash.NetworkRigidbody;

@@ -1,4 +1,4 @@
-import { ComponentHash } from '../ComponentHash';
+import { ComponentHash } from '../../ComponentHash';
 import { BinaryReader, numberToBinaryUInt, signedIntegerToBinary, uIntToBinary, uIntToNumber } from '../../utils';
 
 export const HASH = ComponentHash.LiquidContainer;
