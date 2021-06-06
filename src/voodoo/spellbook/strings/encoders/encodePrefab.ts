@@ -18,7 +18,7 @@ export const encodePrefab = (prefab: Prefab): string => {
   writer.binary(embeddedEntitiesBits);
 
   /* Create child prefabs. */
-  const childPrefabsBits = encodeChildPrefabs([]); // @todo
+  const childPrefabsBits = encodeChildPrefabs(prefab.childPrefabs);
   writer.binary(childPrefabsBits);
 
   return writer.flush();
