@@ -139,6 +139,7 @@ export enum PrefabHash {
   Wooden_Short_Sword = 16448,
   Hard_Metal_Small_Bits = 62594,
   Hard_Plate_Metal_Medium_Square = 50988,
+  Soft_Fabric_Large_Roll = 23206,
   Soft_Fabric_Medium_Roll = 47760,
   Soft_Fabric_Medium_Strips = 63204,
   Craft_Piece_Side_1Way = 1274,
