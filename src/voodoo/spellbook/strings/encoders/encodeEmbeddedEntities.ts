@@ -9,7 +9,7 @@ export const encodeEmbeddedEntities = (entities: EmbeddedEntities = {}): string 
   let binary: string = '';
 
   for (const [key, value] of Object.entries(entities)) {
-    const embeddedEntityHash = key as unknown as number;
+    const embeddedEntityHash = Number(key);
 
     writer.uInt(embeddedEntityHash);
     const hashBits = writer.flush();
