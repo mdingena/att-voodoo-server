@@ -67,7 +67,7 @@ export const encode = ({
   const writer = createBinaryWriter();
 
   /* Component hash. */
-  writer.uInt(ComponentHash.LiquidContainer);
+  writer.uInt(ComponentHash.NetworkRigidbody);
   const hashBits = writer.flush();
 
   /* Component data. */
