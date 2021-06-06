@@ -1,3 +1,4 @@
+export { Prefab } from './decoders';
 export { createString } from './createString';
 export { decodeString, DecodedString } from './decodeString';
 export { parsePrefab } from './parsePrefab';
