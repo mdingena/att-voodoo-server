@@ -1,5 +1,4 @@
 import { Prefab } from '../decoders/decodePrefab';
-import { MaterialSpellComponent } from '../MaterialSpellComponent';
 import { Component } from '../components/transcoders/liquidContainer';
 
 enum PresetHash {
@@ -12,11 +11,11 @@ export const parseFlask = (prefab: Prefab): string | undefined => {
 
   if (!component) return undefined;
 
-  if (!component.hasContent) return MaterialSpellComponent.FlaskEmpty;
+  if (!component.hasContent) return 'empty flask';
 
-  if (component.presetHash === PresetHash.Water) return MaterialSpellComponent.FlaskWater;
+  if (component.presetHash === PresetHash.Water) return 'flask containing water';
 
-  if (component.presetHash === PresetHash.TeleportPotion) return MaterialSpellComponent.FlaskTeleportPotion;
+  if (component.presetHash === PresetHash.TeleportPotion) return 'flask containing teleportation potion';
 
   return undefined;
 };
