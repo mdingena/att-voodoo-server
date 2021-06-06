@@ -1,6 +1,6 @@
 import { DecodedString } from './decodeString';
 import { PrefabHash } from './PrefabHash';
-import { parseFlask } from './parsers';
+import { parseFlask, parseLeather } from './parsers';
 
 export const parsePrefab = (decoded: DecodedString): string | undefined => {
   switch (decoded.hash) {
@@ -9,6 +9,14 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
      */
     case PrefabHash.Potion_Medium:
       return parseFlask(decoded.prefab);
+
+    /**
+     * LEATHER
+     */
+    case PrefabHash.Soft_Fabric_Medium_Strips:
+    case PrefabHash.Soft_Fabric_Medium_Roll:
+    case PrefabHash.Soft_Fabric_Large_Roll:
+      return parseLeather(decoded.prefab);
 
     /**
      * HILTED APPARATUS
