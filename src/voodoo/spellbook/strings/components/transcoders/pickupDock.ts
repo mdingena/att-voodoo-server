@@ -25,8 +25,8 @@ export const encode = ({ dockedTypeHash = 0, quantity = 1, childIndex = 0 }: Com
 
   /* Component data. */
   writer.uInt(dockedTypeHash);
-  writer.uInt(quantity);
-  writer.uInt(childIndex);
+  writer.int(quantity);
+  writer.int(childIndex);
 
   const dataBits = writer.flush();
 
