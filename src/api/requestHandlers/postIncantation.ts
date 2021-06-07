@@ -55,9 +55,7 @@ export const postIncantation =
       }
 
       /* Get belt item prefab string. */
-      // @todo Risky!! Ask Joel for a single `select tostring id` command!
-      await voodoo.command({ accountId, command: `select ${beltItemId}` });
-      // @todo Risky!! There is no guarantee that the output of this command is actually what was selected on the previous line.
+      voodoo.command({ accountId, command: `select ${beltItemId}` });
       const { Result: encodedPrefab }: { Result: string } = await voodoo.command({
         accountId,
         command: 'select tostring'
