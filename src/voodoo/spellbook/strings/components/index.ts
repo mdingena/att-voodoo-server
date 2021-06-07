@@ -4,6 +4,7 @@ export type ComponentName = keyof typeof transcoders;
 
 export type KnownComponent =
   | transcoders.BasicDecay.Component
+  | transcoders.DurabilityModule.Component
   | transcoders.LiquidContainer.Component
   | transcoders.NetworkRigidbody.Component
   | transcoders.PhysicalMaterialPart.Component
