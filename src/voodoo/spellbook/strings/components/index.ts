@@ -8,6 +8,7 @@ export type KnownComponent =
   | transcoders.LiquidContainer.Component
   | transcoders.NetworkRigidbody.Component
   | transcoders.PhysicalMaterialPart.Component
+  | transcoders.Pickup.Component
   | transcoders.PickupDock.Component
   | transcoders.StatManager.Component;
 
