@@ -98,8 +98,8 @@ export const decode = (reader: BinaryReader): Component => {
 };
 
 export const encode = ({
-  canAddTo = true,
-  canRemoveFrom = true,
+  canAddTo = false,
+  canRemoveFrom = false,
   contentLevel = 0,
   hasContent = !!contentLevel,
   isCustom = false,
