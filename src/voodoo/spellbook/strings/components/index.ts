@@ -3,6 +3,7 @@ import * as transcoders from './transcoders';
 export type ComponentName = keyof typeof transcoders;
 
 export type KnownComponent =
+  | transcoders.BasicDecay.Component
   | transcoders.LiquidContainer.Component
   | transcoders.NetworkRigidbody.Component
   | transcoders.PhysicalMaterialPart.Component
