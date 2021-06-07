@@ -11,7 +11,7 @@ export const parseFlask = (prefab: Prefab): string | undefined => {
 
   if (component.presetHash === PresetHash.Water) return 'flask containing water';
 
-  if (component.presetHash === PresetHash.TeleportPotion) return 'flask containing teleportation potion';
+  if (component.presetHash === PresetHash.TeleportationPotion) return 'flask containing teleportation potion';
 
   return undefined;
 };
