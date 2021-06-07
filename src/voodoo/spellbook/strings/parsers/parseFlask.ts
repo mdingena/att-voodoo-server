@@ -1,10 +1,6 @@
 import { Prefab } from '../decoders/decodePrefab';
 import { Component } from '../components/transcoders/liquidContainer';
-
-enum PresetHash {
-  TeleportPotion = 27100,
-  Water = 44872
-}
+import { PresetHash } from '../PresetHash';
 
 export const parseFlask = (prefab: Prefab): string | undefined => {
   const component = prefab.components?.LiquidContainer as Component;
