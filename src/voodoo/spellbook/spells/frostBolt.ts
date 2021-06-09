@@ -4,7 +4,7 @@ import { spawn } from '../spawn';
 import { spawnFrom } from '../spawnFrom';
 import { spawnVelocity } from '../spawnVelocity';
 
-export const castFrostBolt = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const frostBolt = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
   const player = await voodoo.getPlayerDetailed({ accountId });
 
   const { position, rotation, direction } = spawnFrom(player, 'rightPalm', 0.3);
