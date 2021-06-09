@@ -152,6 +152,159 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'hilted apparatus';
 
     /**
+     * PRODUCE
+     */
+    case PrefabHash.Apple_Core_Burnt:
+      return 'burnt apple core';
+
+    case PrefabHash.Apple_Core_Cooked:
+      return 'cooked apple core';
+
+    case PrefabHash.Apple_Core_Ripe:
+      return 'ripe apple core';
+
+    case PrefabHash.Apple_Core_Unripe:
+      return 'unripe apple core';
+
+    case PrefabHash.Apple_Full_Burnt:
+      return 'burnt apple';
+
+    case PrefabHash.Apple_Full_Cooked:
+      return 'cooked apple';
+
+    case PrefabHash.Apple_Full_Ripe:
+      return 'ripe apple';
+
+    case PrefabHash.Apple_Full_Unripe:
+      return 'unripe apple';
+
+    case PrefabHash.Blueberry_Full_Burnt:
+      return 'burnt blueberry';
+
+    case PrefabHash.Blueberry_Full_Cooked:
+      return 'cooked blueberry';
+
+    case PrefabHash.Blueberry_Full_Ripe:
+      return 'ripe blueberry';
+
+    case PrefabHash.Blueberry_Full_Unripe:
+      return 'unripe blueberry';
+
+    case PrefabHash.Carrot_Full_Burnt:
+      return 'burnt carrot';
+
+    case PrefabHash.Carrot_Full_Cooked:
+      return 'cooked carrot';
+
+    case PrefabHash.Carrot_Full_Ripe:
+      return 'ripe carrot';
+
+    case PrefabHash.Carrot_Full_Unripe:
+      return 'unripe carrot';
+
+    case PrefabHash.Carrot_Leaves:
+      return 'carrot leaves';
+
+    case PrefabHash.Eggplant_Full_Burnt:
+      return 'burnt eggplant';
+
+    case PrefabHash.Eggplant_Full_Cooked:
+      return 'cooked eggplant';
+
+    case PrefabHash.Eggplant_Full_Ripe:
+      return 'ripe eggplant';
+
+    case PrefabHash.Eggplant_Full_Unripe:
+      return 'unripe eggplant';
+
+    case PrefabHash.Garlic_Full_Burnt:
+      return 'burnt garlic';
+
+    case PrefabHash.Garlic_Full_Cooked:
+      return 'cooked garlic';
+
+    case PrefabHash.Garlic_Full_Ripe:
+      return 'ripe garlic';
+
+    case PrefabHash.Garlic_Full_Unripe:
+      return 'unripe garlic';
+
+    case PrefabHash.Garlic_Leaves:
+      return 'garlic leaves';
+
+    case PrefabHash.Garlic_Roots:
+      return 'garlic roots';
+
+    case PrefabHash.Onion_Full_Burnt:
+      return 'burnt onion';
+
+    case PrefabHash.Onion_Full_Cooked:
+      return 'cooked onion';
+
+    case PrefabHash.Onion_Full_Ripe:
+      return 'ripe onion';
+
+    case PrefabHash.Onion_Full_Unripe:
+      return 'unripe onion';
+
+    case PrefabHash.Onion_Leaves:
+      return 'onion leaves';
+
+    case PrefabHash.Onion_Roots:
+      return 'onion roots';
+
+    case PrefabHash.Potato_Full_Burnt:
+      return 'burnt potato';
+
+    case PrefabHash.Potato_Full_Cooked:
+      return 'cooked potato';
+
+    case PrefabHash.Potato_Full_Ripe:
+      return 'ripe potato';
+
+    case PrefabHash.Potato_Full_Unripe:
+      return 'unripe potato';
+
+    case PrefabHash.Potato_Sapling:
+      return 'potato sapling';
+
+    case PrefabHash.pumpkin_full_burnt:
+      return 'burnt pumpkin';
+
+    case PrefabHash.pumpkin_full_cooked:
+      return 'cooked pumpkin';
+
+    case PrefabHash.pumpkin_full_ripe:
+      return 'ripe pumpkin';
+
+    case PrefabHash.pumpkin_full_unripe:
+      return 'unripe pumpkin';
+
+    case PrefabHash.pumpkin_piece_burnt:
+      return 'burnt pumpkin piece';
+
+    case PrefabHash.pumpkin_piece_cooked:
+      return 'cooked pumpkin piece';
+
+    case PrefabHash.pumpkin_piece_ripe:
+      return 'ripe pumpkin piece';
+
+    case PrefabHash.pumpkin_piece_unripe:
+      return 'unripe pumpkin piece';
+
+    case PrefabHash.Tomato_Full_Burnt:
+      return 'burnt tomato';
+
+    case PrefabHash.Tomato_Full_Cooked:
+      return 'cooked tomato';
+
+    case PrefabHash.Tomato_Full_Ripe:
+      return 'ripe tomato';
+
+    case PrefabHash.Tomato_Full_Unripe:
+      return 'unripe tomato';
+
+    /**
      * FLASK
      */
     case PrefabHash.Potion_Medium:
