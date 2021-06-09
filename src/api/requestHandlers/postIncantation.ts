@@ -56,7 +56,7 @@ export const postIncantation =
 
       /* Get belt item prefab string. */
       voodoo.command({ accountId, command: `select ${beltItemId}` });
-      const { Result: encodedPrefab }: { Result: string } = await voodoo.command({
+      const { ResultString: encodedPrefab }: { ResultString: string } = await voodoo.command({
         accountId,
         command: 'select tostring'
       });
