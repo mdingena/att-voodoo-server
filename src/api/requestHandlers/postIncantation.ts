@@ -94,7 +94,7 @@ export const postIncantation =
             preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
           } else {
             /* Cast the spell immediately. */
-            spell.cast(voodoo, accountId);
+            await spell.cast(voodoo, accountId);
           }
         } else {
           // @todo somehow feedback that there was no spell associated
