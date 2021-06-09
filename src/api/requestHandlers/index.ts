@@ -2,6 +2,6 @@ export { deleteIncantations } from './deleteIncantations';
 export { getInfo } from './getInfo';
 export { getSeal } from './getSeal';
 export { getSession } from './getSession';
-export { postHeartbeat } from './postHeartbeat';
+export { getHeartbeat } from './getHeartbeat';
 export { postIncantation } from './postIncantation';
 export { postTrigger } from './postTrigger';
