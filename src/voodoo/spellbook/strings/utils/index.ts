@@ -5,6 +5,7 @@ export { createBinaryReader, BinaryReader } from './createBinaryReader';
 export { createBinaryWriter, BinaryWriter } from './createBinaryWriter';
 export { numberToBinaryUInt } from './numberToBinaryUInt';
 export { numberToBinary } from './numberToBinary';
+export { repairMaterial } from './repairMaterial';
 export { signedIntegerToBinary } from './signedIntegerToBinary';
 export { uIntToBinary } from './uIntToBinary';
 export { uIntToNumber } from './uIntToNumber';
