@@ -32,10 +32,13 @@ type Players = {
   };
 };
 
-export type PreparedSpells = {
+type PreparedSpell = {
+  name: string;
   verbalTrigger: string;
   incantations: [string, string][];
-}[];
+};
+
+export type PreparedSpells = PreparedSpell[];
 
 interface RemoveServer {
   serverId: number;
@@ -220,7 +223,8 @@ export const createVoodooServer = (): VoodooServer => ({
 
     if (preparedSpells.length >= maxPreparedSpells) preparedSpells.shift();
 
-    const preparedSpell = {
+    const preparedSpell: PreparedSpell = {
+      name: spell.name,
       verbalTrigger: spell.verbalTrigger ?? '',
       incantations
     };

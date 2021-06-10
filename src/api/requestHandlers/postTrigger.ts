@@ -31,7 +31,7 @@ export const postTrigger =
         });
       }
 
-      const preparedSpells: PreparedSpells = storedSpells.rows[0].prepared_spells;
+      const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0].prepared_spells);
 
       /* Get verbal spell trigger. */
       const [verbalTrigger] = clientRequest.body;
