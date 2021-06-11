@@ -7,13 +7,6 @@ const logger = new Logger('Bot');
 export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (connection: ServerConnection) => {
   logger.success(`Connected to ${connection.server.info.name}`);
 
-  voodoo.addServer({
-    id: connection.server.info.id,
-    name: connection.server.info.name,
-    online: connection.server.isOnline,
-    players: connection.server.info.online_players.length
-  });
-
   connection.server.on('update', server => {
     voodoo.updateServer({
       id: server.info.id,
@@ -53,9 +46,15 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
 };
 
 export const handleServerConnectionClosed = (voodoo: VoodooServer) => (connection: ServerConnection) => {
-  logger.warn(`Disconnected from ${connection.server.info.name}`);
+  const { server } = connection;
 
-  const serverId = connection.server.info.id;
-  voodoo.removePlayers({ serverId });
-  voodoo.removeServer({ serverId });
+  logger.warn(`Disconnected from ${server.info.name}`);
+
+  voodoo.removePlayers({ serverId: server.info.id });
+  voodoo.updateServer({
+    id: server.info.id,
+    name: server.info.name,
+    online: server.isOnline,
+    players: server.info.online_players.length
+  });
 };

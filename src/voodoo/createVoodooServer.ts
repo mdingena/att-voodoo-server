@@ -40,10 +40,6 @@ type PreparedSpell = {
 
 export type PreparedSpells = PreparedSpell[];
 
-interface RemoveServer {
-  serverId: number;
-}
-
 interface AddPlayer {
   accountId: number;
   serverId: number;
@@ -92,9 +88,7 @@ export type VoodooServer = {
   servers: Server[];
   players: Players;
   spellbook: Spellbook;
-  addServer: (server: Server) => void;
   updateServer: (server: Server) => void;
-  removeServer: ({ serverId }: RemoveServer) => void;
   addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
@@ -115,17 +109,9 @@ export const createVoodooServer = (): VoodooServer => ({
 
   spellbook,
 
-  addServer: function (server) {
-    this.servers = [...this.servers, server];
-  },
-
   updateServer: function (server) {
     const servers = this.servers.filter(({ id }) => id !== server.id);
     this.servers = [...servers, server];
-  },
-
-  removeServer: function ({ serverId }) {
-    this.servers = this.servers.filter(({ id }) => id !== serverId);
   },
 
   addPlayer: function ({ accountId, serverId, serverConnection }) {

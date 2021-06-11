@@ -16,9 +16,24 @@ export const createBot = async (voodoo: VoodooServer): Promise<void> => {
   await api.login(config);
   await subscriptions.init();
   await groupManager.groups.refresh(true);
-
-
   await groupManager.acceptAllInvites(true);
 
-  groupManager.automaticConsole(handleServerConnectionOpened(voodoo));
+  /* Add every server to Voodoo for the server status screen in the client. */
+  await Promise.all(
+    groupManager.groups.items.map(async group => {
+      await group.servers.refresh(true);
+      await group.servers.refreshStatus(true);
+
+      group.servers.items.forEach(server => {
+        voodoo.updateServer({
+          id: server.info.id,
+          name: server.info.name,
+          online: server.isOnline,
+          players: server.info.online_players.length
+        });
+      });
+    })
+  );
+
+  await groupManager.automaticConsole(handleServerConnectionOpened(voodoo));
 };
