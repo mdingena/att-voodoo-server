@@ -19,7 +19,7 @@ const api = express();
 api.use(auth);
 api.use(express.json());
 
-export const createApi = async (voodoo: VoodooServer) => {
+export const createApi = (voodoo: VoodooServer) => {
   api.get('/', getInfo);
   api.get('/heartbeat', getHeartbeat(voodoo));
   api.get('/session', getSession(voodoo));
