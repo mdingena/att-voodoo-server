@@ -220,7 +220,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     await db.query(upsertPreparedSpells, [accountId, newPreparedSpells]);
 
-    logger.info(`${accountId} prepared a spell`);
+    logger.info(`${accountId} prepared spell: ${spell.name}`);
 
     return preparedSpells;
   }
