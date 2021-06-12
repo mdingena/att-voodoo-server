@@ -6,6 +6,8 @@ import { VoodooServer } from '../voodoo';
 import { handleServerConnectionOpened } from './serverConnectionHandlers';
 import { config } from './config';
 
+const CONSOLE_PERMISSION = 'Console';
+
 const api: ApiConnection = new ApiConnection();
 const subscriptions: SubscriptionManager = new SubscriptionManager(api);
 const groupManager: GroupManager = new GroupManager(subscriptions);
@@ -21,17 +23,28 @@ export const createBot = async (voodoo: VoodooServer): Promise<void> => {
   /* Add every server to Voodoo for the server status screen in the client. */
   await Promise.all(
     groupManager.groups.items.map(async group => {
-      await group.servers.refresh(true);
-      await group.servers.refreshStatus(true);
+      let hasConsoleAccess = false;
 
-      group.servers.items.forEach(server => {
-        voodoo.updateServer({
-          id: server.info.id,
-          name: server.info.name,
-          online: server.isOnline,
-          players: server.info.online_players.length
+      for (const role of group.info.roles) {
+        if (role.permissions.includes(CONSOLE_PERMISSION)) {
+          hasConsoleAccess = true;
+          break;
+        }
+      }
+
+      if (hasConsoleAccess) {
+        await group.servers.refresh(true);
+        await group.servers.refreshStatus(true);
+
+        group.servers.items.forEach(server => {
+          voodoo.updateServer({
+            id: server.info.id,
+            name: server.info.name,
+            online: server.isOnline,
+            players: server.info.online_players.length
+          });
         });
-      });
+      }
     })
   );
 
