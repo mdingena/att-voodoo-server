@@ -15,5 +15,7 @@ if (!!process.env.SENTRY_DSN) {
   await createBot(voodoo);
   createApi(voodoo);
 
+  voodoo.logger.success('Voodoo Server is online');
+
   keepAwake(voodoo);
 })();
