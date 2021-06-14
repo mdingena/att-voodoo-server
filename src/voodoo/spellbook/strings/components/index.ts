@@ -1,5 +1,7 @@
 import * as transcoders from './transcoders';
 
+export { ComponentVersion } from './ComponentVersion';
+
 export type ComponentName = keyof typeof transcoders;
 
 export type KnownComponent =

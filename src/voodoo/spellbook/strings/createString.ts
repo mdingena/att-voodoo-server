@@ -1,7 +1,7 @@
 import { Prefab } from './decoders';
 import { binaryToUIntArray } from './utils';
 import { encodePrefab } from './encoders';
-import { transcoders, ComponentName } from './components';
+import { getComponentVersions } from './getComponentVersions';
 
 export const createString = (prefab: Prefab): string => {
   const hash = prefab.prefabObject.hash;
@@ -23,9 +23,7 @@ export const createString = (prefab: Prefab): string => {
   const uIntString = [hash, bytes, ...uInts].join(',');
 
   /* Construct the versions string. */
-  const components = Object.keys(prefab.components ?? {}).filter(name => name !== 'Unknown') as ComponentName[];
-  const versions = components.map(name => `${transcoders[name].HASH},${transcoders[name].VERSION}`);
-  const versionString = versions.length && [versions.length, ...versions].join(',');
+  const versionString = getComponentVersions(prefab);
 
   /* Return spawn string. */
   const strings = [uIntString, versionString].filter(Boolean);
