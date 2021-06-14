@@ -1,6 +1,6 @@
 import { DecodedString } from './decodeString';
 import { PrefabHash } from './PrefabHash';
-import { parseFlask, parseLeather } from './parsers';
+import { parseFlask, parseHiltedApparatus, parseLeather } from './parsers';
 
 export const parsePrefab = (decoded: DecodedString): string | undefined => {
   switch (decoded.hash) {
@@ -149,7 +149,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case PrefabHash.Handle_Short_Taper:
     case PrefabHash.Handle_Spear:
     case PrefabHash.Handle_Tonfa:
-      return 'hilted apparatus';
+      return parseHiltedApparatus(decoded.prefab);
 
     /**
      * PRODUCE
