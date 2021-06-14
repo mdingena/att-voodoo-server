@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/node';
 import { createVoodooServer } from './voodoo';
 import { createBot } from './bot';
 import { createApi, keepAwake } from './api';
+import { regularlyPurgeSessions } from './db';
 
 if (!!process.env.SENTRY_DSN) {
   Sentry.init({
@@ -18,4 +19,5 @@ if (!!process.env.SENTRY_DSN) {
   voodoo.logger.success('Voodoo Server is online');
 
   keepAwake(voodoo);
+  regularlyPurgeSessions(voodoo);
 })();
