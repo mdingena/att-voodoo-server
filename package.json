@@ -10,7 +10,7 @@
     "start": "node ./build/index.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@sentry/node": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
