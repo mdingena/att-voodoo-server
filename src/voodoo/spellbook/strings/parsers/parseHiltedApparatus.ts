@@ -16,9 +16,6 @@ export const parseHiltedApparatus = (prefab: Prefab): string | undefined => {
     case PrefabHash.Handle_Fist:
       return 'fist handle';
 
-    case PrefabHash.Handle_Large_Branch:
-      return 'large branch handle';
-
     case PrefabHash.Handle_Medium_Straight:
       return 'medium straight wooden handle';
 
