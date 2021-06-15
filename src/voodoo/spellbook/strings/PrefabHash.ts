@@ -842,5 +842,21 @@ export enum PrefabHash {
   Woodcut_Twigs_V3_0 = 63168,
   Woodcut_Twigs_V3_30 = 15084,
   Woodcut_Twigs_V4_0 = 52628,
-  Woodcut_Twigs_V4_30 = 31554
+  Woodcut_Twigs_V4_30 = 31554,
+  Small_Bone_Spike = 61488,
+  Babu_Leg_Bone = 32526,
+  Babu_Leg_Full_Burnt = 64844,
+  Babu_Leg_Full_Cooked = 42916,
+  Babu_Leg_Full_Ripe = 2562,
+  Babu_Leg_Half_Burnt = 50328,
+  Babu_Leg_Half_Cooked = 50326,
+  Babu_Leg_Half_Ripe = 50252,
+  Dais_Meat_Full_Burnt = 41870,
+  Dais_Meat_Full_Cooked = 43452,
+  Dais_Meat_Full_Ripe = 47394,
+  Dais_Meat_Half_Burnt = 43674,
+  Dais_Meat_Half_Cooked = 43502,
+  Dais_Meat_Half_Ripe = 43294,
+  Spriggull_Fletching_Blue = 50608,
+  Spriggull_Fletching_Red = 24072
 }

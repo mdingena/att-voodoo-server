@@ -49,8 +49,65 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case PrefabHash.Spriggull_Feather_Blue:
       return 'blue spriggull feather';
 
+    case PrefabHash.Spriggull_Fletching_Blue:
+      return 'blue spriggull fletching';
+
     case PrefabHash.Spriggull_Feather_Red:
       return 'red spriggull feather';
+
+    case PrefabHash.Spriggull_Fletching_Red:
+      return 'red spriggull fletching';
+
+    /**
+     * BONE
+     */
+    case PrefabHash.Small_Bone_Spike:
+      return 'spriggull bone shard';
+
+    case PrefabHash.SpriggullDrumstick_Bone:
+      return 'spriggull leg bone';
+
+    case PrefabHash.Babu_Leg_Bone:
+      return 'babu leg bone';
+
+    /**
+     * MEAT
+     */
+    case PrefabHash.SpriggullDrumstick_Full_Burnt:
+      return 'burnt spriggull leg';
+
+    case PrefabHash.SpriggullDrumstick_Full_Cooked:
+      return 'cooked spriggull leg';
+
+    case PrefabHash.SpriggullDrumstick_Full_Ripe:
+      return 'uncooked spriggull leg';
+
+    case PrefabHash.SpriggullDrumstick_Half_Burnt:
+      return 'burnt spriggull chop';
+
+    case PrefabHash.SpriggullDrumstick_Half_Cooked:
+      return 'cooked spriggull chop';
+
+    case PrefabHash.SpriggullDrumstick_Half_Ripe:
+      return 'uncooked spriggull chop';
+
+    case PrefabHash.Babu_Leg_Full_Burnt:
+      return 'burnt babu leg';
+
+    case PrefabHash.Babu_Leg_Full_Cooked:
+      return 'cooked babu leg';
+
+    case PrefabHash.Babu_Leg_Full_Ripe:
+      return 'uncooked babu leg';
+
+    case PrefabHash.Babu_Leg_Half_Burnt:
+      return 'burnt babu chop';
+
+    case PrefabHash.Babu_Leg_Half_Cooked:
+      return 'cooked babu chop';
+
+    case PrefabHash.Babu_Leg_Half_Ripe:
+      return 'uncooked babu chop';
 
     /**
      * MUSHROOM
