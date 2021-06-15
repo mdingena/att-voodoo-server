@@ -22,6 +22,9 @@ export const parseHiltedApparatus = (prefab: Prefab): string | undefined => {
     case PrefabHash.Handle_Short:
       return 'short wooden handle';
 
+    case PrefabHash.Hebios_Handle_Kunai:
+      return 'kunai handle';
+
     default:
       return 'handle';
   }
