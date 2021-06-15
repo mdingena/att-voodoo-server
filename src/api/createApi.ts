@@ -1,4 +1,5 @@
 import express from 'express';
+import nocache from 'nocache';
 import Logger from 'js-tale/dist/logger';
 import { VoodooServer } from '../voodoo';
 import { auth } from './middleware';
@@ -16,6 +17,8 @@ const port = process.env.PORT || 3000;
 const logger = new Logger('Express');
 
 const api = express();
+api.set('etag', false);
+api.use(nocache());
 api.use(auth);
 api.use(express.json());
 
