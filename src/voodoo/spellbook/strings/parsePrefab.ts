@@ -376,6 +376,15 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return parseLeather(decoded.prefab);
 
     /**
+     * GOTERA
+     */
+    case PrefabHash.Gotera_Seedling_Orb:
+      return 'gotera seedling';
+
+    case PrefabHash.Redwood_Gotera_Core:
+      return 'redwood gotera core';
+
+    /**
      * UNRECOGNISED
      */
     default:
