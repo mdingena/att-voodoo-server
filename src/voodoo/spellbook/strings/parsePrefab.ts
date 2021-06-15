@@ -206,6 +206,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case PrefabHash.Handle_Short_Taper:
     case PrefabHash.Handle_Spear:
     case PrefabHash.Handle_Tonfa:
+    case PrefabHash.Hebios_Handle_Kunai:
       return parseHiltedApparatus(decoded.prefab);
 
     /**

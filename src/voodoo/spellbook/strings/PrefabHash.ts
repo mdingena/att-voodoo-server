@@ -859,5 +859,6 @@ export enum PrefabHash {
   Dais_Meat_Half_Ripe = 43294,
   Spriggull_Fletching_Blue = 50608,
   Spriggull_Fletching_Red = 24072,
-  Redwood_Gotera_Core = 41402
+  Redwood_Gotera_Core = 41402,
+  Hebios_Handle_Kunai = 18456
 }

@@ -1,6 +1,6 @@
 {
   "name": "att-voodoo-server",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "",
   "main": "build/index.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "express": "^4.17.1",
     "ieee754": "^1.2.1",
     "js-tale": "^1.4.0",
+    "nocache": "^3.0.0",
     "node-fetch": "^2.6.1",
     "pg": "^8.6.0",
     "three": "^0.128.0"

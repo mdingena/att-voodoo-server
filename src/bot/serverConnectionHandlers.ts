@@ -40,11 +40,27 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
       serverId: connection.server.info.id,
       serverConnection: connection
     });
+    /* Hijack player event because server update event doesn't fire. */
+    // @todo remove
+    voodoo.updateServer({
+      id: connection.server.info.id,
+      name: connection.server.info.name,
+      online: connection.server.isOnline,
+      players: (voodoo.servers.find(({ id }) => id === connection.server.info.id)?.players ?? 0) + 1
+    });
   };
 
   /* Player left the server event handler. */
   const handlePlayerLeft = (event: any) => {
     voodoo.removePlayer({ accountId: event.user.id });
+    /* Hijack player event because server update event doesn't fire. */
+    // @todo remove
+    voodoo.updateServer({
+      id: connection.server.info.id,
+      name: connection.server.info.name,
+      online: connection.server.isOnline,
+      players: (voodoo.servers.find(({ id }) => id === connection.server.info.id)?.players ?? 1) - 1
+    });
   };
 
   /* Register event handlers. */
