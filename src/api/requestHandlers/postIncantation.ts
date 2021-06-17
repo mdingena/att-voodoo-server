@@ -26,7 +26,7 @@ export const postIncantation =
       });
 
       if ((nearbyPrefabs ?? []).length === 0) {
-        return clientResponse.status(400).json({
+        return clientResponse.status(406).json({
           ok: false,
           error: 'Not near a Spellcrafting Conduit',
           nearbyPrefabs
@@ -36,7 +36,7 @@ export const postIncantation =
       const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => /^Green_Crystal_cluster_03.*/i.test(Name));
 
       if (!nearConduit) {
-        return clientResponse.json({
+        return clientResponse.status(406).json({
           ok: false,
           error: 'Not near a Spellcrafting Conduit'
         });
