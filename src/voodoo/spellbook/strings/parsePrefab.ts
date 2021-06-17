@@ -170,7 +170,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'mythril ingot';
 
     case PrefabHash.Orchi_Ingot:
-      return 'virdium ingot';
+      return 'viridium ingot';
 
     case PrefabHash.Red_Iron_Ingot:
       return 'red iron ingot';
