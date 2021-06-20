@@ -185,6 +185,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
      * HILTED APPARATUS
      */
     case PrefabHash.Curled_Wooden_Handle:
+    case PrefabHash.Gacha_Handle:
     case PrefabHash.Handle_Bow:
     case PrefabHash.Handle_Fist:
     case PrefabHash.Handle_Large_Branch:
@@ -206,7 +207,13 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case PrefabHash.Handle_Short_Taper:
     case PrefabHash.Handle_Spear:
     case PrefabHash.Handle_Tonfa:
+    case PrefabHash.Hebios_Handle_Katana:
     case PrefabHash.Hebios_Handle_Kunai:
+    case PrefabHash.Hebios_Handle_Naginata:
+    case PrefabHash.Hebios_Handle_Wakizashi:
+    case PrefabHash.Rod_Slim_40cm:
+    case PrefabHash.Rod_Medium:
+    case PrefabHash.Shield_Core_Handle:
       return parseHiltedApparatus(decoded.prefab);
 
     /**
