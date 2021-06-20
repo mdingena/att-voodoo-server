@@ -18,8 +18,15 @@ export const getHeartbeat =
       /* Save heartbeat. */
       await db.query(upsertHeartbeat, [accessToken]);
 
-      /* Return servers update. */
+      /* Get account ID. */
       const accountId = session.rows[0].account_id;
+
+      /* Update player's Voodoo client status. */
+      if (voodoo.players[accountId] && !voodoo.players[accountId].isVoodooClient) {
+        voodoo.setPlayerClientStatus({ accountId, isVoodooClient: true });
+      }
+
+      /* Return servers update. */
       const update = {
         playerJoined: voodoo.players[accountId]?.serverId ?? null,
         servers: [...voodoo.servers]

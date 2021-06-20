@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import { createVoodooServer } from './voodoo';
+import { createVoodooServer, gracefulShutdown } from './voodoo';
 import { createBot } from './bot';
 import { createApi, keepAwake } from './api';
 import { regularlyPurgeSessions } from './db';
@@ -12,7 +12,12 @@ if (!!process.env.SENTRY_DSN) {
 }
 
 (async () => {
+  /* Create Voodoo server. */
   const voodoo = createVoodooServer();
+
+  /* Enable graceful shutdown. */
+  process.on('SIGTERM', gracefulShutdown(voodoo));
+
   await createBot(voodoo);
   createApi(voodoo);
 
