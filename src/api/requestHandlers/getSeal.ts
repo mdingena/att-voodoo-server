@@ -3,6 +3,8 @@ import { db } from '../../db';
 import { VoodooServer, PreparedSpells } from '../../voodoo';
 import { selectSession } from '../../db/sql';
 
+const conduitDistance = 10;
+
 export const getSeal =
   (voodoo: VoodooServer): RequestHandler =>
   async (clientRequest, clientResponse) => {
@@ -13,15 +15,38 @@ export const getSeal =
       const accessToken = auth.replace(/Bearer\s+/i, '');
       const session = await db.query(selectSession, [accessToken]);
 
-      if (!session.rows.length) {
-        return clientResponse.status(404).json({
+      if (!session.rows.length) return clientResponse.status(404).json({ ok: false, error: 'Session not found' });
+
+      const accountId = session.rows[0].account_id;
+
+      /* Verify player is near a Spellcrafting Conduit. */
+      const { Result: nearbyPrefabs } = await voodoo.command({
+        accountId,
+        command: `select find ${accountId} ${conduitDistance}`
+      });
+
+      if ((nearbyPrefabs ?? []).length === 0) {
+        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+        return clientResponse.status(406).json({
           ok: false,
-          error: 'Session not found'
+          error: 'Not near a Spellcrafting Conduit',
+          nearbyPrefabs
+        });
+      }
+
+      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => /^Green_Crystal_cluster_03.*/i.test(Name));
+
+      if (!nearConduit) {
+        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+        return clientResponse.status(406).json({
+          ok: false,
+          error: 'Not near a Spellcrafting Conduit'
         });
       }
 
       /* Get the player's current incantations. */
-      const accountId = session.rows[0].account_id;
       const incantations = voodoo.players[accountId].incantations.map(
         ({ verbalSpellComponent, materialSpellComponent }) => [verbalSpellComponent, materialSpellComponent]
       ) as [string, string][];

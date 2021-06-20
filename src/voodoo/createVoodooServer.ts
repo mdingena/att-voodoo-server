@@ -25,6 +25,7 @@ type SpellpageIncantation = [string, string];
 
 type Players = {
   [accountId: number]: {
+    isVoodooClient: boolean;
     serverId: number;
     serverConnection: ServerConnection;
     dexterity: Dexterity;
@@ -44,6 +45,11 @@ interface AddPlayer {
   accountId: number;
   serverId: number;
   serverConnection: ServerConnection;
+}
+
+interface PlayerClientStatus {
+  accountId: number;
+  isVoodooClient: boolean;
 }
 
 interface RemovePlayer {
@@ -90,6 +96,7 @@ export type VoodooServer = {
   spellbook: Spellbook;
   updateServer: (server: Server) => void;
   addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => void;
+  setPlayerClientStatus: ({ accountId, isVoodooClient }: PlayerClientStatus) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
   getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
@@ -116,6 +123,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
   addPlayer: function ({ accountId, serverId, serverConnection }) {
     const newPlayer = {
+      isVoodooClient: false,
       serverId,
       serverConnection,
       dexterity: 'right' as Dexterity,
@@ -125,6 +133,12 @@ export const createVoodooServer = (): VoodooServer => ({
     this.players = { ...this.players, [accountId]: newPlayer };
 
     logger.success(`Added ${accountId}@${serverId}`);
+  },
+
+  setPlayerClientStatus: function ({ accountId, isVoodooClient }) {
+    if (this.players[accountId]) {
+      this.players[accountId].isVoodooClient = isVoodooClient;
+    }
   },
 
   removePlayer: function ({ accountId }) {

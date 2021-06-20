@@ -3,6 +3,8 @@ import { db } from '../../db';
 import { selectSession } from '../../db/sql';
 import { VoodooServer, PreparedSpells, decodeString, parsePrefab } from '../../voodoo';
 
+const conduitDistance = 10;
+
 export const postIncantation =
   (voodoo: VoodooServer): RequestHandler =>
   async (clientRequest, clientResponse) => {
@@ -18,10 +20,15 @@ export const postIncantation =
       const accountId = session.rows[0].account_id;
 
       /* Verify player is near a Spellcrafting Conduit. */
-      const { Result: nearbyPrefabs } = await voodoo.command({ accountId, command: `select find ${accountId} 4` });
+      const { Result: nearbyPrefabs } = await voodoo.command({
+        accountId,
+        command: `select find ${accountId} ${conduitDistance}`
+      });
 
       if ((nearbyPrefabs ?? []).length === 0) {
-        return clientResponse.status(400).json({
+        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+        return clientResponse.status(406).json({
           ok: false,
           error: 'Not near a Spellcrafting Conduit',
           nearbyPrefabs
@@ -31,7 +38,9 @@ export const postIncantation =
       const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => /^Green_Crystal_cluster_03.*/i.test(Name));
 
       if (!nearConduit) {
-        return clientResponse.json({
+        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+        return clientResponse.status(406).json({
           ok: false,
           error: 'Not near a Spellcrafting Conduit'
         });
