@@ -26,6 +26,8 @@ export const postIncantation =
       });
 
       if ((nearbyPrefabs ?? []).length === 0) {
+        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
         return clientResponse.status(406).json({
           ok: false,
           error: 'Not near a Spellcrafting Conduit',
@@ -36,6 +38,8 @@ export const postIncantation =
       const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => /^Green_Crystal_cluster_03.*/i.test(Name));
 
       if (!nearConduit) {
+        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
         return clientResponse.status(406).json({
           ok: false,
           error: 'Not near a Spellcrafting Conduit'
