@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { VoodooServer, PreparedSpells, Prefab, spawn, spawnFrom } from '../../voodoo';
-
 import { selectSession } from '../../db/sql';
 
 const conduitDistance = 10;
