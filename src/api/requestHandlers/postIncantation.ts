@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
-import { VoodooServer, PreparedSpells, decodeString, parsePrefab } from '../../voodoo';
+import { VoodooServer, PreparedSpells, Prefab, decodeString, parsePrefab, spawn, spawnFrom } from '../../voodoo';
 
 const conduitDistance = 10;
 
@@ -106,6 +106,31 @@ export const postIncantation =
             await spell.cast(voodoo, accountId);
           }
         } else {
+          if (incantations[0]?.[1] === 'hilted apparatus') {
+            const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
+            const player = await voodoo.getPlayerDetailed({ accountId });
+            const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
+
+            const respawn: Prefab = {
+              ...prefab,
+              prefabObject: {
+                ...prefab.prefabObject,
+                position,
+                rotation,
+                scale: 1
+              },
+              components: {
+                ...prefab.components,
+                NetworkRigidbody: {
+                  ...prefab.components?.NetworkRigidbody,
+                  position,
+                  rotation
+                }
+              }
+            };
+
+            spawn(voodoo, accountId, respawn);
+          }
           // @todo somehow feedback that there was no spell associated
         }
 
