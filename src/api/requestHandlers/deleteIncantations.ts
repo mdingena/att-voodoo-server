@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer } from '../../voodoo';
+import { VoodooServer, Prefab, spawn, spawnFrom } from '../../voodoo';
 import { selectSession } from '../../db/sql';
 
 export const deleteIncantations =
@@ -20,8 +20,36 @@ export const deleteIncantations =
         });
       }
 
-      /* Clear player's incantations. */
+      /* Respawn consumed weapon, if any. */
       const accountId = session.rows[0].account_id;
+
+      if (voodoo.players[accountId].incantations[0]?.materialSpellComponent === 'hilted apparatus') {
+        const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
+        const player = await voodoo.getPlayerDetailed({ accountId });
+        const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
+
+        const respawn: Prefab = {
+          ...prefab,
+          prefabObject: {
+            ...prefab.prefabObject,
+            position,
+            rotation,
+            scale: 1
+          },
+          components: {
+            ...prefab.components,
+            NetworkRigidbody: {
+              ...prefab.components?.NetworkRigidbody,
+              position,
+              rotation
+            }
+          }
+        };
+
+        spawn(voodoo, accountId, respawn);
+      }
+
+      /* Clear player's incantations. */
       const incantations = voodoo.clearIncantations({ accountId });
 
       if (incantations.length) {
