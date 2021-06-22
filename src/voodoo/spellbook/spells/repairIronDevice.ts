@@ -4,14 +4,14 @@ import { spawnFrom } from '../spawnFrom';
 import { repairMaterial } from '../strings/utils';
 import { MaterialHash } from '../strings/MaterialHash';
 
-export const repairCopperWeapon = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const repairIronDevice = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
   const hiltedApparatus = voodoo.players[accountId].incantations[0].decodedString.prefab;
 
   const player = await voodoo.getPlayerDetailed({ accountId });
 
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-  const repairedApparatus = repairMaterial(hiltedApparatus, MaterialHash.Copper, 0.25);
+  const repairedApparatus = repairMaterial(hiltedApparatus, MaterialHash.Iron, 0.25);
 
   return spawn(voodoo, accountId, {
     ...repairedApparatus,

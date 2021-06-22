@@ -4,7 +4,7 @@ import { spawnFrom } from '../spawnFrom';
 import { repairMaterial } from '../strings/utils';
 import { MaterialHash } from '../strings/MaterialHash';
 
-export const repairViridiumWeapon = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const repairViridiumDevice = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
   const hiltedApparatus = voodoo.players[accountId].incantations[0].decodedString.prefab;
 
   const player = await voodoo.getPlayerDetailed({ accountId });
