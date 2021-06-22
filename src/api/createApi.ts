@@ -5,12 +5,13 @@ import { VoodooServer } from '../voodoo';
 import { auth } from './middleware';
 import {
   getInfo,
-  getSession,
   getHeartbeat,
+  getSession,
   postIncantation,
   deleteIncantations,
   getSeal,
-  postTrigger
+  postTrigger,
+  getPlayer
 } from './requestHandlers';
 
 const port = process.env.PORT || 3000;
@@ -30,6 +31,7 @@ export const createApi = (voodoo: VoodooServer) => {
   api.delete('/incantation', deleteIncantations(voodoo));
   api.get('/seal', getSeal(voodoo));
   api.post('/trigger', postTrigger(voodoo));
+  api.get('/player', getPlayer(voodoo));
 
   api.listen(port, () => {
     logger.success(`API listening on port ${port}`);

@@ -22,7 +22,8 @@ export const postTrigger =
 
       /* Get the player's prepared spells. */
       const accountId = session.rows[0].account_id;
-      const storedSpells = await db.query(selectPreparedSpells, [accountId]);
+      const { serverId } = voodoo.players[accountId];
+      const storedSpells = await db.query(selectPreparedSpells, [accountId, serverId]);
 
       if (!storedSpells.rows.length) {
         return clientResponse.status(404).json({
@@ -68,7 +69,7 @@ export const postTrigger =
 
       /* Store new prepared spells list. */
       const newPreparedSpells = JSON.stringify(preparedSpells);
-      await db.query(upsertPreparedSpells, [accountId, newPreparedSpells]);
+      await db.query(upsertPreparedSpells, [accountId, serverId, newPreparedSpells]);
 
       clientResponse.json({ ok: true, result: preparedSpells });
     } catch (error) {

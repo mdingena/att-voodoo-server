@@ -38,6 +38,6 @@ const tick = (voodoo: VoodooServer) => {
 export const gracefulShutdown = (voodoo: VoodooServer) => () => {
   voodoo.logger.warn('SIGTERM received, beginning graceful shutdown.');
 
-  setInterval(() => tick(voodoo), 1000);
+  setInterval(() => tick(voodoo), 970);
   tick(voodoo);
 };
