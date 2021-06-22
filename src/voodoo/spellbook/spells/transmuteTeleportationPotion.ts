@@ -4,7 +4,7 @@ import { spawn } from '../spawn';
 import { spawnFrom } from '../spawnFrom';
 import { LiquidContainer } from '../strings/components/transcoders';
 
-export const conjureTeleportationPotion = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const transmuteTeleportationPotion = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
   const flask = voodoo.players[accountId].incantations[0].decodedString;
   const liquidContainer = flask.prefab.components?.LiquidContainer as LiquidContainer.Component;
 

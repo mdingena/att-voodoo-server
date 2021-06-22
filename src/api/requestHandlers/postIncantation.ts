@@ -103,7 +103,7 @@ export const postIncantation =
             preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
           } else {
             /* Cast the spell immediately. */
-            await spell.cast(voodoo, accountId);
+            spell.cast(voodoo, accountId);
           }
         } else {
           if (incantations[0]?.[1] === 'hilted apparatus') {
