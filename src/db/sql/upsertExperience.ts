@@ -1,8 +1,8 @@
-export const upsertExperience = `
+export const upsertExperience = (column: string) => `
 INSERT INTO
-  experience ( account_id, server_id, $3 )
-  VALUES ( $1, $2, $4 )
+  experience ( account_id, server_id, ${column} )
+  VALUES ( $1, $2, $3 )
 ON CONFLICT ( account_id, server_id )
 DO UPDATE SET
-  $3 = experience.$3 + $4
+  ${column} = experience.${column} + $3
 ;`;
