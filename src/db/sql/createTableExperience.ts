@@ -1,5 +1,5 @@
-const createTablePlayerSkills = `
-CREATE TABLE player_skills (
+const createTableExperience = `
+CREATE TABLE experience (
   account_id INTEGER NOT NULL,
   server_id INTEGER NOT NULL,
   upgrades TEXT DEFAULT '{}' NOT NULL,
@@ -13,5 +13,5 @@ CREATE TABLE player_skills (
   transmutation_xp_spent INTEGER DEFAULT 0 NOT NULL
 );
 
-CREATE UNIQUE INDEX ON player_skills (account_id, server_id);
+CREATE UNIQUE INDEX ON experience (account_id, server_id);
 `;

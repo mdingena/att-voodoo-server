@@ -1,4 +1,4 @@
-export const upsertPlayerSkills = `
+export const upsertExperience = `
 INSERT INTO
   player_skills ( account_id, server_id, $3 )
   VALUES ( $1, $2, $4 )

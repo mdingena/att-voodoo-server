@@ -1,4 +1,4 @@
-export const selectPlayerSkills = `
+export const selectExperience = `
 SELECT
   upgrades,
   abjuration_xp_total,
