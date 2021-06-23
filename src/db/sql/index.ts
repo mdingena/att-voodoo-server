@@ -6,3 +6,4 @@ export { upsertExperience } from './upsertExperience';
 export { upsertHeartbeat } from './upsertHeartbeat';
 export { upsertPreparedSpells } from './upsertPreparedSpells';
 export { upsertSession } from './upsertSession';
+export { upsertUpgrade } from './upsertUpgrade';
