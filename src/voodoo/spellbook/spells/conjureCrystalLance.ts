@@ -8,7 +8,7 @@ export const conjureCrystalLance = async (voodoo: VoodooServer, accountId: numbe
 
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-  return spawn(voodoo, accountId, {
+  spawn(voodoo, accountId, {
     prefabObject: {
       hash: PrefabHash.Crystal_Lance_Blue,
       position,
