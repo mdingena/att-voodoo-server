@@ -10,7 +10,7 @@ SELECT
   transmutation_xp_total,
   transmutation_xp_spent
 FROM
-  player_skills
+  experience
 WHERE
   account_id = $1
   AND server_id = $2
