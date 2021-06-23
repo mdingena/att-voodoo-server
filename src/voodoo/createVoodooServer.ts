@@ -33,6 +33,18 @@ type Players = {
   };
 };
 
+export type Experience = {
+  upgrades: { [key: string]: number };
+  abjurationXpTotal: number;
+  abjurationXpSpent: number;
+  conjurationXpTotal: number;
+  conjurationXpSpent: number;
+  evocationXpTotal: number;
+  evocationXpSpent: number;
+  transmutationXpTotal: number;
+  transmutationXpSpent: number;
+};
+
 type PreparedSpell = {
   name: string;
   verbalTrigger: string;
