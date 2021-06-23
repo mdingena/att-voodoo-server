@@ -1,43 +1,34 @@
-import { acidBolt } from './acidBolt';
-import { conjureCrystalLance } from './conjureCrystalLance';
-import { conjureCrystalPick } from './conjureCrystalPick';
-import { conjureCrystalSword } from './conjureCrystalSword';
-import { conjureTeleportationPotion } from './conjureTeleportationPotion';
-import { conjureWater } from './conjureWater';
-import { craftFlask } from './craftFlask';
-import { flaskOfEndlessTeleportation } from './flaskOfEndlessTeleportation';
-import { flaskOfEndlessWater } from './flaskOfEndlessWater';
-import { frostBolt } from './frostBolt';
-import { repairCopperWeapon } from './repairCopperWeapon';
-import { repairElectrumWeapon } from './repairElectrumWeapon';
-import { repairGoldWeapon } from './repairGoldWeapon';
-import { repairIronWeapon } from './repairIronWeapon';
-import { repairMythrilWeapon } from './repairMythrilWeapon';
-import { repairPalladiumWeapon } from './repairPalladiumWeapon';
-import { repairRedIronWeapon } from './repairRedIronWeapon';
-import { repairSilverWeapon } from './repairSilverWeapon';
-import { repairValyanWeapon } from './repairValyanWeapon';
-import { repairViridiumWeapon } from './repairViridiumWeapon';
-
-export const spells = {
-  acidBolt,
-  conjureCrystalLance,
-  conjureCrystalPick,
-  conjureCrystalSword,
-  conjureTeleportationPotion,
-  conjureWater,
-  craftFlask,
-  flaskOfEndlessTeleportation,
-  flaskOfEndlessWater,
-  frostBolt,
-  repairCopperWeapon,
-  repairElectrumWeapon,
-  repairGoldWeapon,
-  repairIronWeapon,
-  repairMythrilWeapon,
-  repairPalladiumWeapon,
-  repairRedIronWeapon,
-  repairSilverWeapon,
-  repairValyanWeapon,
-  repairViridiumWeapon
-};
+export { acidBolt } from './acidBolt';
+export { conjureCrystalLance } from './conjureCrystalLance';
+export { conjureCrystalPick } from './conjureCrystalPick';
+export { conjureCrystalSword } from './conjureCrystalSword';
+export { conjureWater } from './conjureWater';
+export { craftFlask } from './craftFlask';
+export { flaskOfEndlessTeleportation } from './flaskOfEndlessTeleportation';
+export { flaskOfEndlessWater } from './flaskOfEndlessWater';
+export { frostBolt } from './frostBolt';
+export { liquateElectrum } from './liquateElectrum';
+export { liquatePalladium } from './liquatePalladium';
+export { liquateRedIron } from './liquateRedIron';
+export { liquateValyan } from './liquateValyan';
+export { liquateViridium } from './liquateViridium';
+export { repairCopperDevice } from './repairCopperDevice';
+export { repairElectrumDevice } from './repairElectrumDevice';
+export { repairGoldDevice } from './repairGoldDevice';
+export { repairIronDevice } from './repairIronDevice';
+export { repairMythrilDevice } from './repairMythrilDevice';
+export { repairPalladiumDevice } from './repairPalladiumDevice';
+export { repairRedIronDevice } from './repairRedIronDevice';
+export { repairSilverDevice } from './repairSilverDevice';
+export { repairValyanDevice } from './repairValyanDevice';
+export { repairViridiumDevice } from './repairViridiumDevice';
+export { transmuteCopperIngotToOre } from './transmuteCopperIngotToOre';
+export { transmuteCopperToIron } from './transmuteCopperToIron';
+export { transmuteGoldIngotToOre } from './transmuteGoldIngotToOre';
+export { transmuteGoldToSilver } from './transmuteGoldToSilver';
+export { transmuteIronIngotToOre } from './transmuteIronIngotToOre';
+export { transmuteIronToGold } from './transmuteIronToGold';
+export { transmuteMythrilIngotToOre } from './transmuteMythrilIngotToOre';
+export { transmuteSilverIngotToOre } from './transmuteSilverIngotToOre';
+export { transmuteSilverToMythril } from './transmuteSilverToMythril';
+export { transmuteTeleportationPotion } from './transmuteTeleportationPotion';

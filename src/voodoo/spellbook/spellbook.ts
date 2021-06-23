@@ -1,5 +1,5 @@
 import { pages } from 'att-voodoo-spellbook';
-import { spells } from './spells';
+import * as spells from './spells';
 import { VoodooServer } from '../index';
 
 export type Spell = {

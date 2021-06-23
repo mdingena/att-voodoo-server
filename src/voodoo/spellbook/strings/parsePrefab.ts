@@ -11,6 +11,18 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'coal';
 
     /**
+     * ROCK
+     */
+    case PrefabHash.Stone:
+      return 'rock';
+
+    /**
+     * FLINT
+     */
+    case PrefabHash.Flint:
+      return 'flint';
+
+    /**
      * SANDSTONE
      */
     case PrefabHash.Sandstone_Stone:
@@ -180,6 +192,21 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
 
     case PrefabHash.White_Gold_Ingot:
       return 'electrum ingot';
+
+    /**
+     * RUSTY TOOLS
+     */
+    case PrefabHash.Rusty_Axe:
+      return 'rusty axe';
+
+    case PrefabHash.Rusty_Pickaxe:
+      return 'rusty pickaxe';
+
+    case PrefabHash.Rusty_Short_Sword:
+      return 'rusty shortsword';
+
+    case PrefabHash.Rusty_Pitchfork:
+      return 'rusty pitchfork';
 
     /**
      * HILTED APPARATUS
