@@ -216,8 +216,8 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   prepareSpell: async function ({ accountId, incantations, spell }) {
-    const storedSpells = await db.query(selectPreparedSpells, [accountId]);
-
+    const { serverId } = this.players[accountId];
+    const storedSpells = await db.query(selectPreparedSpells, [accountId, serverId]);
     const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0]?.prepared_spells ?? '[]');
     const maxPreparedSpells = 10; // @todo Base this off player level / skills
 
@@ -232,7 +232,7 @@ export const createVoodooServer = (): VoodooServer => ({
     preparedSpells.push(preparedSpell);
     const newPreparedSpells = JSON.stringify(preparedSpells);
 
-    await db.query(upsertPreparedSpells, [accountId, newPreparedSpells]);
+    await db.query(upsertPreparedSpells, [accountId, serverId, newPreparedSpells]);
 
     logger.info(`${accountId} prepared spell: ${spell.name}`);
 
