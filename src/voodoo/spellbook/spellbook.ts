@@ -14,6 +14,8 @@ export type Spellbook = {
   get: (incantations: [string, string][]) => Spell | undefined;
 };
 
+export type School = 'abjuration' | 'conjuration' | 'evocation' | 'transmutation';
+
 export const spellbook: Spellbook = {
   spells: new Map(
     Object.entries(spells)
