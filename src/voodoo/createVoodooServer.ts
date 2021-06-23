@@ -1,8 +1,8 @@
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { spellbook, Spellbook, Spell, DecodedString } from './spellbook';
+import { spellbook, Spellbook, Spell, School, DecodedString } from './spellbook';
 import { db } from '../db';
-import { selectPreparedSpells, upsertPreparedSpells } from '../db/sql';
+import { selectExperience, selectPreparedSpells, upsertExperience, upsertPreparedSpells } from '../db/sql';
 
 const logger = new Logger('Voodoo');
 
@@ -76,6 +76,16 @@ interface GetPlayerDetailed {
   accountId: number;
 }
 
+interface GetExperience {
+  accountId: number;
+}
+
+interface AddExperience {
+  accountId: number;
+  school: School;
+  amount: number;
+}
+
 interface SetDexterity {
   accountId: number;
   dexterity: Dexterity;
@@ -112,6 +122,8 @@ export type VoodooServer = {
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
   getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
+  getExperience: ({ accountId }: GetExperience) => Promise<Experience>;
+  addExperience: ({ accountId, school, amount }: AddExperience) => Promise<any>;
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
@@ -174,6 +186,33 @@ export const createVoodooServer = (): VoodooServer => ({
     });
 
     return player;
+  },
+
+  getExperience: async function ({ accountId }) {
+    const { serverId } = this.players[accountId];
+
+    const storedExperience = await db.query(selectExperience, [accountId, serverId]);
+    const experience: Experience = {
+      upgrades: JSON.parse(storedExperience.rows[0]?.upgrades ?? '{}'),
+      abjurationXpTotal: storedExperience.rows[0]?.abjuration_xp_total ?? 0,
+      abjurationXpSpent: storedExperience.rows[0]?.abjuration_xp_spent ?? 0,
+      conjurationXpTotal: storedExperience.rows[0]?.conjuration_xp_total ?? 0,
+      conjurationXpSpent: storedExperience.rows[0]?.conjuration_xp_spent ?? 0,
+      evocationXpTotal: storedExperience.rows[0]?.evocation_xp_total ?? 0,
+      evocationXpSpent: storedExperience.rows[0]?.evocation_xp_spent ?? 0,
+      transmutationXpTotal: storedExperience.rows[0]?.transmutation_xp_total ?? 0,
+      transmutationXpSpent: storedExperience.rows[0]?.transmutation_xp_spent ?? 0
+    };
+
+    return experience;
+  },
+
+  addExperience: async function ({ accountId, school, amount }) {
+    const { serverId } = this.players[accountId];
+
+    await db.query(upsertExperience(`${school}_xp_total`), [accountId, serverId, amount]);
+
+    return await this.getExperience({ accountId });
   },
 
   setDexterity: function ({ accountId, dexterity }) {
