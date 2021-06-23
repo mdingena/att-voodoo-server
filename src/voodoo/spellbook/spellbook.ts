@@ -4,6 +4,7 @@ import { VoodooServer } from '../index';
 
 export type Spell = {
   name: string;
+  school: School;
   cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
   requiresPreparation: boolean;
   verbalTrigger?: string;

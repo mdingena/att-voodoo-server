@@ -2,7 +2,13 @@ import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
 import { spellbook, Spellbook, Spell, School, DecodedString } from './spellbook';
 import { db } from '../db';
-import { selectExperience, selectPreparedSpells, upsertExperience, upsertPreparedSpells } from '../db/sql';
+import {
+  selectExperience,
+  selectPreparedSpells,
+  upsertExperience,
+  upsertPreparedSpells,
+  upsertUpgrade
+} from '../db/sql';
 
 const logger = new Logger('Voodoo');
 
@@ -30,11 +36,16 @@ type Players = {
     serverConnection: ServerConnection;
     dexterity: Dexterity;
     incantations: DockedIncantation[];
+    experience: Experience;
   };
 };
 
+type Upgrades = {
+  [key: string]: { [key: string]: number };
+};
+
 export type Experience = {
-  upgrades: { [key: string]: number };
+  upgrades: Upgrades;
   abjurationXpTotal: number;
   abjurationXpSpent: number;
   conjurationXpTotal: number;
@@ -78,12 +89,20 @@ interface GetPlayerDetailed {
 
 interface GetExperience {
   accountId: number;
+  serverId: number;
 }
 
 interface AddExperience {
   accountId: number;
   school: School;
   amount: number;
+}
+
+interface AddUpgrade {
+  accountId: number;
+  spell: Spell;
+  upgrade: string;
+  cost: number;
 }
 
 interface SetDexterity {
@@ -117,13 +136,14 @@ export type VoodooServer = {
   players: Players;
   spellbook: Spellbook;
   updateServer: (server: Server) => void;
-  addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => void;
+  addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => Promise<void>;
   setPlayerClientStatus: ({ accountId, isVoodooClient }: PlayerClientStatus) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
   getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
-  getExperience: ({ accountId }: GetExperience) => Promise<Experience>;
-  addExperience: ({ accountId, school, amount }: AddExperience) => Promise<any>;
+  getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
+  addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
+  addUpgrade: ({ accountId, spell, upgrade, cost }: AddUpgrade) => Promise<false | Experience>;
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
@@ -145,13 +165,16 @@ export const createVoodooServer = (): VoodooServer => ({
     this.servers = [...servers, server];
   },
 
-  addPlayer: function ({ accountId, serverId, serverConnection }) {
+  addPlayer: async function ({ accountId, serverId, serverConnection }) {
+    const experience = await this.getExperience({ accountId, serverId });
+
     const newPlayer = {
       isVoodooClient: false,
       serverId,
       serverConnection,
       dexterity: 'right' as Dexterity,
-      incantations: []
+      incantations: [],
+      experience
     };
 
     this.players = { ...this.players, [accountId]: newPlayer };
@@ -188,10 +211,9 @@ export const createVoodooServer = (): VoodooServer => ({
     return player;
   },
 
-  getExperience: async function ({ accountId }) {
-    const { serverId } = this.players[accountId];
-
+  getExperience: async function ({ accountId, serverId }) {
     const storedExperience = await db.query(selectExperience, [accountId, serverId]);
+
     const experience: Experience = {
       upgrades: JSON.parse(storedExperience.rows[0]?.upgrades ?? '{}'),
       abjurationXpTotal: storedExperience.rows[0]?.abjuration_xp_total ?? 0,
@@ -212,7 +234,30 @@ export const createVoodooServer = (): VoodooServer => ({
 
     await db.query(upsertExperience(`${school}_xp_total`), [accountId, serverId, amount]);
 
-    return await this.getExperience({ accountId });
+    return this.getExperience({ accountId, serverId });
+  },
+
+  addUpgrade: async function ({ accountId, spell, upgrade, cost }) {
+    const { serverId } = this.players[accountId];
+
+    const experience = await this.getExperience({ accountId, serverId });
+
+    const experienceTotal = experience[`${spell.school}XpTotal` as keyof Experience] as number;
+    const experienceSpent = experience[`${spell.school}XpSpent` as keyof Experience] as number;
+    const experienceBudget = experienceTotal - experienceSpent;
+
+    if (experienceBudget < cost) return false;
+
+    const { upgrades } = experience;
+
+    upgrades[spell.name] = {
+      ...upgrades[spell.name],
+      [upgrade]: (upgrades[spell.name]?.[upgrade] ?? 0) + 1
+    };
+
+    await db.query(upsertUpgrade(`${spell.school}_xp_spent`), [accountId, serverId, cost, JSON.stringify(upgrades)]);
+
+    return this.getExperience({ accountId, serverId });
   },
 
   setDexterity: function ({ accountId, dexterity }) {
