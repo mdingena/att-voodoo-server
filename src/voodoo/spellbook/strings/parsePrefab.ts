@@ -5,10 +5,16 @@ import { parseFlask, parseHiltedApparatus, parseLeather } from './parsers';
 export const parsePrefab = (decoded: DecodedString): string | undefined => {
   switch (decoded.hash) {
     /**
-     * COAL
+     * FUEL
      */
     case PrefabHash.Coal:
       return 'coal';
+
+    case PrefabHash.MRK_Fuel_Core:
+      return 'fuel core';
+
+    case PrefabHash.MRK_Molten_Core:
+      return 'molten core';
 
     /**
      * ROCK
