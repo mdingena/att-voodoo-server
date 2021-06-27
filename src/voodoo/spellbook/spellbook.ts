@@ -1,4 +1,4 @@
-import { pages } from 'att-voodoo-spellbook';
+import { pages, School } from 'att-voodoo-spellbook';
 import * as spells from './spells';
 import { VoodooServer } from '../index';
 
@@ -14,8 +14,6 @@ export type Spellbook = {
   spells: Map<string, Spell>;
   get: (incantations: [string, string][]) => Spell | undefined;
 };
-
-export type School = 'abjuration' | 'conjuration' | 'evocation' | 'transmutation';
 
 export const spellbook: Spellbook = {
   spells: new Map(
