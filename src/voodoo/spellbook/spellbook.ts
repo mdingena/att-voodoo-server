@@ -1,6 +1,7 @@
 import { pages, School } from 'att-voodoo-spellbook';
 import * as spells from './spells';
-import { VoodooServer } from '../index';
+import { VoodooServer } from '..';
+import { xpGain } from './experience';
 
 export type Spell = {
   name: string;
@@ -21,7 +22,14 @@ export const spellbook: Spellbook = {
       .filter(([spellName]) => pages.hasOwnProperty(spellName))
       .map(([spellName, spell]) => [
         JSON.stringify(pages[spellName].incantations),
-        { ...pages[spellName], cast: spell }
+        {
+          cast: async (voodoo, accountId) => {
+            await spell(voodoo, accountId);
+            const xp = xpGain(pages[spellName].incantations.length);
+            voodoo.addExperience({ accountId, school: pages[spellName].school, amount: xp });
+          },
+          ...pages[spellName]
+        }
       ])
   ),
 
