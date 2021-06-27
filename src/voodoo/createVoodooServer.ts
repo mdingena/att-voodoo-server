@@ -234,7 +234,11 @@ export const createVoodooServer = (): VoodooServer => ({
 
     await db.query(upsertExperience(`${school}_xp_total`), [accountId, serverId, amount]);
 
-    return this.getExperience({ accountId, serverId });
+    const experience = await this.getExperience({ accountId, serverId });
+
+    this.players[accountId].experience = experience;
+
+    return experience;
   },
 
   addUpgrade: async function ({ accountId, spell, upgrade, cost }) {
@@ -257,7 +261,11 @@ export const createVoodooServer = (): VoodooServer => ({
 
     await db.query(upsertUpgrade(`${spell.school}_xp_spent`), [accountId, serverId, cost, JSON.stringify(upgrades)]);
 
-    return this.getExperience({ accountId, serverId });
+    const newExperience = await this.getExperience({ accountId, serverId });
+
+    this.players[accountId].experience = experience;
+
+    return newExperience;
   },
 
   setDexterity: function ({ accountId, dexterity }) {
