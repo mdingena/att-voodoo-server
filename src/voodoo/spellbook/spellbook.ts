@@ -1,4 +1,4 @@
-import { pages, School } from 'att-voodoo-spellbook';
+import { pages, School, Upgrades } from 'att-voodoo-spellbook';
 import * as spells from './spells';
 import { VoodooServer } from '..';
 import { xpGain } from './experience';
@@ -16,21 +16,28 @@ export type Spellbook = {
   get: (incantations: [string, string][]) => Spell | undefined;
 };
 
+export type SpellFunction = (voodoo: VoodooServer, accountId: number, upgrades: Upgrades) => Promise<void>;
+
 export const spellbook: Spellbook = {
   spells: new Map(
     Object.entries(spells)
       .filter(([spellName]) => pages.hasOwnProperty(spellName))
-      .map(([spellName, spell]) => [
-        JSON.stringify(pages[spellName].incantations),
-        {
-          cast: async (voodoo, accountId) => {
-            await spell(voodoo, accountId);
-            const xp = xpGain(pages[spellName].incantations.length);
-            voodoo.addExperience({ accountId, school: pages[spellName].school, amount: xp });
-          },
-          ...pages[spellName]
-        }
-      ])
+      .map(([spellName, spell]) => {
+        const { incantations, school, upgrades } = pages[spellName];
+
+        return [
+          JSON.stringify(incantations),
+          {
+            cast: async (voodoo, accountId) => {
+              await spell(voodoo, accountId, upgrades);
+
+              const amount = xpGain(incantations.length);
+              voodoo.addExperience({ accountId, school, amount });
+            },
+            ...pages[spellName]
+          }
+        ];
+      })
   ),
 
   get: function (incantations: [string, string][]) {
