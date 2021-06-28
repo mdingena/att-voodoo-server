@@ -98,6 +98,11 @@ interface AddExperience {
   amount: number;
 }
 
+interface GetSpellUpgrades {
+  accountId: number;
+  spell: string;
+}
+
 interface AddUpgrade {
   accountId: number;
   spell: Spell;
@@ -143,6 +148,7 @@ export type VoodooServer = {
   getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
   getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
   addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
+  getSpellUpgrades: ({ accountId, spell }: GetSpellUpgrades) => { [key: string]: number };
   addUpgrade: ({ accountId, spell, upgrade, cost }: AddUpgrade) => Promise<false | Experience>;
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
@@ -239,6 +245,10 @@ export const createVoodooServer = (): VoodooServer => ({
     this.players[accountId].experience = experience;
 
     return experience;
+  },
+
+  getSpellUpgrades: function ({ accountId, spell }) {
+    return this.players[accountId].experience.upgrades[spell] ?? {};
   },
 
   addUpgrade: async function ({ accountId, spell, upgrade, cost }) {
