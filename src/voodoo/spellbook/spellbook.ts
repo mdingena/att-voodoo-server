@@ -9,6 +9,7 @@ export type Spell = {
   cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
   requiresPreparation: boolean;
   verbalTrigger?: string;
+  upgrades: Upgrades;
 };
 
 export type Spellbook = {
