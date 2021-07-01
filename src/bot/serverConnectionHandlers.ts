@@ -12,7 +12,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
       info: { id, name, online_players }
     }
   }: ServerConnection) => {
-    connection.server.off('update', handleUpdate);
+    connection.server.off('status', handleServerStatus);
     connection.unsubscribe('PlayerJoined', handlePlayerJoined);
     connection.unsubscribe('PlayerLeft', handlePlayerLeft);
     voodoo.removePlayers({ serverId: id });
@@ -27,7 +27,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   };
 
   /* Server info updated event handler. */
-  const handleUpdate = (server: Server) => {
+  const handleServerStatus = (server: Server) => {
     voodoo.updateServer({
       id: server.info.id,
       name: server.info.name,
@@ -43,34 +43,18 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
       serverId: connection.server.info.id,
       serverConnection: connection
     });
-    /* Hijack player event because server update event doesn't fire. */
-    // @todo remove
-    voodoo.updateServer({
-      id: connection.server.info.id,
-      name: connection.server.info.name,
-      online: connection.server.isOnline,
-      players: (voodoo.servers.find(({ id }) => id === connection.server.info.id)?.players ?? 0) + 1
-    });
   };
 
   /* Player left the server event handler. */
   const handlePlayerLeft = (event: any) => {
     voodoo.removePlayer({ accountId: event.user.id });
-    /* Hijack player event because server update event doesn't fire. */
-    // @todo remove
-    voodoo.updateServer({
-      id: connection.server.info.id,
-      name: connection.server.info.name,
-      online: connection.server.isOnline,
-      players: (voodoo.servers.find(({ id }) => id === connection.server.info.id)?.players ?? 1) - 1
-    });
   };
 
   /* Register event handlers. */
   connection.on('closed', handleClosed);
   connection.subscribe('PlayerJoined', handlePlayerJoined);
   connection.subscribe('PlayerLeft', handlePlayerLeft);
-  connection.server.on('update', handleUpdate);
+  connection.server.on('status', handleServerStatus);
 
   /* Update server info immediately after connecting. */
   voodoo.updateServer({
