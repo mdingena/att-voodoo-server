@@ -293,7 +293,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players[accountId].experience = experience;
 
-    logger.success(`[${serverName ?? serverId}] ${accountId} upgraded ${spell} ${upgrade} for ${XP_UPGRADE_COST} XP`);
+    logger.success(`[${serverName ?? serverId}] ${accountId} upgraded ${spell} (${upgrade}) for ${XP_UPGRADE_COST} XP`);
 
     return newExperience;
   },
