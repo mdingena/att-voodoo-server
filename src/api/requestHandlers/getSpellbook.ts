@@ -3,13 +3,19 @@ import { VoodooServer } from '../../voodoo';
 
 export const getSpellbook = (voodoo: VoodooServer): RequestHandler => {
   const spellbook = [...voodoo.spellbook.spells.values()].reduce(
-    (sum, spell) => ({
-      ...sum,
+    (spells, spell) => ({
+      ...spells,
       [spell.name]: {
         name: spell.name,
         school: spell.school,
         requiresPreparation: spell.requiresPreparation,
-        upgrades: spell.upgrades
+        upgrades: Object.values(spell.upgrades).reduce(
+          (upgrades, upgrade) => ({
+            ...upgrades,
+            [upgrade.name]: upgrade
+          }),
+          {}
+        )
       }
     }),
     {}
