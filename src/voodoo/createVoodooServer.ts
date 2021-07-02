@@ -10,6 +10,8 @@ import {
   upsertUpgrade
 } from '../db/sql';
 
+const XP_UPGRADE_COST = 1000;
+
 const logger = new Logger('Voodoo');
 
 type Server = {
@@ -105,9 +107,9 @@ interface GetSpellUpgrades {
 
 interface AddUpgrade {
   accountId: number;
-  spell: Spell;
+  school: School;
+  spell: string;
   upgrade: string;
-  cost: number;
 }
 
 interface SetDexterity {
@@ -149,7 +151,7 @@ export type VoodooServer = {
   getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
   addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
   getSpellUpgrades: ({ accountId, spell }: GetSpellUpgrades) => { [key: string]: number };
-  addUpgrade: ({ accountId, spell, upgrade, cost }: AddUpgrade) => Promise<false | Experience>;
+  addUpgrade: ({ accountId, school, spell, upgrade }: AddUpgrade) => Promise<false | Experience>;
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
@@ -261,32 +263,37 @@ export const createVoodooServer = (): VoodooServer => ({
     return this.players[accountId].experience.upgrades[spell] ?? {};
   },
 
-  addUpgrade: async function ({ accountId, spell, upgrade, cost }) {
+  addUpgrade: async function ({ accountId, school, spell, upgrade }) {
     const { serverId } = this.players[accountId];
     const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
 
     const experience = await this.getExperience({ accountId, serverId });
 
-    const experienceTotal = experience[`${spell.school}XpTotal` as keyof Experience] as number;
-    const experienceSpent = experience[`${spell.school}XpSpent` as keyof Experience] as number;
+    const experienceTotal = experience[`${school}XpTotal` as keyof Experience] as number;
+    const experienceSpent = experience[`${school}XpSpent` as keyof Experience] as number;
     const experienceBudget = experienceTotal - experienceSpent;
 
-    if (experienceBudget < cost) return false;
+    if (experienceBudget < XP_UPGRADE_COST) return false;
 
     const { upgrades } = experience;
 
-    upgrades[spell.name] = {
-      ...upgrades[spell.name],
-      [upgrade]: (upgrades[spell.name]?.[upgrade] ?? 0) + 1
+    upgrades[spell] = {
+      ...upgrades[spell],
+      [upgrade]: (upgrades[spell]?.[upgrade] ?? 0) + 1
     };
 
-    await db.query(upsertUpgrade(`${spell.school}_xp_spent`), [accountId, serverId, cost, JSON.stringify(upgrades)]);
+    await db.query(upsertUpgrade(`${school}_xp_spent`), [
+      accountId,
+      serverId,
+      XP_UPGRADE_COST,
+      JSON.stringify(upgrades)
+    ]);
 
     const newExperience = await this.getExperience({ accountId, serverId });
 
     this.players[accountId].experience = experience;
 
-    logger.success(`[${serverName ?? serverId}] ${accountId} upgraded ${spell.name} ${upgrade} for ${cost} XP`);
+    logger.success(`[${serverName ?? serverId}] ${accountId} upgraded ${spell} ${upgrade} for ${XP_UPGRADE_COST} XP`);
 
     return newExperience;
   },
