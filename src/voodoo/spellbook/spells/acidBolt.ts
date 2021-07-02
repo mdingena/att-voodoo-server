@@ -29,7 +29,7 @@ export const acidBolt: SpellFunction = async (voodoo, accountId, upgrades) => {
     }
   });
 
-  if (attributes.ambidextrous) {
+  if (attributes.ambidextrous === 2) {
     const leftHand = spawnFrom(player, 'leftPalm', 0.3);
 
     if (attributes.burst > 1) voodoo.command({ accountId, command: `repeat ${attributes.burst} 0.2` });
