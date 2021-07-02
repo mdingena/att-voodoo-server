@@ -6,7 +6,7 @@ import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
 
 export const acidBolt: SpellFunction = async (voodoo, accountId, upgrades) => {
-  const spellUpgrades = voodoo.getSpellUpgrades({ accountId, spell: 'acidBolt' });
+  const spellUpgrades = voodoo.getSpellUpgrades({ accountId, spell: 'Acid Bolt' });
   const attributes = getSpellAttributes(spellUpgrades, upgrades);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
