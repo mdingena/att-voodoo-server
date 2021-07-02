@@ -9,7 +9,7 @@ type SpellUpgrades = { [key: string]: number };
 
 type UpgradeConfigs = { [key: string]: UpgradeConfig };
 
-const upgradedAttribute = (
+const upgradeAttribute = (
   upgrades: number | undefined,
   { isStepFunction, min, max, constant }: UpgradeConfig
 ): number => {
@@ -25,6 +25,6 @@ export const xpGain = (incantations: number): number => {
 
 export const getSpellAttributes = (spellUpgrades: SpellUpgrades, configs: UpgradeConfigs): SpellUpgrades =>
   Object.keys(configs).reduce(
-    (sum, key) => ({ ...sum, [key]: upgradedAttribute(spellUpgrades[key], configs[key]) }),
+    (sum, key) => ({ ...sum, [key]: upgradeAttribute(spellUpgrades[key], configs[key]) }),
     {}
   );
