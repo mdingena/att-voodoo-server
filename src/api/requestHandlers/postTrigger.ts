@@ -48,24 +48,31 @@ export const postTrigger =
       }
 
       /* Get the prepared spell's incantations. */
-      const { incantations } = preparedSpells[spellIndex];
+      const preparedSpell = preparedSpells[spellIndex];
 
       /* Search for spell in spellbook matching prepared incantations. */
-      const spell = voodoo.spellbook.get(incantations);
+      const spell = voodoo.spellbook.get(preparedSpell.incantations);
 
       if (!spell)
         return clientResponse.status(500).json({
           ok: false,
           error: 'Something went wrong locating the spell for the given incantations',
-          incantations
+          incantations: preparedSpell.incantations
         });
 
       // @todo abstract casting prepared spell into VoodooServer
       /* Cast the prepared spell. */
       spell.cast(voodoo, accountId);
 
-      /* Remove prepared spell. */
-      preparedSpells.splice(spellIndex, 1);
+      /* Reduce prepare spell charges by one. */
+      const remainingCharges = (preparedSpell.charges ?? 1) - 1;
+
+      if (remainingCharges) {
+        preparedSpell.charges = remainingCharges;
+      } else {
+        /* Remove prepared spell. */
+        preparedSpells.splice(spellIndex, 1);
+      }
 
       /* Store new prepared spells list. */
       const newPreparedSpells = JSON.stringify(preparedSpells);
