@@ -39,6 +39,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   /* Player joined the server event handler. */
   const handlePlayerJoined = (event: any) => {
     voodoo.addPlayer({
+      name: event.user.username,
       accountId: event.user.id,
       serverId: connection.server.info.id,
       serverConnection: connection
@@ -70,6 +71,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
 
     players.map((player: any) =>
       voodoo.addPlayer({
+        name: player.username,
         accountId: player.id,
         serverId: connection.server.info.id,
         serverConnection: connection

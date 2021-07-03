@@ -39,6 +39,7 @@ type SpellpageIncantation = [string, string];
 
 type Players = {
   [accountId: number]: {
+    name: string;
     isVoodooClient: boolean;
     serverId: number;
     serverConnection: ServerConnection;
@@ -74,6 +75,7 @@ type PreparedSpell = {
 export type PreparedSpells = PreparedSpell[];
 
 interface AddPlayer {
+  name: string;
   accountId: number;
   serverId: number;
   serverConnection: ServerConnection;
@@ -150,7 +152,7 @@ export type VoodooServer = {
   players: Players;
   spellbook: Spellbook;
   updateServer: (server: Server) => void;
-  addPlayer: ({ accountId, serverId, serverConnection }: AddPlayer) => Promise<void>;
+  addPlayer: ({ name, accountId, serverId, serverConnection }: AddPlayer) => Promise<void>;
   setPlayerClientStatus: ({ accountId, isVoodooClient }: PlayerClientStatus) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
@@ -180,10 +182,11 @@ export const createVoodooServer = (): VoodooServer => ({
     this.servers = [...servers, server];
   },
 
-  addPlayer: async function ({ accountId, serverId, serverConnection }) {
+  addPlayer: async function ({ name, accountId, serverId, serverConnection }) {
     const experience = await this.getExperience({ accountId, serverId });
 
     const newPlayer = {
+      name,
       isVoodooClient: false,
       serverId,
       serverConnection,
