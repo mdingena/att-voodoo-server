@@ -1,6 +1,6 @@
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { spellbook, Spellbook, Spell, School, DecodedString } from './spellbook';
+import { spellbook, Spellbook, Spell, School, DecodedString, upgradeAttribute, UpgradeConfig } from './spellbook';
 import { db } from '../db';
 import {
   selectExperience,
@@ -11,6 +11,12 @@ import {
 } from '../db/sql';
 
 const XP_UPGRADE_COST = 1000;
+const PREPARED_SPELLS_CONFIG: UpgradeConfig = {
+  isStepFunction: true,
+  min: 10,
+  max: 25,
+  constant: 0.0000343
+};
 
 const logger = new Logger('Voodoo');
 
@@ -360,7 +366,13 @@ export const createVoodooServer = (): VoodooServer => ({
     const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
     const storedSpells = await db.query(selectPreparedSpells, [accountId, serverId]);
     const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0]?.prepared_spells ?? '[]');
-    const maxPreparedSpells = 10; // @todo Base this off player level / skills
+
+    const {
+      experience: { abjurationXpTotal, conjurationXpTotal, evocationXpTotal, transmutationXpTotal }
+    } = this.players[accountId];
+
+    const xpTotal = abjurationXpTotal + conjurationXpTotal + evocationXpTotal + transmutationXpTotal;
+    const maxPreparedSpells = upgradeAttribute(xpTotal, PREPARED_SPELLS_CONFIG);
 
     if (preparedSpells.length >= maxPreparedSpells) preparedSpells.shift();
 

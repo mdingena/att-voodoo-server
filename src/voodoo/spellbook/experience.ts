@@ -1,4 +1,4 @@
-type UpgradeConfig = {
+export type UpgradeConfig = {
   isStepFunction: boolean;
   min: number;
   max: number;
@@ -9,7 +9,7 @@ type SpellUpgrades = { [key: string]: number };
 
 type UpgradeConfigs = { [key: string]: UpgradeConfig };
 
-const upgradeAttribute = (
+export const upgradeAttribute = (
   upgrades: number | undefined,
   { isStepFunction, min, max, constant }: UpgradeConfig
 ): number => {
