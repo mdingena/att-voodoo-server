@@ -68,6 +68,7 @@ type PreparedSpell = {
   name: string;
   verbalTrigger: string;
   incantations: [string, string][];
+  charges: number;
 };
 
 export type PreparedSpells = PreparedSpell[];
@@ -362,24 +363,27 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   prepareSpell: async function ({ accountId, incantations, spell }) {
-    const { serverId } = this.players[accountId];
+    const { serverId, experience } = this.players[accountId];
     const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
     const storedSpells = await db.query(selectPreparedSpells, [accountId, serverId]);
     const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0]?.prepared_spells ?? '[]');
 
-    const {
-      experience: { abjurationXpTotal, conjurationXpTotal, evocationXpTotal, transmutationXpTotal }
-    } = this.players[accountId];
+    const { abjurationXpTotal, conjurationXpTotal, evocationXpTotal, transmutationXpTotal, upgrades } = experience;
 
     const xpTotal = abjurationXpTotal + conjurationXpTotal + evocationXpTotal + transmutationXpTotal;
     const maxPreparedSpells = upgradeAttribute(xpTotal, PREPARED_SPELLS_CONFIG);
+
+    const upgradeLevel = upgrades[spell.name]?.['Eidetic Memory'] ?? 0;
+    const upgradeConfig: UpgradeConfig | undefined = spell.upgrades.eidetic;
+    const charges = upgradeLevel === 0 ? 1 : upgradeAttribute(upgradeLevel, upgradeConfig);
 
     if (preparedSpells.length >= maxPreparedSpells) preparedSpells.shift();
 
     const preparedSpell: PreparedSpell = {
       name: spell.name,
       verbalTrigger: spell.verbalTrigger ?? '',
-      incantations
+      incantations,
+      charges
     };
 
     preparedSpells.push(preparedSpell);
