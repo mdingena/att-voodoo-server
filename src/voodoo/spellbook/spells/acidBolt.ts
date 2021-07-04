@@ -5,9 +5,9 @@ import { spawnVelocity } from '../spawnVelocity';
 import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
 
-export const acidBolt: SpellFunction = async (voodoo, accountId, upgrades) => {
-  const spellUpgrades = voodoo.getSpellUpgrades({ accountId, spell: 'Acid Bolt' });
-  const attributes = getSpellAttributes(spellUpgrades, upgrades);
+export const acidBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
+  const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'acidBolt' });
+  const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
   const rightHand = spawnFrom(player, 'rightPalm', 0.3);
@@ -50,7 +50,6 @@ export const acidBolt: SpellFunction = async (voodoo, accountId, upgrades) => {
     });
   }
 
-  const { name, serverId } = voodoo.players[accountId];
-  const { name: serverName } = voodoo.servers.find(({ id }) => id === serverId) ?? {};
+  const { name, serverId, serverName } = voodoo.players[accountId];
   voodoo.logger.success(`[${serverName ?? serverId} | ${name}] casted Acid Bolt`);
 };
