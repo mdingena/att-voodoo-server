@@ -13,7 +13,7 @@ import {
 type Config = {
   CONDUIT_DISTANCE: number;
   PREPARED_SPELLS_CONFIG: UpgradeConfig;
-  XP_UPGRADE_COST: number;
+  UPGRADE_COST_XP: number;
 };
 
 const logger = new Logger('Voodoo');
@@ -177,7 +177,7 @@ export const createVoodooServer = (): VoodooServer => ({
       max: 25,
       constant: 0.0000343
     },
-    XP_UPGRADE_COST: 1000
+    UPGRADE_COST_XP: 1000
   },
 
   logger,
@@ -291,9 +291,9 @@ export const createVoodooServer = (): VoodooServer => ({
     const experienceTotal = experience[`${school}XpTotal` as keyof Experience] as number;
     const experienceSpent = experience[`${school}XpSpent` as keyof Experience] as number;
     const experienceBudget = experienceTotal - experienceSpent;
-    const { XP_UPGRADE_COST } = this.config;
+    const { UPGRADE_COST_XP } = this.config;
 
-    if (experienceBudget < XP_UPGRADE_COST) return false;
+    if (experienceBudget < UPGRADE_COST_XP) return false;
 
     const { upgrades } = experience;
 
@@ -305,7 +305,7 @@ export const createVoodooServer = (): VoodooServer => ({
     await db.query(upsertUpgrade(`${school}_xp_spent`), [
       accountId,
       serverId,
-      XP_UPGRADE_COST,
+      UPGRADE_COST_XP,
       JSON.stringify(upgrades)
     ]);
 
@@ -313,7 +313,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players[accountId].experience = experience;
 
-    logger.success(`[${serverName ?? serverId} | ${name}] upgraded ${spell} (${upgrade}) for ${XP_UPGRADE_COST} XP`);
+    logger.success(`[${serverName ?? serverId} | ${name}] upgraded ${spell} (${upgrade}) for ${UPGRADE_COST_XP} XP`);
 
     return newExperience;
   },
