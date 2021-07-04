@@ -10,12 +10,10 @@ import {
   upsertUpgrade
 } from '../db/sql';
 
-const XP_UPGRADE_COST = 1000;
-const PREPARED_SPELLS_CONFIG: UpgradeConfig = {
-  isStepFunction: true,
-  min: 10,
-  max: 25,
-  constant: 0.0000343
+type Config = {
+  CONDUIT_DISTANCE: number;
+  PREPARED_SPELLS_CONFIG: UpgradeConfig;
+  XP_UPGRADE_COST: number;
 };
 
 const logger = new Logger('Voodoo');
@@ -148,6 +146,7 @@ interface PrepareSpell {
 }
 
 export type VoodooServer = {
+  config: Config;
   logger: Logger;
   servers: Server[];
   players: Players;
@@ -170,6 +169,17 @@ export type VoodooServer = {
 };
 
 export const createVoodooServer = (): VoodooServer => ({
+  config: {
+    CONDUIT_DISTANCE: 10,
+    PREPARED_SPELLS_CONFIG: {
+      isStepFunction: true,
+      min: 10,
+      max: 25,
+      constant: 0.0000343
+    },
+    XP_UPGRADE_COST: 1000
+  },
+
   logger,
 
   servers: [],
@@ -281,6 +291,7 @@ export const createVoodooServer = (): VoodooServer => ({
     const experienceTotal = experience[`${school}XpTotal` as keyof Experience] as number;
     const experienceSpent = experience[`${school}XpSpent` as keyof Experience] as number;
     const experienceBudget = experienceTotal - experienceSpent;
+    const { XP_UPGRADE_COST } = this.config;
 
     if (experienceBudget < XP_UPGRADE_COST) return false;
 
@@ -368,7 +379,7 @@ export const createVoodooServer = (): VoodooServer => ({
     const { abjurationXpTotal, conjurationXpTotal, evocationXpTotal, transmutationXpTotal, upgrades } = experience;
 
     const xpTotal = abjurationXpTotal + conjurationXpTotal + evocationXpTotal + transmutationXpTotal;
-    const maxPreparedSpells = upgradeAttribute(xpTotal, PREPARED_SPELLS_CONFIG);
+    const maxPreparedSpells = upgradeAttribute(xpTotal, this.config.PREPARED_SPELLS_CONFIG);
 
     const upgradeLevel = upgrades[spell.name]?.['Eidetic Memory'] ?? 0;
     const upgradeConfig: UpgradeConfig | undefined = spell.upgrades.eidetic;

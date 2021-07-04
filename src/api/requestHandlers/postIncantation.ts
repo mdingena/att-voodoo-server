@@ -3,8 +3,6 @@ import { db } from '../../db';
 import { selectSession } from '../../db/sql';
 import { VoodooServer, PreparedSpells, Prefab, decodeString, parsePrefab, spawn, spawnFrom } from '../../voodoo';
 
-const conduitDistance = 10;
-
 export const postIncantation =
   (voodoo: VoodooServer): RequestHandler =>
   async (clientRequest, clientResponse) => {
@@ -22,7 +20,7 @@ export const postIncantation =
       /* Verify player is near a Spellcrafting Conduit. */
       const { Result: nearbyPrefabs } = await voodoo.command({
         accountId,
-        command: `select find ${accountId} ${conduitDistance}`
+        command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
       });
 
       if ((nearbyPrefabs ?? []).length === 0) {
