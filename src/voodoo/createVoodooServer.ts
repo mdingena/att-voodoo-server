@@ -42,6 +42,7 @@ type Players = {
     name: string;
     isVoodooClient: boolean;
     serverId: number;
+    serverName?: string;
     serverConnection: ServerConnection;
     dexterity: Dexterity;
     incantations: DockedIncantation[];
@@ -185,10 +186,13 @@ export const createVoodooServer = (): VoodooServer => ({
   addPlayer: async function ({ name, accountId, serverId, serverConnection }) {
     const experience = await this.getExperience({ accountId, serverId });
 
+    const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
+
     const newPlayer = {
       name,
       isVoodooClient: false,
       serverId,
+      serverName,
       serverConnection,
       dexterity: 'right' as Dexterity,
       incantations: [],
@@ -196,8 +200,6 @@ export const createVoodooServer = (): VoodooServer => ({
     };
 
     this.players = { ...this.players, [accountId]: newPlayer };
-
-    const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
 
     logger.success(`[${serverName ?? serverId} | ${name}] added`);
   },
@@ -209,8 +211,7 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   removePlayer: function ({ accountId }) {
-    const { name, serverId } = this.players[accountId];
-    const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
+    const { name, serverId, serverName } = this.players[accountId];
 
     delete this.players[accountId];
 
@@ -255,8 +256,7 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   addExperience: async function ({ accountId, school, amount }) {
-    const { name, serverId } = this.players[accountId];
-    const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
+    const { name, serverId, serverName } = this.players[accountId];
 
     await db.query(upsertExperience(`${school}_xp_total`), [accountId, serverId, amount]);
 
@@ -274,8 +274,7 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   addUpgrade: async function ({ accountId, school, spell, upgrade }) {
-    const { name, serverId } = this.players[accountId];
-    const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
+    const { name, serverId, serverName } = this.players[accountId];
 
     const experience = await this.getExperience({ accountId, serverId });
 
@@ -309,8 +308,7 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   setDexterity: function ({ accountId, dexterity }) {
-    const { name, serverId } = this.players[accountId];
-    const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
+    const { name, serverId, serverName } = this.players[accountId];
 
     this.players = { ...this.players, [accountId]: { ...this.players[accountId], dexterity } };
 
@@ -329,10 +327,8 @@ export const createVoodooServer = (): VoodooServer => ({
       [accountId]: { ...player, incantations: newIncantations }
     };
 
-    const { name: serverName } = this.servers.find(({ id }) => id === player.serverId) ?? {};
-
     logger.success(
-      `[${serverName ?? player.serverId} | ${
+      `[${player.serverName ?? player.serverId} | ${
         player.name
       }] incanted "${incantation.verbalSpellComponent.toUpperCase()}" (${incantation.materialSpellComponent})`
     );
@@ -347,9 +343,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players = { ...this.players, [accountId]: { ...player, incantations: [] } };
 
-    const { name: serverName } = this.servers.find(({ id }) => id === player.serverId) ?? {};
-
-    logger.success(`[${serverName ?? player.serverId} | ${player.name}] cleared incantations`);
+    logger.success(`[${player.serverName ?? player.serverId} | ${player.name}] cleared incantations`);
 
     return [];
   },
@@ -361,16 +355,13 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const result = await player.serverConnection.send(command);
 
-    const { name: serverName } = this.servers.find(({ id }) => id === player.serverId) ?? {};
-
-    logger.log(`[${serverName ?? player.serverId} | ${player.name}] ${command}`);
+    logger.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
 
     return result;
   },
 
   prepareSpell: async function ({ accountId, incantations, spell }) {
-    const { name, serverId, experience } = this.players[accountId];
-    const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
+    const { name, serverId, serverName, experience } = this.players[accountId];
     const storedSpells = await db.query(selectPreparedSpells, [accountId, serverId]);
     const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0]?.prepared_spells ?? '[]');
 
