@@ -1,14 +1,17 @@
-import { VoodooServer } from '../..';
+import { SpellFunction } from '../spellbook';
+// import { getSpellAttributes } from '../experience';
+import { spawnFrom } from '../spawnFrom';
 import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
-import { spawnFrom } from '../spawnFrom';
 
-export const craftFlask = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const craftFlask: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
+  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'craftFlask' });
+  // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
+
   const player = await voodoo.getPlayerDetailed({ accountId });
-
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-  return spawn(voodoo, accountId, {
+  spawn(voodoo, accountId, {
     prefabObject: {
       hash: PrefabHash.Potion_Medium,
       position,
@@ -22,4 +25,7 @@ export const craftFlask = async (voodoo: VoodooServer, accountId: number): Promi
       LiquidContainer: {}
     }
   });
+
+  const { name, serverId, serverName } = voodoo.players[accountId];
+  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Craft Flask`);
 };
