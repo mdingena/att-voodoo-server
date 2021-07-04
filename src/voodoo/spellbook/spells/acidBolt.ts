@@ -49,4 +49,8 @@ export const acidBolt: SpellFunction = async (voodoo, accountId, upgrades) => {
       }
     });
   }
+
+  const { name, serverId } = voodoo.players[accountId];
+  const { name: serverName } = voodoo.servers.find(({ id }) => id === serverId) ?? {};
+  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] casted Acid Bolt`);
 };
