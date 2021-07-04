@@ -4,6 +4,7 @@ import { VoodooServer } from '..';
 import { xpGain } from './experience';
 
 export type Spell = {
+  key: string;
   name: string;
   school: School;
   cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
@@ -29,13 +30,14 @@ export const spellbook: Spellbook = {
         return [
           JSON.stringify(incantations),
           {
+            ...pages[spellKey],
+            key: spellKey,
             cast: async (voodoo, accountId) => {
               await spell(voodoo, accountId, upgrades);
 
               const amount = xpGain(incantations.length);
               voodoo.addExperience({ accountId, school, amount });
-            },
-            ...pages[spellKey]
+            }
           }
         ];
       })

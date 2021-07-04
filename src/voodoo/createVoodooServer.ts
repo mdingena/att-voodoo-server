@@ -381,7 +381,7 @@ export const createVoodooServer = (): VoodooServer => ({
     const xpTotal = abjurationXpTotal + conjurationXpTotal + evocationXpTotal + transmutationXpTotal;
     const maxPreparedSpells = upgradeAttribute(xpTotal, this.config.PREPARED_SPELLS_CONFIG);
 
-    const upgradeLevel = upgrades[spell.name]?.['Eidetic Memory'] ?? 0;
+    const upgradeLevel = upgrades[spell.key]?.eidetic ?? 0;
     const upgradeConfig: UpgradeConfig | undefined = spell.upgrades.eidetic;
     const charges = upgradeLevel === 0 ? 1 : upgradeAttribute(upgradeLevel, upgradeConfig);
 
