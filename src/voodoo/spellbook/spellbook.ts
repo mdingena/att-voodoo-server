@@ -22,9 +22,9 @@ export type SpellFunction = (voodoo: VoodooServer, accountId: number, upgrades: 
 export const spellbook: Spellbook = {
   spells: new Map(
     Object.entries(spells)
-      .filter(([spellName]) => pages.hasOwnProperty(spellName))
-      .map(([spellName, spell]) => {
-        const { incantations, school, upgrades } = pages[spellName];
+      .filter(([spellKey]) => pages.hasOwnProperty(spellKey))
+      .map(([spellKey, spell]) => {
+        const { incantations, school, upgrades } = pages[spellKey];
 
         return [
           JSON.stringify(incantations),
@@ -35,7 +35,7 @@ export const spellbook: Spellbook = {
               const amount = xpGain(incantations.length);
               voodoo.addExperience({ accountId, school, amount });
             },
-            ...pages[spellName]
+            ...pages[spellKey]
           }
         ];
       })

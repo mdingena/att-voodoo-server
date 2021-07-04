@@ -34,7 +34,7 @@ export const createApi = (voodoo: VoodooServer) => {
   api.get('/seal', getSeal(voodoo));
   api.post('/trigger', postTrigger(voodoo));
   api.get('/player', getPlayer(voodoo));
-  api.get('/spellbook', getSpellbook(voodoo));
+  api.get('/spellbook', getSpellbook());
   api.post('/upgrade', postUpgrade(voodoo));
 
   api.listen(port, () => {
