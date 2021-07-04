@@ -2,6 +2,7 @@ const createTableExperience = `
 CREATE TABLE experience (
   account_id INTEGER NOT NULL,
   server_id INTEGER NOT NULL,
+  updated_at TIMESTAMP NOT NULL,
   upgrades TEXT DEFAULT '{}' NOT NULL,
   abjuration_xp_total INTEGER DEFAULT 0 NOT NULL,
   abjuration_xp_spent INTEGER DEFAULT 0 NOT NULL,
