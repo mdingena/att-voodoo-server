@@ -4,7 +4,7 @@ import { spawnFrom } from '../spawnFrom';
 import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
 
-export const conjureCrystalSword: SpellFunction = async (voodoo, accountId, upgradeConfigs): Promise<void> => {
+export const conjureCrystalSword: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'conjureCrystalSword' });
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
