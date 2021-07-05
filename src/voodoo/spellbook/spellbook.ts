@@ -36,7 +36,7 @@ export const spellbook: Spellbook = {
               await spell(voodoo, accountId, upgrades);
 
               const amount = xpGain(incantations.length);
-              voodoo.addExperience({ accountId, school, amount });
+              await voodoo.addExperience({ accountId, school, amount });
             }
           }
         ];

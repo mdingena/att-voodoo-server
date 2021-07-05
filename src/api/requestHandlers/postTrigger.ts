@@ -62,9 +62,9 @@ export const postTrigger =
 
       // @todo abstract casting prepared spell into VoodooServer
       /* Cast the prepared spell. */
-      spell.cast(voodoo, accountId);
+      await spell.cast(voodoo, accountId);
 
-      /* Reduce prepare spell charges by one. */
+      /* Reduce prepared spell charges by one. */
       const remainingCharges = (preparedSpell.charges ?? 1) - 1;
 
       if (remainingCharges) {
@@ -78,7 +78,13 @@ export const postTrigger =
       const newPreparedSpells = JSON.stringify(preparedSpells);
       await db.query(upsertPreparedSpells, [accountId, serverId, newPreparedSpells]);
 
-      clientResponse.json({ ok: true, result: preparedSpells });
+      clientResponse.json({
+        ok: true,
+        result: {
+          experience: voodoo.players[accountId].experience,
+          preparedSpells
+        }
+      });
     } catch (error) {
       voodoo.logger.error(error);
       clientResponse.status(500).json({ ok: false, error: error.message });

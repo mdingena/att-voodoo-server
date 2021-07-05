@@ -60,7 +60,7 @@ export const getSeal =
           preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
         } else {
           /* Cast the spell immediately. */
-          spell.cast(voodoo, accountId);
+          await spell.cast(voodoo, accountId);
         }
       } else {
         if (incantations[0]?.[1] === 'hilted apparatus') {
@@ -102,9 +102,22 @@ export const getSeal =
       }
 
       if (preparedSpells.length) {
-        clientResponse.json({ ok: true, result: { incantations, preparedSpells } });
+        clientResponse.json({
+          ok: true,
+          result: {
+            experience: voodoo.players[accountId].experience,
+            incantations,
+            preparedSpells
+          }
+        });
       } else {
-        clientResponse.json({ ok: true, result: { incantations } });
+        clientResponse.json({
+          ok: true,
+          result: {
+            experience: voodoo.players[accountId].experience,
+            incantations
+          }
+        });
       }
     } catch (error) {
       voodoo.logger.error(error);
