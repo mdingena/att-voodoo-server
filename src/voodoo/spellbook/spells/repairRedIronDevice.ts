@@ -1,19 +1,23 @@
-import { VoodooServer } from '../..';
-import { spawn } from '../spawn';
+import { SpellFunction } from '../spellbook';
+import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
 import { repairMaterial } from '../strings/utils';
 import { MaterialHash } from '../strings/MaterialHash';
+import { spawn } from '../spawn';
 
-export const repairRedIronDevice = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const repairRedIronDevice: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const hiltedApparatus = voodoo.players[accountId].incantations[0].decodedString.prefab;
 
-  const player = await voodoo.getPlayerDetailed({ accountId });
+  const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'repairRedIronDevice' });
+  const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
+  const player = await voodoo.getPlayerDetailed({ accountId });
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-  const repairedApparatus = repairMaterial(hiltedApparatus, MaterialHash.RedIronAlloy, 0.25);
+  const repairAmount = attributes.reconstructor / 100;
+  const repairedApparatus = repairMaterial(hiltedApparatus, MaterialHash.RedIronAlloy, repairAmount);
 
-  return spawn(voodoo, accountId, {
+  spawn(voodoo, accountId, {
     ...repairedApparatus,
     prefabObject: {
       ...repairedApparatus.prefabObject,
@@ -28,4 +32,7 @@ export const repairRedIronDevice = async (voodoo: VoodooServer, accountId: numbe
       }
     }
   });
+
+  const { name, serverId, serverName } = voodoo.players[accountId];
+  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Red Iron Device`);
 };
