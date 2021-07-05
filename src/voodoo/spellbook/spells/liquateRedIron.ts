@@ -5,7 +5,7 @@ import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
 
 export const liquateRedIron: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
-  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'craftFlask' });
+  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'liquateRedIron' });
   // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });

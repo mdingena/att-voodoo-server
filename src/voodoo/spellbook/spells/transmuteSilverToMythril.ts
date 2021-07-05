@@ -5,7 +5,7 @@ import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
 
 export const transmuteSilverToMythril: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
-  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'craftFlask' });
+  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'transmuteSilverToMythril' });
   // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
