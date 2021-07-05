@@ -1,17 +1,20 @@
-import { VoodooServer } from '../..';
+import { SpellFunction } from '../spellbook';
+// import { getSpellAttributes } from '../experience';
+import { LiquidContainer } from '../strings/components/transcoders';
+import { spawnFrom } from '../spawnFrom';
 import { PrefabHash, PresetHash } from '../strings';
 import { spawn } from '../spawn';
-import { spawnFrom } from '../spawnFrom';
-import { LiquidContainer } from '../strings/components/transcoders';
 
-export const transmuteTeleportationPotion = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const transmuteTeleportationPotion: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const flask = voodoo.players[accountId].incantations[0].decodedString;
   const liquidContainer = flask.prefab.components?.LiquidContainer as LiquidContainer.Component;
 
   if (!liquidContainer) return;
 
-  const player = await voodoo.getPlayerDetailed({ accountId });
+  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'transmuteTeleportationPotion' });
+  // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
+  const player = await voodoo.getPlayerDetailed({ accountId });
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
   return spawn(voodoo, accountId, {

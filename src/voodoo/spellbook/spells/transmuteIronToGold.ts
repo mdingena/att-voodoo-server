@@ -1,14 +1,17 @@
-import { VoodooServer } from '../..';
+import { SpellFunction } from '../spellbook';
+// import { getSpellAttributes } from '../experience';
+import { spawnFrom } from '../spawnFrom';
 import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
-import { spawnFrom } from '../spawnFrom';
 
-export const transmuteIronToGold = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const transmuteIronToGold: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
+  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'transmuteIronToGold' });
+  // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
+
   const player = await voodoo.getPlayerDetailed({ accountId });
-
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-  return spawn(voodoo, accountId, {
+  spawn(voodoo, accountId, {
     prefabObject: {
       hash: PrefabHash.Gold_Ingot,
       position,
@@ -21,4 +24,7 @@ export const transmuteIronToGold = async (voodoo: VoodooServer, accountId: numbe
       }
     }
   });
+
+  const { name, serverId, serverName } = voodoo.players[accountId];
+  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Transmute Iron To Gold`);
 };

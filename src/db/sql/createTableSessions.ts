@@ -1,8 +1,6 @@
 const createTableSessions = `
 CREATE TABLE sessions (
-  access_token varchar(2048) primary key,
-  account_id integer unique not null
+  account_id INTEGER PRIMARY KEY,
+  access_token TEXT NOT NULL
 );
-
-CREATE UNIQUE INDEX ON sessions (account_id);
 `;

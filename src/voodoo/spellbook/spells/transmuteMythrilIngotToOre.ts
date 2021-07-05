@@ -1,24 +1,28 @@
-import { VoodooServer } from '../..';
+import { SpellFunction } from '../spellbook';
+// import { getSpellAttributes } from '../experience';
+import { spawnFrom } from '../spawnFrom';
 import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
-import { spawnFrom } from '../spawnFrom';
 
-export const transmuteMythrilIngotToOre = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const transmuteMythrilIngotToOre: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
+  // const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'transmuteMythrilIngotToOre' });
+  // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
+
   const player = await voodoo.getPlayerDetailed({ accountId });
 
-  const { position: positionLeft, rotation: rotationLeft } = spawnFrom(player, 'leftPalm', 0.05);
-  const { position: positionRight, rotation: rotationRight } = spawnFrom(player, 'rightPalm', 0.05);
+  const leftHand = spawnFrom(player, 'leftPalm', 0.05);
+  const rightHand = spawnFrom(player, 'rightPalm', 0.05);
 
   spawn(voodoo, accountId, {
     prefabObject: {
       hash: PrefabHash.Mythril_Ore,
-      position: positionLeft,
-      rotation: rotationLeft
+      position: leftHand.position,
+      rotation: leftHand.rotation
     },
     components: {
       NetworkRigidbody: {
-        position: positionLeft,
-        rotation: rotationLeft
+        position: leftHand.position,
+        rotation: leftHand.rotation
       }
     }
   });
@@ -26,16 +30,17 @@ export const transmuteMythrilIngotToOre = async (voodoo: VoodooServer, accountId
   spawn(voodoo, accountId, {
     prefabObject: {
       hash: PrefabHash.Mythril_Ore,
-      position: positionRight,
-      rotation: rotationRight
+      position: rightHand.position,
+      rotation: rightHand.rotation
     },
     components: {
       NetworkRigidbody: {
-        position: positionRight,
-        rotation: rotationRight
+        position: rightHand.position,
+        rotation: rightHand.rotation
       }
     }
   });
 
-  return;
+  const { name, serverId, serverName } = voodoo.players[accountId];
+  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Transmute Ingot To Ore (Mythril)`);
 };

@@ -4,5 +4,7 @@ export { getInfo } from './getInfo';
 export { getPlayer } from './getPlayer';
 export { getSeal } from './getSeal';
 export { getSession } from './getSession';
+export { getSpellbook } from './getSpellbook';
 export { postIncantation } from './postIncantation';
 export { postTrigger } from './postTrigger';
+export { postUpgrade } from './postUpgrade';

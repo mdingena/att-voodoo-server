@@ -1,20 +1,23 @@
-import { VoodooServer } from '../..';
+import { SpellFunction } from '../spellbook';
+import { getSpellAttributes } from '../experience';
+import { spawnFrom } from '../spawnFrom';
 import { PrefabHash } from '../strings';
 import { spawn } from '../spawn';
-import { spawnFrom } from '../spawnFrom';
 import { LiquidContainer } from '../strings/components/transcoders';
 
-export const flaskOfEndlessTeleportation = async (voodoo: VoodooServer, accountId: number): Promise<void> => {
+export const flaskOfEndlessTeleportation: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const flask = voodoo.players[accountId].incantations[0].decodedString;
   const liquidContainer = flask.prefab.components?.LiquidContainer as LiquidContainer.Component;
 
   if (!liquidContainer) return;
 
-  const player = await voodoo.getPlayerDetailed({ accountId });
+  const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'flaskOfEndlessTeleportation' });
+  const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
+  const player = await voodoo.getPlayerDetailed({ accountId });
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-  return spawn(voodoo, accountId, {
+  spawn(voodoo, accountId, {
     prefabObject: {
       hash: PrefabHash.Potion_Medium,
       position,
@@ -27,8 +30,11 @@ export const flaskOfEndlessTeleportation = async (voodoo: VoodooServer, accountI
       },
       LiquidContainer: {
         ...liquidContainer,
-        contentLevel: (liquidContainer.contentLevel ?? 1) + 1
+        contentLevel: (liquidContainer.contentLevel ?? 1) + attributes.copious
       }
     }
   });
+
+  const { name, serverId, serverName } = voodoo.players[accountId];
+  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Flask of Endless Teleportation`);
 };

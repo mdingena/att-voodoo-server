@@ -1,5 +1,6 @@
 const createTableHeartbeats = `
 CREATE TABLE heartbeats (
-  account_id integer primary key,
-  updated_at timestamp not null
-);`;
+  account_id INTEGER PRIMARY KEY,
+  updated_at TIMESTAMP NOT NULL
+);
+`;

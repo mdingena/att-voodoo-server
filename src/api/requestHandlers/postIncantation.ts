@@ -3,8 +3,6 @@ import { db } from '../../db';
 import { selectSession } from '../../db/sql';
 import { VoodooServer, PreparedSpells, Prefab, decodeString, parsePrefab, spawn, spawnFrom } from '../../voodoo';
 
-const conduitDistance = 10;
-
 export const postIncantation =
   (voodoo: VoodooServer): RequestHandler =>
   async (clientRequest, clientResponse) => {
@@ -22,7 +20,7 @@ export const postIncantation =
       /* Verify player is near a Spellcrafting Conduit. */
       const { Result: nearbyPrefabs } = await voodoo.command({
         accountId,
-        command: `select find ${accountId} ${conduitDistance}`
+        command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
       });
 
       if ((nearbyPrefabs ?? []).length === 0) {
@@ -103,7 +101,7 @@ export const postIncantation =
             preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
           } else {
             /* Cast the spell immediately. */
-            spell.cast(voodoo, accountId);
+            await spell.cast(voodoo, accountId);
           }
         } else {
           if (incantations[0]?.[1] === 'hilted apparatus') {
@@ -145,12 +143,31 @@ export const postIncantation =
         }
 
         if (preparedSpells.length) {
-          clientResponse.json({ ok: true, result: { incantations, preparedSpells } });
+          clientResponse.json({
+            ok: true,
+            result: {
+              experience: voodoo.players[accountId].experience,
+              incantations,
+              preparedSpells
+            }
+          });
         } else {
-          clientResponse.json({ ok: true, result: { incantations } });
+          clientResponse.json({
+            ok: true,
+            result: {
+              experience: voodoo.players[accountId].experience,
+              incantations
+            }
+          });
         }
       } else {
-        clientResponse.json({ ok: true, result: { incantations } });
+        clientResponse.json({
+          ok: true,
+          result: {
+            experience: voodoo.players[accountId].experience,
+            incantations
+          }
+        });
       }
     } catch (error) {
       voodoo.logger.error(error);

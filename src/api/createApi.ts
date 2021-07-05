@@ -11,7 +11,9 @@ import {
   deleteIncantations,
   getSeal,
   postTrigger,
-  getPlayer
+  getPlayer,
+  getSpellbook,
+  postUpgrade
 } from './requestHandlers';
 
 const port = process.env.PORT || 3000;
@@ -32,6 +34,8 @@ export const createApi = (voodoo: VoodooServer) => {
   api.get('/seal', getSeal(voodoo));
   api.post('/trigger', postTrigger(voodoo));
   api.get('/player', getPlayer(voodoo));
+  api.get('/spellbook', getSpellbook());
+  api.post('/upgrade', postUpgrade(voodoo));
 
   api.listen(port, () => {
     logger.success(`API listening on port ${port}`);

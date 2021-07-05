@@ -3,8 +3,6 @@ import { db } from '../../db';
 import { VoodooServer, PreparedSpells, Prefab, spawn, spawnFrom } from '../../voodoo';
 import { selectSession } from '../../db/sql';
 
-const conduitDistance = 10;
-
 export const getSeal =
   (voodoo: VoodooServer): RequestHandler =>
   async (clientRequest, clientResponse) => {
@@ -22,7 +20,7 @@ export const getSeal =
       /* Verify player is near a Spellcrafting Conduit. */
       const { Result: nearbyPrefabs } = await voodoo.command({
         accountId,
-        command: `select find ${accountId} ${conduitDistance}`
+        command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
       });
 
       if ((nearbyPrefabs ?? []).length === 0) {
@@ -62,7 +60,7 @@ export const getSeal =
           preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
         } else {
           /* Cast the spell immediately. */
-          spell.cast(voodoo, accountId);
+          await spell.cast(voodoo, accountId);
         }
       } else {
         if (incantations[0]?.[1] === 'hilted apparatus') {
@@ -104,9 +102,22 @@ export const getSeal =
       }
 
       if (preparedSpells.length) {
-        clientResponse.json({ ok: true, result: { incantations, preparedSpells } });
+        clientResponse.json({
+          ok: true,
+          result: {
+            experience: voodoo.players[accountId].experience,
+            incantations,
+            preparedSpells
+          }
+        });
       } else {
-        clientResponse.json({ ok: true, result: { incantations } });
+        clientResponse.json({
+          ok: true,
+          result: {
+            experience: voodoo.players[accountId].experience,
+            incantations
+          }
+        });
       }
     } catch (error) {
       voodoo.logger.error(error);
