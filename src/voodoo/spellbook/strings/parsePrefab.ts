@@ -366,18 +366,6 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case PrefabHash.Potato_Sapling:
       return 'potato sapling';
 
-    case PrefabHash.pumpkin_full_burnt:
-      return 'burnt pumpkin';
-
-    case PrefabHash.pumpkin_full_cooked:
-      return 'cooked pumpkin';
-
-    case PrefabHash.pumpkin_full_ripe:
-      return 'ripe pumpkin';
-
-    case PrefabHash.pumpkin_full_unripe:
-      return 'unripe pumpkin';
-
     case PrefabHash.pumpkin_piece_burnt:
       return 'burnt pumpkin piece';
 
