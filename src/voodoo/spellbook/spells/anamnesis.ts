@@ -32,6 +32,7 @@ export const ANAMNESIS_MAP = new Map([
   [PrefabHash.Potato_Full_Burnt, PrefabHash.Potato_Full_Cooked],
   [PrefabHash.Potato_Full_Cooked, PrefabHash.Potato_Full_Ripe],
   [PrefabHash.Potato_Full_Ripe, PrefabHash.Potato_Full_Unripe],
+  [PrefabHash.Potato_Full_Unripe, PrefabHash.Potato_Sapling],
   [PrefabHash.pumpkin_piece_burnt, PrefabHash.pumpkin_piece_cooked],
   [PrefabHash.pumpkin_piece_cooked, PrefabHash.pumpkin_piece_ripe],
   [PrefabHash.pumpkin_piece_ripe, PrefabHash.pumpkin_piece_unripe],

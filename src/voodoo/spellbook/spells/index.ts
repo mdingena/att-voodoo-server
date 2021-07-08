@@ -25,6 +25,7 @@ export { anamnesisOnionFullUnripe } from './anamnesisOnionFullUnripe';
 export { anamnesisPotatoFullBurnt } from './anamnesisPotatoFullBurnt';
 export { anamnesisPotatoFullCooked } from './anamnesisPotatoFullCooked';
 export { anamnesisPotatoFullRipe } from './anamnesisPotatoFullRipe';
+export { anamnesisPotatoFullUnripe } from './anamnesisPotatoFullUnripe';
 export { anamnesisPumpkinPieceBurnt } from './anamnesisPumpkinPieceBurnt';
 export { anamnesisPumpkinPieceCooked } from './anamnesisPumpkinPieceCooked';
 export { anamnesisPumpkinPieceRipe } from './anamnesisPumpkinPieceRipe';
