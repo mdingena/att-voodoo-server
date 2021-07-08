@@ -7,7 +7,7 @@ export const repairMaterial = (prefab: Prefab, material: MaterialHash, amount: n
   const physicalMaterialPart = prefab.components?.PhysicalMaterialPart as PhysicalMaterialPart.Component;
 
   if (durabilityModule && physicalMaterialPart && physicalMaterialPart.materialHash === material) {
-    durabilityModule.integrity = Math.max(1, (durabilityModule.integrity ?? 0) + amount);
+    durabilityModule.integrity = Math.min(1, (durabilityModule.integrity ?? 0) + amount);
   }
 
   for (const child of prefab.childPrefabs ?? []) {
