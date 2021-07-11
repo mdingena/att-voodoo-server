@@ -1,4 +1,5 @@
-import { EmbeddedEntities } from '../decoders';
+import { EmbeddedEntities, KnownEmbeddedEntity, UnknownEmbeddedEntity } from '../decoders';
+import { EmbeddedEntityHash } from '../EmbeddedEntityHash';
 import { createBinaryWriter } from '../utils/createBinaryWriter';
 import { encodeComponents } from './encodeComponents';
 
@@ -6,32 +7,33 @@ const terminator = '0'.repeat(32);
 
 export const encodeEmbeddedEntities = (entities: EmbeddedEntities = {}): string => {
   const writer = createBinaryWriter();
-  let binary: string = '';
 
   for (const [key, value] of Object.entries(entities)) {
-    const embeddedEntityHash = Number(key);
+    const embeddedEntityName = key as keyof EmbeddedEntities;
 
-    writer.uInt(embeddedEntityHash);
-    const hashBits = writer.flush();
+    if (embeddedEntityName === 'Unknown') {
+      const unknownEmbeddedEntities = value as UnknownEmbeddedEntity[];
 
-    writer.boolean(value.isAlive);
+      for (const { hash = 0, isAlive = true, components = {} } of unknownEmbeddedEntities) {
+        const componentsBits = encodeComponents(components);
 
-    if (value.isAlive) {
-      const componentBits = encodeComponents(value.components);
-      writer.binary(componentBits);
+        writer.uInt(hash);
+        writer.uInt(1 + componentsBits.length);
+        writer.boolean(isAlive);
+        writer.binary(componentsBits);
+      }
+    } else {
+      const { isAlive = true, components = {} } = value as KnownEmbeddedEntity;
+      const componentsBits = encodeComponents(components);
+
+      writer.uInt(EmbeddedEntityHash[embeddedEntityName as keyof typeof EmbeddedEntityHash]);
+      writer.uInt(1 + componentsBits.length);
+      writer.boolean(isAlive);
+      writer.binary(componentsBits);
     }
-
-    const dataBits = writer.flush();
-
-    writer.uInt(dataBits.length);
-    const sizeBits = writer.flush();
-
-    writer.binary(hashBits);
-    writer.binary(sizeBits);
-    writer.binary(dataBits);
-
-    binary += writer.flush();
   }
+
+  const binary = writer.flush();
 
   return `${binary}${terminator}`;
 };
