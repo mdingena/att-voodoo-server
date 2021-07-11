@@ -1,3 +1,4 @@
+import { numberToBinaryULong } from './numberToBinaryULong';
 import { numberToBinaryUInt } from './numberToBinaryUInt';
 import { signedIntegerToBinary } from './signedIntegerToBinary';
 import { uIntToBinary } from './uIntToBinary';
@@ -6,6 +7,7 @@ export type BinaryWriter = {
   binary: (bits: string) => void;
   boolean: (bit: boolean) => void;
   uInt: (number: number) => void;
+  uLong: (number: number) => void;
   float: (number: number) => void;
   int: (number: number) => void;
   flush: () => string;
@@ -25,6 +27,10 @@ export const createBinaryWriter = (): BinaryWriter => {
 
     uInt: function (number: number) {
       binary += uIntToBinary(number);
+    },
+
+    uLong: function (number: number) {
+      binary += numberToBinaryULong(number);
     },
 
     float: function (number: number) {
