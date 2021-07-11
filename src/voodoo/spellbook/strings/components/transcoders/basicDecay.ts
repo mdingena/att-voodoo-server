@@ -4,17 +4,19 @@ import { BinaryReader, createBinaryWriter } from '../../utils';
 export const HASH = ComponentHash.BasicDecay;
 export const VERSION = 3;
 
+const HUNDRED_YEARS_TICKS = 31557600000000000;
+
 export type Component = {
   isDisabled?: boolean;
-  timelineEntry?: string; // 64 bits
+  timelineEntry?: number;
 };
 
 export const decode = (reader: BinaryReader): Component => ({
   isDisabled: reader.boolean(),
-  timelineEntry: reader.binary(64)
+  timelineEntry: reader.uLong()
 });
 
-export const encode = ({ isDisabled = true, timelineEntry = '0'.repeat(64) }: Component): string => {
+export const encode = ({ isDisabled = true, timelineEntry = HUNDRED_YEARS_TICKS }: Component): string => {
   const writer = createBinaryWriter();
 
   /* Component hash. */
@@ -23,7 +25,7 @@ export const encode = ({ isDisabled = true, timelineEntry = '0'.repeat(64) }: Co
 
   /* Component data. */
   writer.boolean(isDisabled);
-  writer.binary(timelineEntry);
+  writer.uLong(timelineEntry);
   const dataBits = writer.flush();
 
   /* Component data length. */
