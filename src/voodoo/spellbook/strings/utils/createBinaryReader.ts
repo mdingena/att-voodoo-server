@@ -1,5 +1,6 @@
 import { binaryToNumber } from './binaryToNumber';
 import { binaryToSignedInteger } from './binaryToSignedInteger';
+import { binaryToULong } from './binaryToULong';
 import { uIntToNumber } from './uIntToNumber';
 
 type Index = { current: number };
@@ -8,6 +9,7 @@ export type BinaryReader = {
   binary: (bits: number) => string;
   boolean: () => boolean;
   uInt: () => number;
+  uLong: () => number;
   float: () => number;
   int: () => number;
 };
@@ -35,6 +37,12 @@ export const createBinaryReader = (binary: string): BinaryReader => {
       const bits = this.binary(32);
 
       return binaryToNumber(bits);
+    },
+
+    uLong: function () {
+      const bits = this.binary(64);
+
+      return binaryToULong(bits);
     },
 
     float: function () {
