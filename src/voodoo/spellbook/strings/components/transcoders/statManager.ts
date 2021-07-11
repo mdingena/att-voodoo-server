@@ -13,7 +13,7 @@ type TimedModifier = null | {
   hash: number;
   value: number;
   isMultiplier: boolean;
-  time: string;
+  time: number;
 };
 
 type IndirectModifierSaveData = {
@@ -25,7 +25,7 @@ type IndirectModifierSaveData = {
 
 type IndirectStatModifier = null | {
   hash: number;
-  time: string;
+  time: number;
   modifiers: IndirectModifierSaveData[];
 };
 
@@ -68,7 +68,7 @@ export const decode = (reader: BinaryReader): Component => {
       hash: reader.uInt(),
       value: reader.float(),
       isMultiplier: reader.boolean(),
-      time: reader.binary(64)
+      time: reader.uLong()
     });
   }
 
@@ -84,7 +84,7 @@ export const decode = (reader: BinaryReader): Component => {
     }
 
     const hash = reader.uInt();
-    const time = reader.binary(64);
+    const time = reader.uLong();
 
     /* Get indirect modifier save data array. */
     const indirectModifiersSaveDataLength = reader.uInt();
@@ -138,7 +138,7 @@ export const encode = ({ stats = [], modifiers = [], indirectStatModifiers = [] 
       writer.uInt(modifier.hash);
       writer.float(modifier.value);
       writer.boolean(modifier.isMultiplier);
-      writer.binary(modifier.time);
+      writer.uLong(modifier.time);
     }
   }
 
@@ -150,7 +150,7 @@ export const encode = ({ stats = [], modifiers = [], indirectStatModifiers = [] 
     } else {
       writer.boolean(false); // isNull bit
       writer.uInt(indirectStatModifier.hash);
-      writer.binary(indirectStatModifier.time);
+      writer.uLong(indirectStatModifier.time);
       writer.uInt(indirectStatModifier.modifiers.length);
 
       for (const modifier of indirectStatModifier.modifiers) {
