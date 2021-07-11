@@ -1,8 +1,10 @@
 export { binaryToNumber } from './binaryToNumber';
 export { binaryToSignedInteger } from './binaryToSignedInteger';
 export { binaryToUIntArray } from './binaryToUIntArray';
+export { binaryToULong } from './binaryToULong';
 export { createBinaryReader, BinaryReader } from './createBinaryReader';
 export { createBinaryWriter, BinaryWriter } from './createBinaryWriter';
+export { numberToBinaryULong } from './numberToBinaryULong';
 export { numberToBinaryUInt } from './numberToBinaryUInt';
 export { numberToBinary } from './numberToBinary';
 export { repairMaterial } from './repairMaterial';
