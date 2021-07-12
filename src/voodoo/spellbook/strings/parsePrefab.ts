@@ -1,6 +1,6 @@
 import { DecodedString } from './decodeString';
 import { PrefabHash } from './PrefabHash';
-import { parseFlask, parseHiltedApparatus, parseLeather } from './parsers';
+import { parseFlask, parseHiltedApparatus, parseLeather, parseWedge } from './parsers';
 
 export const parsePrefab = (decoded: DecodedString): string | undefined => {
   switch (decoded.hash) {
@@ -213,6 +213,12 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
 
     case PrefabHash.Rusty_Pitchfork:
       return 'rusty pitchfork';
+
+    /**
+     * WOODCUT WEDGE
+     */
+    case PrefabHash.Woodcut_Wedge:
+      return parseWedge(decoded.prefab);
 
     /**
      * HILTED APPARATUS
