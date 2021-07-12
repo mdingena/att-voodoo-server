@@ -92,6 +92,24 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'babu leg bone';
 
     /**
+     * TREE SEEDS
+     */
+    case PrefabHash.Ash_Tree_Seed:
+      return 'ash tree seed';
+
+    case PrefabHash.Birch_Tree_Seed:
+      return 'birch tree seed';
+
+    case PrefabHash.Oak_Tree_Seed:
+      return 'oak tree seed';
+
+    case PrefabHash.Redwood_Tree_Seed:
+      return 'redwood tree seed';
+
+    case PrefabHash.Wallnut_Tree_Seed:
+      return 'wallnut tree seed';
+
+    /**
      * MEAT
      */
     case PrefabHash.SpriggullDrumstick_Full_Burnt:
