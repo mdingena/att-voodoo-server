@@ -60,6 +60,7 @@ export { repairSilverDevice } from './repairSilverDevice';
 export { repairValyanDevice } from './repairValyanDevice';
 export { repairViridiumDevice } from './repairViridiumDevice';
 export { repairWalnutDevice } from './repairWalnutDevice';
+export { smokescreen } from './smokescreen';
 export { transmuteCopperIngotToOre } from './transmuteCopperIngotToOre';
 export { transmuteCopperToIron } from './transmuteCopperToIron';
 export { transmuteGoldIngotToOre } from './transmuteGoldIngotToOre';
