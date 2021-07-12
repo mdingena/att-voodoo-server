@@ -7,6 +7,9 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     /**
      * FUEL
      */
+    case PrefabHash.Grass_Clump:
+      return 'grass clump';
+
     case PrefabHash.Coal:
       return 'coal';
 
