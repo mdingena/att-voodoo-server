@@ -2,6 +2,7 @@ export { binaryToNumber } from './binaryToNumber';
 export { binaryToSignedInteger } from './binaryToSignedInteger';
 export { binaryToUIntArray } from './binaryToUIntArray';
 export { binaryToULong } from './binaryToULong';
+export { composeTree } from './composeTree';
 export { createBinaryReader, BinaryReader } from './createBinaryReader';
 export { createBinaryWriter, BinaryWriter } from './createBinaryWriter';
 export { numberToBinaryULong } from './numberToBinaryULong';
