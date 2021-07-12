@@ -1,7 +1,7 @@
 import { BinaryReader } from '../utils';
 import { decodePrefab, Prefab } from './decodePrefab';
 
-type ChildPrefab = {
+export type ChildPrefab = {
   parentHash: number;
   prefab: Prefab;
 };

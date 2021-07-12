@@ -3,4 +3,4 @@ export { decodePrefab, Prefab } from './decodePrefab';
 export { PrefabObject } from './decodePrefabObject';
 export { Components } from './decodeComponents';
 export { EmbeddedEntities, KnownEmbeddedEntity, UnknownEmbeddedEntity } from './decodeEmbeddedEntities';
-export { ChildPrefabs } from './decodeChildPrefabs';
+export { ChildPrefab, ChildPrefabs } from './decodeChildPrefabs';
