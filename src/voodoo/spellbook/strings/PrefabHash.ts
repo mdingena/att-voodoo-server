@@ -23,6 +23,7 @@ export enum PrefabHash {
   Arrow_Training = 36190,
   Arrow_Training_Dud = 8858,
   Ash_Pile = 53398,
+  Ash_Gotera_Smoke = 48860,
   Ash_Tree_Seed = 35274,
   Assembly_Deck = 17520,
   ATM_Coin_Bank = 9780,
