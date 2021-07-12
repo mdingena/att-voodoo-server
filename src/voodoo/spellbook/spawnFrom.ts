@@ -1,7 +1,7 @@
 import { Vector3, Object3D } from 'three';
 import { parseVector } from './strings/utils/parseVector';
 
-type Origin = 'leftPalm' | 'rightPalm';
+type Origin = 'eyes' | 'leftPalm' | 'rightPalm';
 
 export const spawnFrom = (player: any, from: Origin, distance: number = 0) => {
   let position: Vector3, direction: Vector3, sign: 1 | -1;
@@ -14,12 +14,17 @@ export const spawnFrom = (player: any, from: Origin, distance: number = 0) => {
       break;
 
     case 'rightPalm':
-    default:
       position = parseVector(player['RightHandPosition']);
       direction = new Vector3().crossVectors(
         parseVector(player['RightHandForward']),
         parseVector(player['RightHandUp'])
       );
+      sign = 1;
+
+    case 'eyes':
+    default:
+      position = parseVector(player['HeadPosition']);
+      direction = parseVector(player['HeadForward']);
       sign = 1;
   }
 
