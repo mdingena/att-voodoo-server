@@ -65,6 +65,8 @@ export { transmuteCopperIngotToOre } from './transmuteCopperIngotToOre';
 export { transmuteCopperToIron } from './transmuteCopperToIron';
 export { transmuteGoldIngotToOre } from './transmuteGoldIngotToOre';
 export { transmuteGoldToSilver } from './transmuteGoldToSilver';
+export { transmuteIronHandleMedium } from './transmuteIronHandleMedium';
+export { transmuteIronHandleShort } from './transmuteIronHandleShort';
 export { transmuteIronIngotToOre } from './transmuteIronIngotToOre';
 export { transmuteIronToGold } from './transmuteIronToGold';
 export { transmuteMythrilIngotToOre } from './transmuteMythrilIngotToOre';
