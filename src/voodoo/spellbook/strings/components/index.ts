@@ -13,7 +13,8 @@ export type KnownComponent =
   | transcoders.PhysicalMaterialPart.Component
   | transcoders.Pickup.Component
   | transcoders.PickupDock.Component
-  | transcoders.StatManager.Component;
+  | transcoders.StatManager.Component
+  | transcoders.WoodcutTree.Component;
 
 export type UnknownComponent = { hash: number; data: string };
 

@@ -7,3 +7,4 @@ export * as PhysicalMaterialPart from './physicalMaterialPart';
 export * as Pickup from './pickup';
 export * as PickupDock from './pickupDock';
 export * as StatManager from './statManager';
+export * as WoodcutTree from './woodcutTree';
