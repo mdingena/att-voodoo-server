@@ -1,6 +1,7 @@
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { spellbook, Spellbook, Spell, School, DecodedString, upgradeAttribute, UpgradeConfig } from './spellbook';
+import { DecodedString } from 'att-string-transcoder';
+import { spellbook, Spellbook, Spell, School, upgradeAttribute, UpgradeConfig } from './spellbook';
 import { db } from '../db';
 import {
   selectExperience,

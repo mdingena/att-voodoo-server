@@ -1,9 +1,7 @@
-import { Prefab } from '../decoders/decodePrefab';
-import { Component } from '../components/transcoders/liquidContainer';
-import { PresetHash } from '../PresetHash';
+import { Prefab, LiquidContainer, PresetHash } from 'att-string-transcoder';
 
 export const parseFlask = (prefab: Prefab): string | undefined => {
-  const component = prefab.components?.LiquidContainer as Component;
+  const component = prefab.components?.LiquidContainer as LiquidContainer;
 
   if (!component) return undefined;
 

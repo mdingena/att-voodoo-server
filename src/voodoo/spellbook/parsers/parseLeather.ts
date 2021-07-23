@@ -1,14 +1,11 @@
-import { Prefab } from '../decoders/decodePrefab';
-import { Component } from '../components/transcoders/physicalMaterialPart';
-import { PrefabHash } from '../PrefabHash';
-import { MaterialHash } from '../MaterialHash';
+import { Prefab, PhysicalMaterialPart, PhysicalMaterialPartHash, PrefabHash } from 'att-string-transcoder';
 
 export const parseLeather = (prefab: Prefab): string | undefined => {
-  const component = prefab.components?.PhysicalMaterialPart as Component;
+  const component = prefab.components?.PhysicalMaterialPart as PhysicalMaterialPart;
 
   if (!component) return undefined;
 
-  if (component.materialHash === MaterialHash.DaisLeather) {
+  if (component.materialHash === PhysicalMaterialPartHash.DaisLeather) {
     switch (prefab.prefabObject.hash) {
       case PrefabHash.Soft_Fabric_Medium_Strips:
         return 'tan leather strips';
@@ -24,7 +21,7 @@ export const parseLeather = (prefab: Prefab): string | undefined => {
     }
   }
 
-  if (component.materialHash === MaterialHash.DaisRedLeather) {
+  if (component.materialHash === PhysicalMaterialPartHash.DaisRedLeather) {
     switch (prefab.prefabObject.hash) {
       case PrefabHash.Soft_Fabric_Medium_Strips:
         return 'brown leather strips';
@@ -40,7 +37,7 @@ export const parseLeather = (prefab: Prefab): string | undefined => {
     }
   }
 
-  if (component.materialHash === MaterialHash.WyrmFaceLeather) {
+  if (component.materialHash === PhysicalMaterialPartHash.WyrmFaceLeather) {
     switch (prefab.prefabObject.hash) {
       case PrefabHash.Soft_Fabric_Medium_Strips:
         return 'green leather strips';
@@ -56,7 +53,7 @@ export const parseLeather = (prefab: Prefab): string | undefined => {
     }
   }
 
-  if (component.materialHash === MaterialHash.UnknownLeather) {
+  if (component.materialHash === PhysicalMaterialPartHash.UnknownLeather) {
     switch (prefab.prefabObject.hash) {
       case PrefabHash.Soft_Fabric_Medium_Strips:
         return 'black leather strips';

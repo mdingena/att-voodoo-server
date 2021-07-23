@@ -2,7 +2,7 @@ import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
 import { spawnVelocity } from '../spawnVelocity';
-import { PrefabHash } from '../strings';
+import { PrefabHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const ANAMNESIS_MAP = new Map([

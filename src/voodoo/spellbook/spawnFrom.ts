@@ -1,5 +1,5 @@
 import { Vector3, Object3D } from 'three';
-import { parseVector } from './strings/utils/parseVector';
+import { parseVector } from './utils/parseVector';
 
 type Origin = 'eyes' | 'leftPalm' | 'rightPalm';
 

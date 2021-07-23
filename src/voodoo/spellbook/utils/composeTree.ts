@@ -1,6 +1,4 @@
-import { ChildPrefab } from '../decoders';
-import { PrefabHash } from '../PrefabHash';
-import { PrefabEmbeddedEntityHash } from '../PrefabEmbeddedEntityHash';
+import { ChildPrefab, PrefabHash, PrefabEmbeddedEntityHash } from 'att-string-transcoder';
 
 type Tree = {
   [segment in keyof typeof PrefabEmbeddedEntityHash]?: EmbeddedEntities | null;

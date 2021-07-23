@@ -1,8 +1,8 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { repairMaterial } from '../strings/utils';
-import { MaterialHash } from '../strings/MaterialHash';
+import { repairMaterial } from '../utils';
+import { PhysicalMaterialPartHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const repairCopperDevice: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -15,7 +15,7 @@ export const repairCopperDevice: SpellFunction = async (voodoo, accountId, upgra
   const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
   const repairAmount = attributes.reconstructor / 100;
-  const repairedApparatus = repairMaterial(hiltedApparatus, MaterialHash.Copper, repairAmount);
+  const repairedApparatus = repairMaterial(hiltedApparatus, PhysicalMaterialPartHash.Copper, repairAmount);
 
   spawn(voodoo, accountId, {
     ...repairedApparatus,

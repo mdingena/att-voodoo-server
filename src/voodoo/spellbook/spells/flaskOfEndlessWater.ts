@@ -1,13 +1,12 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from '../strings';
+import { PrefabHash, LiquidContainer } from 'att-string-transcoder';
 import { spawn } from '../spawn';
-import { LiquidContainer } from '../strings/components/transcoders';
 
 export const flaskOfEndlessWater: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const flask = voodoo.players[accountId].incantations[0].decodedString;
-  const liquidContainer = flask.prefab.components?.LiquidContainer as LiquidContainer.Component;
+  const liquidContainer = flask.prefab.components?.LiquidContainer as LiquidContainer;
 
   if (!liquidContainer) return;
 

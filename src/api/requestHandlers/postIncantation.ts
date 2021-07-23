@@ -1,7 +1,8 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
-import { VoodooServer, PreparedSpells, Prefab, decodeString, parsePrefab, spawn, spawnFrom } from '../../voodoo';
+import { VoodooServer, PreparedSpells, parsePrefab, spawn, spawnFrom } from '../../voodoo';
+import { Prefab, decodeString } from 'att-string-transcoder';
 
 export const postIncantation =
   (voodoo: VoodooServer): RequestHandler =>

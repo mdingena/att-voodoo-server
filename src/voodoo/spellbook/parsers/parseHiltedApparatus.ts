@@ -1,5 +1,4 @@
-import { Prefab } from '../decoders/decodePrefab';
-import { PrefabHash } from '../PrefabHash';
+import { Prefab, PrefabHash } from 'att-string-transcoder';
 
 export const parseHiltedApparatus = (prefab: Prefab): string | undefined => {
   const children = Object.keys(prefab.childPrefabs ?? []);

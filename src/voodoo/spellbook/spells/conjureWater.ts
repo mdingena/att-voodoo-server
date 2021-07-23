@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash, PresetHash } from '../strings';
+import { PrefabHash, PresetHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const conjureWater: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {

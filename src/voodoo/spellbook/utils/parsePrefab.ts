@@ -1,6 +1,5 @@
-import { DecodedString } from './decodeString';
-import { PrefabHash } from './PrefabHash';
-import { parseFlask, parseHiltedApparatus, parseLeather, parseWedge } from './parsers';
+import { DecodedString, PrefabHash } from 'att-string-transcoder';
+import { parseFlask, parseHiltedApparatus, parseLeather, parseWedge } from '../parsers';
 
 export const parsePrefab = (decoded: DecodedString): string | undefined => {
   switch (decoded.hash) {
