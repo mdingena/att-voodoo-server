@@ -14,7 +14,7 @@
   "dependencies": {
     "@sentry/node": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
-    "att-string-transcoder": "^1.0.0-rc.2",
+    "att-string-transcoder": "^1.0.1",
     "att-voodoo-spellbook": "github:mdingena/att-voodoo-spellbook",
     "bitwise": "^2.1.0",
     "express": "^4.17.1",
