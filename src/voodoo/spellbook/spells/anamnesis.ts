@@ -48,7 +48,7 @@ export const anamnesis =
     const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
     const player = await voodoo.getPlayerDetailed({ accountId });
-    const rightHand = spawnFrom(player, 'rightPalm', 0.3);
+    const rightHand = spawnFrom(player, 'rightPalm', 0.05);
 
     spawn(voodoo, accountId, {
       prefabObject: {
