@@ -1,12 +1,13 @@
 import { pages, School, Upgrades } from 'att-voodoo-spellbook';
 import * as spells from './spells';
-import { VoodooServer } from '..';
+import { Experience, VoodooServer } from '../createVoodooServer';
 import { xpGain } from './experience';
 
 export type Spell = {
   key: string;
   name: string;
   school: School;
+  xp: (voodoo: VoodooServer, accountId: number) => Promise<Experience>;
   cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
   requiresPreparation: boolean;
   verbalTrigger?: string;
@@ -32,12 +33,11 @@ export const spellbook: Spellbook = {
           {
             ...pages[spellKey],
             key: spellKey,
-            cast: async (voodoo, accountId) => {
-              await spell(voodoo, accountId, upgrades);
-
+            xp: (voodoo, accountId) => {
               const amount = xpGain(incantations.length);
-              await voodoo.addExperience({ accountId, school, amount });
-            }
+              return voodoo.addExperience({ accountId, school, amount });
+            },
+            cast: async (voodoo, accountId) => await spell(voodoo, accountId, upgrades)
           }
         ];
       })
