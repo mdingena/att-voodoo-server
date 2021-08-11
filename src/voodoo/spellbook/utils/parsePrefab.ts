@@ -440,6 +440,12 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'redwood gotera core';
 
     /**
+     * SOULBOUND
+     */
+    case PrefabHash.Key_Standard:
+      return 'soulbond';
+
+    /**
      * UNRECOGNISED
      */
     default:
