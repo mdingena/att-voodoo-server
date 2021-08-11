@@ -37,6 +37,7 @@ export { conjureCrystalPick } from './conjureCrystalPick';
 export { conjureCrystalSword } from './conjureCrystalSword';
 export { conjureWater } from './conjureWater';
 export { craftFlask } from './craftFlask';
+export { craftSoulbond } from './craftSoulbond';
 export { fire } from './fire';
 export { flaskOfEndlessTeleportation } from './flaskOfEndlessTeleportation';
 export { flaskOfEndlessWater } from './flaskOfEndlessWater';
