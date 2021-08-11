@@ -17,12 +17,6 @@ export const fire: SpellFunction = async (voodoo, accountId, upgradeConfigs) => 
       position,
       rotation
     },
-    components: {
-      NetworkRigidbody: {
-        position,
-        rotation
-      }
-    },
     embeddedEntities: {
       Fire: {
         components: {
