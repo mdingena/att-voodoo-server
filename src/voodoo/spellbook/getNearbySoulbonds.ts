@@ -39,7 +39,7 @@ export const getNearbySoulbonds = async (voodoo: VoodooServer, accountId: number
     const playerPosition = parseVector(player.Position);
     const distance = casterPosition.distanceTo(playerPosition);
 
-    return distance >= searchRadius;
+    return distance <= searchRadius;
   }) as PlayerDetailed[];
 
   return nearbySoulbonds;
