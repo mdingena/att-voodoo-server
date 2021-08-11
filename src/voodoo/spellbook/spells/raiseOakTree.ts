@@ -1,9 +1,8 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash, SpeciesHash } from 'att-string-transcoder';
+import { composeTree, generateComposition, PrefabHash, SpeciesHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
-import { composeTree, generateComposition } from '../utils';
 
 export const raiseOakTree: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'raiseOakTree' });
