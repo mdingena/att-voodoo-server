@@ -98,6 +98,32 @@ interface GetPlayerDetailed {
   accountId: number;
 }
 
+type PotentialVectorResponse = string | number[];
+
+export type PlayerDetailed = {
+  Position: PotentialVectorResponse;
+  HeadPosition: PotentialVectorResponse;
+  HeadForward: PotentialVectorResponse;
+  HeadUp: PotentialVectorResponse;
+  LeftHandPosition: PotentialVectorResponse;
+  LeftHandForward: PotentialVectorResponse;
+  LeftHandUp: PotentialVectorResponse;
+  RightHandPosition: PotentialVectorResponse;
+  RightHandForward: PotentialVectorResponse;
+  RightHandUp: PotentialVectorResponse;
+  Chunk: string;
+  Body: {
+    Identifier: number;
+    Name: string;
+  };
+  id: number;
+  username: string;
+};
+
+type PlayerDetailedResponse = {
+  Result?: PlayerDetailed;
+};
+
 interface GetExperience {
   accountId: number;
   serverId: number;
@@ -157,7 +183,7 @@ export type VoodooServer = {
   setPlayerClientStatus: ({ accountId, isVoodooClient }: PlayerClientStatus) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
-  getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
+  getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<PlayerDetailed | undefined>;
   getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
   addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
   getSpellUpgrades: ({ accountId, spell }: GetSpellUpgrades) => { [key: string]: number };
@@ -240,12 +266,16 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   getPlayerDetailed: async function ({ accountId }) {
-    const { Result: player } = await this.command({
-      accountId,
-      command: `player detailed ${accountId}`
-    });
+    try {
+      const { Result: player }: PlayerDetailedResponse = await this.command({
+        accountId,
+        command: `player detailed ${accountId}`
+      });
 
-    return player;
+      return player;
+    } catch (error) {
+      return undefined;
+    }
   },
 
   getExperience: async function ({ accountId, serverId }) {
