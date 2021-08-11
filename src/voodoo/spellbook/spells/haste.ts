@@ -17,7 +17,7 @@ export const haste: SpellFunction = async (voodoo, accountId, upgradeConfigs) =>
     nearbySoulbondIds = nearbySoulbonds.map(soulbond => soulbond.id);
   }
 
-  const playerList = JSON.stringify([accountId, ...nearbySoulbondIds]);
+  const playerList = [accountId, ...nearbySoulbondIds].join(',');
 
   voodoo.command({
     accountId,
