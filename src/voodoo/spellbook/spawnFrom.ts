@@ -20,6 +20,7 @@ export const spawnFrom = (player: any, from: Origin, distance: number = 0) => {
         parseVector(player['RightHandUp'])
       );
       sign = 1;
+      break;
 
     case 'eyes':
     default:
