@@ -41,6 +41,7 @@ export { fire } from './fire';
 export { flaskOfEndlessTeleportation } from './flaskOfEndlessTeleportation';
 export { flaskOfEndlessWater } from './flaskOfEndlessWater';
 export { frostBolt } from './frostBolt';
+export { haste } from './haste';
 export { liquateElectrum } from './liquateElectrum';
 export { liquatePalladium } from './liquatePalladium';
 export { liquateRedIron } from './liquateRedIron';
