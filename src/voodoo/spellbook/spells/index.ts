@@ -48,6 +48,7 @@ export { liquatePalladium } from './liquatePalladium';
 export { liquateRedIron } from './liquateRedIron';
 export { liquateValyan } from './liquateValyan';
 export { liquateViridium } from './liquateViridium';
+export { raiseOakTree } from './raiseOakTree';
 export { repairAshDevice } from './repairAshDevice';
 export { repairBirchDevice } from './repairBirchDevice';
 export { repairCopperDevice } from './repairCopperDevice';
