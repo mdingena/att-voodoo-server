@@ -6,7 +6,7 @@ export const haste: SpellFunction = async (voodoo, accountId, upgradeConfigs) =>
   const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'haste' });
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
-  const value = attributes.intensify;
+  const value = 1 + attributes.intensify / 100;
   const duration = attributes.concentration;
   const searchRadius = attributes.projection;
 
@@ -21,7 +21,7 @@ export const haste: SpellFunction = async (voodoo, accountId, upgradeConfigs) =>
 
   voodoo.command({
     accountId,
-    command: `player modify-stat ${playerList} speed ${value} ${duration}`
+    command: `player modify-stat ${playerList} speed ${value} ${duration} true`
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
