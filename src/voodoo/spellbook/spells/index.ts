@@ -80,3 +80,4 @@ export { transmuteMythrilIngotToOre } from './transmuteMythrilIngotToOre';
 export { transmuteSilverIngotToOre } from './transmuteSilverIngotToOre';
 export { transmuteSilverToMythril } from './transmuteSilverToMythril';
 export { transmuteTeleportationPotion } from './transmuteTeleportationPotion';
+export { trueStrike } from './trueStrike';
