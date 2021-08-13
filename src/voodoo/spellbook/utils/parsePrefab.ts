@@ -55,6 +55,12 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'firework';
 
     /**
+     * HEALING POD
+     */
+    case PrefabHash.Healing_Pod:
+      return 'healing pod';
+
+    /**
      * CRYSTAL
      */
     case PrefabHash.Crystal_Gem_Blue:
