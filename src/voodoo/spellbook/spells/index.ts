@@ -44,6 +44,7 @@ export { flaskOfEndlessWater } from './flaskOfEndlessWater';
 export { frostBolt } from './frostBolt';
 export { haste } from './haste';
 export { healWounds } from './healWounds';
+export { heroism } from './heroism';
 export { liquateElectrum } from './liquateElectrum';
 export { liquatePalladium } from './liquatePalladium';
 export { liquateRedIron } from './liquateRedIron';
