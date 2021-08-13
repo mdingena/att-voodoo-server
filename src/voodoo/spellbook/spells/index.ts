@@ -32,6 +32,7 @@ export { anamnesisPumpkinPieceRipe } from './anamnesisPumpkinPieceRipe';
 export { anamnesisTomatoFullBurnt } from './anamnesisTomatoFullBurnt';
 export { anamnesisTomatoFullCooked } from './anamnesisTomatoFullCooked';
 export { anamnesisTomatoFullRipe } from './anamnesisTomatoFullRipe';
+export { aptitude } from './aptitude';
 export { conjureCrystalLance } from './conjureCrystalLance';
 export { conjureCrystalPick } from './conjureCrystalPick';
 export { conjureCrystalSword } from './conjureCrystalSword';
