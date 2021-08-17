@@ -111,7 +111,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case PrefabHash.Redwood_Tree_Seed:
       return 'redwood tree seed';
 
-    case PrefabHash.Wallnut_Tree_Seed:
+    case PrefabHash.Walnut_Tree_Seed:
       return 'wallnut tree seed';
 
     /**

@@ -16,7 +16,7 @@ export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Crystal_Spit,
+      hash: PrefabHash.Wyrm_Crystal_Spit,
       position: rightHand.position,
       rotation: rightHand.rotation
     },
@@ -36,7 +36,7 @@ export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs
 
     spawn(voodoo, accountId, {
       prefabObject: {
-        hash: PrefabHash.Crystal_Spit,
+        hash: PrefabHash.Wyrm_Crystal_Spit,
         position: leftHand.position,
         rotation: leftHand.rotation
       },

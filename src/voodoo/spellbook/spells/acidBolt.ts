@@ -16,7 +16,7 @@ export const acidBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs)
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Spit,
+      hash: PrefabHash.Wyrm_Spit,
       position: rightHand.position,
       rotation: rightHand.rotation
     },
@@ -36,7 +36,7 @@ export const acidBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs)
 
     spawn(voodoo, accountId, {
       prefabObject: {
-        hash: PrefabHash.Spit,
+        hash: PrefabHash.Wyrm_Spit,
         position: leftHand.position,
         rotation: leftHand.rotation
       },
