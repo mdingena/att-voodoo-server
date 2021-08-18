@@ -35,7 +35,7 @@ export const heroism: SpellFunction = async (voodoo, accountId, upgradeConfigs) 
     if (healthResponse.Result) {
       const buffedHealth = healthResponse.Result.Value * value;
 
-      voodoo.command({ accountId, command: `player modify-stat ${playerId} health ${buffedHealth} ${duration} true` });
+      voodoo.command({ accountId, command: `player modify-stat ${playerId} health ${buffedHealth} ${duration}` });
     }
   }
 
