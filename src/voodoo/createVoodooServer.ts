@@ -414,7 +414,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const upgradeLevel = upgrades[spell.key]?.eidetic ?? 0;
     const upgradeConfig: UpgradeConfig | undefined = spell.upgrades.eidetic;
-    const charges = upgradeLevel === 0 ? 1 : upgradeAttribute(upgradeLevel, upgradeConfig);
+    const charges = upgradeConfig ? upgradeAttribute(upgradeLevel, upgradeConfig) : 1;
 
     if (preparedSpells.length >= maxPreparedSpells) preparedSpells.shift();
 
