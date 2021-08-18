@@ -1,13 +1,12 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
-import { LiquidContainer } from '../strings/components/transcoders';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash, PresetHash } from '../strings';
+import { PrefabHash, LiquidContainer, PresetHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const transmuteTeleportationPotion: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const flask = voodoo.players[accountId].incantations[0].decodedString;
-  const liquidContainer = flask.prefab.components?.LiquidContainer as LiquidContainer.Component;
+  const liquidContainer = flask.prefab.components?.LiquidContainer as LiquidContainer;
 
   if (!liquidContainer) return;
 

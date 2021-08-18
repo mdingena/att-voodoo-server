@@ -1,6 +1,7 @@
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { spellbook, Spellbook, Spell, School, DecodedString, upgradeAttribute, UpgradeConfig } from './spellbook';
+import { DecodedString } from 'att-string-transcoder';
+import { spellbook, Spellbook, Spell, School, upgradeAttribute, UpgradeConfig } from './spellbook';
 import { db } from '../db';
 import {
   selectExperience,
@@ -97,6 +98,32 @@ interface GetPlayerDetailed {
   accountId: number;
 }
 
+type PotentialVectorResponse = string | number[];
+
+export type PlayerDetailed = {
+  Position: PotentialVectorResponse;
+  HeadPosition: PotentialVectorResponse;
+  HeadForward: PotentialVectorResponse;
+  HeadUp: PotentialVectorResponse;
+  LeftHandPosition: PotentialVectorResponse;
+  LeftHandForward: PotentialVectorResponse;
+  LeftHandUp: PotentialVectorResponse;
+  RightHandPosition: PotentialVectorResponse;
+  RightHandForward: PotentialVectorResponse;
+  RightHandUp: PotentialVectorResponse;
+  Chunk: string;
+  Body: {
+    Identifier: number;
+    Name: string;
+  };
+  id: number;
+  username: string;
+};
+
+type PlayerDetailedResponse = {
+  Result?: PlayerDetailed;
+};
+
 interface GetExperience {
   accountId: number;
   serverId: number;
@@ -156,7 +183,7 @@ export type VoodooServer = {
   setPlayerClientStatus: ({ accountId, isVoodooClient }: PlayerClientStatus) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
-  getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<any>;
+  getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<PlayerDetailed | undefined>;
   getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
   addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
   getSpellUpgrades: ({ accountId, spell }: GetSpellUpgrades) => { [key: string]: number };
@@ -239,12 +266,16 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   getPlayerDetailed: async function ({ accountId }) {
-    const { Result: player } = await this.command({
-      accountId,
-      command: `player detailed ${accountId}`
-    });
+    try {
+      const { Result: player }: PlayerDetailedResponse = await this.command({
+        accountId,
+        command: `player detailed ${accountId}`
+      });
 
-    return player;
+      return player;
+    } catch (error) {
+      return undefined;
+    }
   },
 
   getExperience: async function ({ accountId, serverId }) {
@@ -383,7 +414,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const upgradeLevel = upgrades[spell.key]?.eidetic ?? 0;
     const upgradeConfig: UpgradeConfig | undefined = spell.upgrades.eidetic;
-    const charges = upgradeLevel === 0 ? 1 : upgradeAttribute(upgradeLevel, upgradeConfig);
+    const charges = upgradeConfig ? upgradeAttribute(upgradeLevel, upgradeConfig) : 1;
 
     if (preparedSpells.length >= maxPreparedSpells) preparedSpells.shift();
 

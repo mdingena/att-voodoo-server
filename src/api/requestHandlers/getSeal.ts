@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer, PreparedSpells, Prefab, spawn, spawnFrom } from '../../voodoo';
+import { VoodooServer, PreparedSpells, spawn, spawnFrom } from '../../voodoo';
+import { Prefab } from 'att-string-transcoder';
 import { selectSession } from '../../db/sql';
 
 export const getSeal =
@@ -62,6 +63,9 @@ export const getSeal =
           /* Cast the spell immediately. */
           await spell.cast(voodoo, accountId);
         }
+
+        /* Award XP. */
+        spell.xp(voodoo, accountId);
       } else {
         if (incantations[0]?.[1] === 'hilted apparatus') {
           const { prefab } = voodoo.players[accountId].incantations[0].decodedString;

@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer, Prefab, spawn, spawnFrom } from '../../voodoo';
+import { VoodooServer, spawn, spawnFrom } from '../../voodoo';
+import { Prefab } from 'att-string-transcoder';
 import { selectSession } from '../../db/sql';
 
 export const deleteIncantations =
