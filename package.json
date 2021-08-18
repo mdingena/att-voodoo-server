@@ -9,7 +9,7 @@
     "dev": "ts-node -r dotenv/config ./src/index.ts",
     "start": "node ./build/index.js"
   },
-  "author": "",
+  "author": "Marc Dingena",
   "license": "MIT",
   "dependencies": {
     "@sentry/node": "^6.4.1",
