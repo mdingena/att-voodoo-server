@@ -153,6 +153,24 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case PrefabHash.Babu_Leg_Half_Ripe:
       return 'uncooked babu chop';
 
+    case PrefabHash.Dais_Meat_Full_Burnt:
+      return 'burnt dais leg';
+
+    case PrefabHash.Dais_Meat_Full_Cooked:
+      return 'cooked dais leg';
+
+    case PrefabHash.Dais_Meat_Full_Ripe:
+      return 'uncooked dais leg';
+
+    case PrefabHash.Dais_Meat_Half_Burnt:
+      return 'burnt dais chop';
+
+    case PrefabHash.Dais_Meat_Half_Cooked:
+      return 'cooked dais chop';
+
+    case PrefabHash.Dais_Meat_Half_Ripe:
+      return 'uncooked dais chop';
+
     /**
      * MUSHROOM
      */
