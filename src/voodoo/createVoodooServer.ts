@@ -248,6 +248,10 @@ export const createVoodooServer = (): VoodooServer => ({
   },
 
   removePlayer: function ({ accountId }) {
+    if (!this.players[accountId]) {
+      return logger.error(`Attempted to remove player ${accountId} but no such player found.`);
+    }
+
     const { name, serverId, serverName } = this.players[accountId];
 
     delete this.players[accountId];
