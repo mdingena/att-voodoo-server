@@ -1,9 +1,10 @@
 {
   "name": "att-voodoo-server",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "description": "",
   "main": "build/index.js",
   "scripts": {
+    "compile": "tsc --noEmit",
     "prebuild": "rimraf build/",
     "build": "tsc",
     "dev": "ts-node -r dotenv/config ./src/index.ts",
@@ -19,7 +20,7 @@
     "bitwise": "^2.1.0",
     "express": "^4.17.1",
     "ieee754": "^1.2.1",
-    "js-tale": "^1.5.5",
+    "js-tale": "^2.0.0-rc.3",
     "nocache": "^3.0.0",
     "node-fetch": "^2.6.1",
     "pg": "^8.6.0",

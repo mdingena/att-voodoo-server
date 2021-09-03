@@ -1,6 +1,4 @@
-import ApiConnection from 'js-tale/dist/Core/ApiConnection';
-import SubscriptionManager from 'js-tale/dist/Core/SubscriptionManager';
-import GroupManager from 'js-tale/dist/Groups/GroupManager';
+import { Client } from 'js-tale';
 import { initLogger } from 'js-tale/dist/logger';
 import { VoodooServer } from '../voodoo';
 import { handleServerConnectionOpened } from './serverConnectionHandlers';
@@ -8,21 +6,17 @@ import { config } from './config';
 
 const CONSOLE_PERMISSION = 'Console';
 
-const api: ApiConnection = new ApiConnection();
-const subscriptions: SubscriptionManager = new SubscriptionManager(api);
-const groupManager: GroupManager = new GroupManager(subscriptions);
-
-export const createBot = async (voodoo: VoodooServer): Promise<void> => {
+export const createBot = async (voodoo: VoodooServer): Promise<Client> => {
   initLogger();
 
-  await api.login(config);
-  await subscriptions.init();
-  await groupManager.groups.refresh(true);
-  await groupManager.acceptAllInvites(true);
+  const bot = new Client(config);
+
+  await bot.initialize();
+  await bot.groupManager.acceptAllInvites(true);
 
   /* Add every server to Voodoo for the server status screen in the client. */
   await Promise.all(
-    groupManager.groups.items.map(async group => {
+    bot.groupManager.groups.items.map(async group => {
       let hasConsoleAccess = false;
 
       for (const role of group.info.roles) {
@@ -48,5 +42,7 @@ export const createBot = async (voodoo: VoodooServer): Promise<void> => {
     })
   );
 
-  await groupManager.automaticConsole(handleServerConnectionOpened(voodoo));
+  await bot.groupManager.automaticConsole(handleServerConnectionOpened(voodoo));
+
+  return bot;
 };
