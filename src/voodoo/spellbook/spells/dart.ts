@@ -10,7 +10,7 @@ export const dart: SpellFunction = async (voodoo, accountId, upgradeConfigs) => 
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
-  const rightHand = spawnFrom(player, 'rightPalm', 0.15);
+  const rightHand = spawnFrom(player, 'rightPalm', 0.3);
 
   if (attributes.burst > 1) voodoo.command({ accountId, command: `repeat ${attributes.burst} 0.1` });
 
@@ -30,7 +30,7 @@ export const dart: SpellFunction = async (voodoo, accountId, upgradeConfigs) => 
   });
 
   if (attributes.ambidextrous === 2) {
-    const leftHand = spawnFrom(player, 'leftPalm', 0.15);
+    const leftHand = spawnFrom(player, 'leftPalm', 0.3);
 
     if (attributes.burst > 1) voodoo.command({ accountId, command: `repeat ${attributes.burst} 0.1` });
 

@@ -13,7 +13,7 @@ export const craftSoulbond: SpellFunction = async (voodoo, accountId, upgradeCon
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Key_Standard,
+      hash: PrefabHash.Spriggull_Feather_Green,
       position,
       rotation
     },

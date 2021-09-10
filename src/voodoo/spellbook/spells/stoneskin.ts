@@ -1,15 +1,41 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
-import { getNearbySoulbonds } from '../getNearbySoulbonds';
 import { spawnFrom } from '../spawnFrom';
 import { PrefabHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
+import { getNearbySoulbonds } from '../getNearbySoulbonds';
 
 export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'stoneskin' });
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
-  const value = 1 + attributes.intensify / 100;
+  const player = await voodoo.getPlayerDetailed({ accountId });
+  const rightHand = spawnFrom(player, 'rightPalm', 0.05);
+  const eyes = spawnFrom(player, 'eyes');
+
+  spawn(voodoo, accountId, {
+    prefabObject: {
+      hash: PrefabHash.Potion_Medium,
+      position: rightHand.position,
+      rotation: rightHand.rotation
+    },
+    components: {
+      NetworkRigidbody: {
+        position: rightHand.position,
+        rotation: rightHand.rotation
+      },
+      LiquidContainer: {}
+    }
+  });
+
+  spawn(voodoo, accountId, {
+    prefabObject: {
+      hash: PrefabHash.Iron_Boulder_Parts,
+      position: eyes.position
+    }
+  });
+
+  const multiplier = 1 + attributes.intensify / 100;
   const duration = attributes.concentration;
   const searchRadius = attributes.projection;
 
@@ -20,22 +46,20 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
     nearbySoulbondIds = nearbySoulbonds.map(soulbond => soulbond.id);
   }
 
-  const playerList = [accountId, ...nearbySoulbondIds].join(',');
+  const playerIds = [accountId, ...nearbySoulbondIds];
 
-  voodoo.command({
-    accountId,
-    command: `player modify-stat ${playerList} damageprotection ${value} ${duration} true`
-  });
+  for (const playerId of playerIds) {
+    const baseDamageProtection = await voodoo.getPlayerCheckStatBase({ accountId: playerId, stat: 'damageprotection' });
 
-  const player = await voodoo.getPlayerDetailed({ accountId });
-  const { position } = spawnFrom(player, 'eyes');
+    if (baseDamageProtection) {
+      const buffedDamageProtection = baseDamageProtection * multiplier;
 
-  spawn(voodoo, accountId, {
-    prefabObject: {
-      hash: PrefabHash.Iron_Boulder_Parts,
-      position
+      voodoo.command({
+        accountId,
+        command: `player modify-stat ${playerId} damageprotection ${buffedDamageProtection} ${duration} false`
+      });
     }
-  });
+  }
 
   const { name, serverId, serverName } = voodoo.players[accountId];
   voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Stoneskin`);
