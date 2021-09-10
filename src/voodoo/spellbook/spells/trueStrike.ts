@@ -27,7 +27,7 @@ export const trueStrike: SpellFunction = async (voodoo, accountId, upgradeConfig
     }
   });
 
-  const value = 1 + attributes.intensify / 100;
+  const multiplier = 1 + attributes.intensify / 100;
   const duration = attributes.concentration;
   const searchRadius = attributes.projection;
 
@@ -38,12 +38,20 @@ export const trueStrike: SpellFunction = async (voodoo, accountId, upgradeConfig
     nearbySoulbondIds = nearbySoulbonds.map(soulbond => soulbond.id);
   }
 
-  const playerList = [accountId, ...nearbySoulbondIds].join(',');
+  const playerIds = [accountId, ...nearbySoulbondIds];
 
-  voodoo.command({
-    accountId,
-    command: `player modify-stat ${playerList} damage ${value} ${duration} true`
-  });
+  for (const playerId of playerIds) {
+    const baseDamage = await voodoo.getPlayerCheckStatBase({ accountId: playerId, stat: 'damage' });
+
+    if (baseDamage) {
+      const buffedDamage = baseDamage * multiplier;
+
+      voodoo.command({
+        accountId,
+        command: `player modify-stat ${playerId} damage ${buffedDamage} ${duration} false`
+      });
+    }
+  }
 
   const { name, serverId, serverName } = voodoo.players[accountId];
   voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast True Strike`);

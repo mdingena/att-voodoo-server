@@ -35,7 +35,7 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
     }
   });
 
-  const value = 1 + attributes.intensify / 100;
+  const multiplier = 1 + attributes.intensify / 100;
   const duration = attributes.concentration;
   const searchRadius = attributes.projection;
 
@@ -46,12 +46,20 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
     nearbySoulbondIds = nearbySoulbonds.map(soulbond => soulbond.id);
   }
 
-  const playerList = [accountId, ...nearbySoulbondIds].join(',');
+  const playerIds = [accountId, ...nearbySoulbondIds];
 
-  voodoo.command({
-    accountId,
-    command: `player modify-stat ${playerList} damageprotection ${value} ${duration} true`
-  });
+  for (const playerId of playerIds) {
+    const baseDamageProtection = await voodoo.getPlayerCheckStatBase({ accountId: playerId, stat: 'damageprotection' });
+
+    if (baseDamageProtection) {
+      const buffedDamageProtection = baseDamageProtection * multiplier;
+
+      voodoo.command({
+        accountId,
+        command: `player modify-stat ${playerId} damageprotection ${buffedDamageProtection} ${duration} false`
+      });
+    }
+  }
 
   const { name, serverId, serverName } = voodoo.players[accountId];
   voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Stoneskin`);

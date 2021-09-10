@@ -98,6 +98,16 @@ interface GetPlayerDetailed {
   accountId: number;
 }
 
+interface GetPlayerCheckStatBase {
+  accountId: number;
+  stat: string;
+}
+
+interface GetPlayerCheckStatCurrent {
+  accountId: number;
+  stat: string;
+}
+
 type PotentialVectorResponse = string | number[];
 
 export type PlayerDetailed = {
@@ -122,6 +132,13 @@ export type PlayerDetailed = {
 
 type PlayerDetailedResponse = {
   Result?: PlayerDetailed;
+};
+
+type PlayerCheckStatResponse = {
+  Result?: {
+    Base: number;
+    Value: number;
+  };
 };
 
 interface GetExperience {
@@ -184,6 +201,8 @@ export type VoodooServer = {
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
   getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<PlayerDetailed | undefined>;
+  getPlayerCheckStatBase: ({ accountId }: GetPlayerCheckStatBase) => Promise<number | undefined>;
+  getPlayerCheckStatCurrent: ({ accountId }: GetPlayerCheckStatCurrent) => Promise<number | undefined>;
   getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
   addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
   getSpellUpgrades: ({ accountId, spell }: GetSpellUpgrades) => { [key: string]: number };
@@ -277,6 +296,32 @@ export const createVoodooServer = (): VoodooServer => ({
       });
 
       return player;
+    } catch (error) {
+      return undefined;
+    }
+  },
+
+  getPlayerCheckStatBase: async function ({ accountId, stat }) {
+    try {
+      const checkStatResponse: PlayerCheckStatResponse = await this.command({
+        accountId,
+        command: `player check-stat ${accountId} ${stat}`
+      });
+
+      return checkStatResponse.Result?.Base;
+    } catch (error) {
+      return undefined;
+    }
+  },
+
+  getPlayerCheckStatCurrent: async function ({ accountId, stat }) {
+    try {
+      const checkStatResponse: PlayerCheckStatResponse = await this.command({
+        accountId,
+        command: `player check-stat ${accountId} ${stat}`
+      });
+
+      return checkStatResponse.Result?.Value;
     } catch (error) {
       return undefined;
     }
