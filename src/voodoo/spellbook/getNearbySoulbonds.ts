@@ -7,7 +7,7 @@ export const getNearbySoulbonds = async (voodoo: VoodooServer, accountId: number
     Result: [{ Belt: inventory }]
   } = await voodoo.command({ accountId, command: `player inventory ${accountId}` });
 
-  const beltItemIds: number[] = inventory.map((item: { Identifier?: number }) => item.Identifier).filter(Boolean);
+  const beltItemIds: number[] = inventory.map((item?: { Identifier: number }) => item?.Identifier ?? 0).filter(Boolean);
 
   const beltItems: { ResultString?: string }[] = await Promise.all(
     beltItemIds.map(id => {
