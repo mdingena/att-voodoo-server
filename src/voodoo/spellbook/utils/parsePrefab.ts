@@ -466,7 +466,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     /**
      * SOULBOUND
      */
-    case PrefabHash.Key_Standard:
+    case PrefabHash.Spriggull_Feather_Green:
       return 'soulbond';
 
     /**
