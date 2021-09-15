@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import fetch from 'node-fetch';
-import { VoodooServer } from '../../voodoo';
+import { TrackAction, TrackCategory, VoodooServer } from '../../voodoo';
 import { db } from '../../db';
 import { upsertSession, upsertHeartbeat } from '../../db/sql';
 
@@ -25,11 +25,20 @@ export const getSession =
       await db.query(upsertSession, [accountId, accessToken]);
       await db.query(upsertHeartbeat, [accessToken]);
 
+      const serverId = voodoo.players[accountId]?.serverId;
+
       const session = {
         accountId,
-        playerJoined: voodoo.players[accountId]?.serverId ?? null,
+        playerJoined: serverId ?? null,
         servers: [...voodoo.servers]
       };
+
+      voodoo.track({
+        serverId,
+        accountId,
+        category: TrackCategory.Sessions,
+        action: TrackAction.SessionCreated
+      });
 
       clientResponse.json({ ok: true, result: session });
     } catch (error) {
