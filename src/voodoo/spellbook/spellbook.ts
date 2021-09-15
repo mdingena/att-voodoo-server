@@ -1,6 +1,6 @@
 import { pages, School, Upgrades } from 'att-voodoo-spellbook';
 import * as spells from './spells';
-import { Experience, VoodooServer } from '../createVoodooServer';
+import { Experience, TrackAction, TrackCategory, VoodooServer } from '../createVoodooServer';
 import { xpGain } from './experience';
 
 export type Spell = {
@@ -37,7 +37,14 @@ export const spellbook: Spellbook = {
               const amount = xpGain(incantations.length);
               return voodoo.addExperience({ accountId, school, amount });
             },
-            cast: async (voodoo, accountId) => await spell(voodoo, accountId, upgrades)
+            cast: async (voodoo, accountId) => {
+              await spell(voodoo, accountId, upgrades);
+              return voodoo.track({
+                accountId,
+                category: TrackCategory.Spells,
+                action: TrackAction.SpellCast
+              });
+            }
           }
         ];
       })

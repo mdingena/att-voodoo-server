@@ -1,6 +1,6 @@
 import { Server, ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { VoodooServer } from '../voodoo';
+import { TrackAction, TrackCategory, VoodooServer } from '../voodoo';
 
 const logger = new Logger('Bot');
 
@@ -24,6 +24,12 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
     });
 
     logger.warn(`Disconnected from ${name}`);
+
+    voodoo.track({
+      serverId: connection.server.info.id,
+      category: TrackCategory.Servers,
+      action: TrackAction.ServerDisconnected
+    });
   };
 
   /* Server info updated event handler. */
@@ -82,4 +88,10 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   }
 
   logger.success(`Connected to ${connection.server.info.name}`);
+
+  voodoo.track({
+    serverId: connection.server.info.id,
+    category: TrackCategory.Servers,
+    action: TrackAction.ServerConnected
+  });
 };

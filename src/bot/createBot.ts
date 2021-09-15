@@ -13,6 +13,7 @@ export const createBot = async (voodoo: VoodooServer): Promise<Client> => {
 
   await bot.initialize();
   await bot.groupManager.acceptAllInvites(true);
+  await bot.groupManager.groups.refresh(true);
 
   /* Add every server to Voodoo for the server status screen in the client. */
   await Promise.all(

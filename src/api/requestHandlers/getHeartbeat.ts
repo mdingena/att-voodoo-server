@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer } from '../../voodoo';
+import { TrackAction, TrackCategory, VoodooServer } from '../../voodoo';
 import { selectSession, upsertHeartbeat } from '../../db/sql';
 
 export const getHeartbeat =
@@ -20,6 +20,7 @@ export const getHeartbeat =
 
       /* Get account ID. */
       const accountId = session.rows[0].account_id;
+      const serverId = voodoo.players[accountId]?.serverId;
 
       /* Update player's Voodoo client status. */
       if (voodoo.players[accountId] && !voodoo.players[accountId].isVoodooClient) {
@@ -28,9 +29,16 @@ export const getHeartbeat =
 
       /* Return servers update. */
       const update = {
-        playerJoined: voodoo.players[accountId]?.serverId ?? null,
+        playerJoined: serverId ?? null,
         servers: [...voodoo.servers]
       };
+
+      voodoo.track({
+        serverId,
+        accountId,
+        category: TrackCategory.Sessions,
+        action: TrackAction.SessionHeartbeat
+      });
 
       clientResponse.json({ ok: true, result: update });
     } catch (error) {
