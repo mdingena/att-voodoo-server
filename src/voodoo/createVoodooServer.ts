@@ -199,7 +199,7 @@ export enum TrackCategory {
 }
 
 export enum TrackAction {
-  AllPlayersRemoved = 'All player removed',
+  AllPlayersRemoved = 'All players removed',
   ExperienceAdded = 'Experience added',
   ExperienceRemoved = 'Experience removed',
   PlayerAdded = 'Player added',
@@ -571,16 +571,20 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
   },
 
   track: function ({ serverId, accountId, category, action, value }) {
-    const p = (serverId ?? (accountId ? this.players[accountId].serverId : 0)).toString();
+    try {
+      const p = (serverId ?? (accountId ? this.players[accountId]?.serverId ?? 0 : 0)).toString();
 
-    return this.analytics
-      .event({
-        ec: category,
-        ea: action,
-        el: (accountId ?? 0).toString(),
-        ev: value,
-        p
-      })
-      .send();
+      return this.analytics
+        .event({
+          ec: category,
+          ea: action,
+          el: (accountId ?? 0).toString(),
+          ev: value,
+          p
+        })
+        .send();
+    } catch (error) {
+      this.logger.error(error.message);
+    }
   }
 });
