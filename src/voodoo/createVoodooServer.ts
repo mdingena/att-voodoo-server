@@ -195,7 +195,8 @@ export enum TrackCategory {
   Players = 'Players',
   Servers = 'Servers',
   Sessions = 'Sessions',
-  Spells = 'Spells'
+  SpellCast = 'Cast spell',
+  SpellPrepared = 'Prepared spell'
 }
 
 export enum TrackAction {
@@ -208,8 +209,6 @@ export enum TrackAction {
   ServerDisconnected = 'Server disconnected',
   SessionCreated = 'Session created',
   SessionHeartbeat = 'Heartbeat',
-  SpellCast = 'Cast spell',
-  SpellPrepared = 'Prepared spell',
   UpgradeAdded = 'Upgrade added'
 }
 
@@ -217,7 +216,7 @@ interface Track {
   serverId?: number;
   accountId?: number;
   category: TrackCategory;
-  action: TrackAction;
+  action: TrackAction | string;
   value?: number;
 }
 
@@ -563,8 +562,8 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     this.track({
       serverId,
       accountId,
-      category: TrackCategory.Spells,
-      action: TrackAction.SpellPrepared
+      category: TrackCategory.SpellPrepared,
+      action: spell.name
     });
 
     return preparedSpells;

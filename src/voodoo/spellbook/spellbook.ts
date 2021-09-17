@@ -41,8 +41,8 @@ export const spellbook: Spellbook = {
               await spell(voodoo, accountId, upgrades);
               return voodoo.track({
                 accountId,
-                category: TrackCategory.Spells,
-                action: TrackAction.SpellCast
+                category: TrackCategory.SpellCast,
+                action: pages[spellKey].name
               });
             }
           }
