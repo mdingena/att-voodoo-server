@@ -9,9 +9,9 @@ const CONSOLE_PERMISSION = 'Console';
 export const createBot = async (voodoo: VoodooServer): Promise<Client> => {
   initLogger();
 
-  const bot = new Client(config);
+  const bot = new Client();
 
-  await bot.initialize();
+  await bot.init(config);
   await bot.groupManager.acceptAllInvites(true);
   await bot.groupManager.groups.refresh(true);
 

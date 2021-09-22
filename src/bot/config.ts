@@ -1,12 +1,12 @@
 type AltaApiConfig = {
-  clientId: string;
-  clientSecret: string;
-  scope: string[];
+  client_id: string;
+  client_secret: string;
+  scope: string;
 };
 
 export const config: AltaApiConfig = {
-  clientId: process.env.ALTA_CLIENT_ID || '',
-  clientSecret: process.env.ALTA_CLIENT_SECRET || '',
+  client_id: process.env.ALTA_CLIENT_ID || '',
+  client_secret: process.env.ALTA_CLIENT_SECRET || '',
   scope: [
     'group.info',
     'group.invite',
@@ -21,5 +21,5 @@ export const config: AltaApiConfig = {
     'ws.group_invites',
     'ws.group_members',
     'ws.group_servers'
-  ]
+  ].join(' ')
 };
