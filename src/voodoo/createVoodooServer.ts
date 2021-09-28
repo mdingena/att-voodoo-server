@@ -310,16 +310,16 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const { name, serverId, serverName } = this.players[accountId];
 
-    delete this.players[accountId];
-
-    logger.warn(`[${serverName ?? serverId} | ${name}] removed`);
-
     this.track({
       accountId,
       serverId,
       category: TrackCategory.Players,
       action: TrackAction.PlayerRemoved
     });
+
+    delete this.players[accountId];
+
+    logger.warn(`[${serverName ?? serverId} | ${name}] removed`);
   },
 
   removePlayers: function ({ serverId }) {
