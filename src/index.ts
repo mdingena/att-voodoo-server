@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/node';
-import ua from 'universal-analytics';
 import { createVoodooServer, gracefulShutdown } from './voodoo';
 import { createBot } from './bot';
 import { createApi, keepAwake } from './api';
@@ -16,11 +15,9 @@ if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID) {
   throw new Error('Missing required environment variables.');
 }
 
-const analytics = ua(process.env.GA_TRACKING_ID, { uid: process.env.ALTA_CLIENT_ID });
-
 (async () => {
   /* Create Voodoo server. */
-  const voodoo = createVoodooServer(analytics);
+  const voodoo = createVoodooServer();
 
   /* Enable graceful shutdown. */
   process.on('SIGTERM', gracefulShutdown(voodoo));

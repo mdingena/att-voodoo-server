@@ -1,4 +1,4 @@
-import { Visitor } from 'universal-analytics';
+import ua, { Visitor } from 'universal-analytics';
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
 import { DecodedString } from 'att-string-transcoder';
@@ -41,6 +41,7 @@ type Players = {
   [accountId: number]: {
     name: string;
     isVoodooClient: boolean;
+    analytics: Visitor;
     serverId: number;
     serverName?: string;
     serverConnection: ServerConnection;
@@ -200,21 +201,17 @@ export enum TrackCategory {
 }
 
 export enum TrackAction {
-  AllPlayersRemoved = 'All players removed',
   ExperienceAdded = 'Experience added',
   ExperienceRemoved = 'Experience removed',
   PlayerAdded = 'Player added',
   PlayerRemoved = 'Player removed',
-  ServerConnected = 'Server connected',
-  ServerDisconnected = 'Server disconnected',
   SessionCreated = 'Session created',
-  SessionHeartbeat = 'Heartbeat',
   UpgradeAdded = 'Upgrade added'
 }
 
 interface Track {
+  accountId: number;
   serverId?: number;
-  accountId?: number;
   category: TrackCategory;
   action: TrackAction | string;
   value?: number;
@@ -226,7 +223,6 @@ export type VoodooServer = {
   servers: Server[];
   players: Players;
   spellbook: Spellbook;
-  analytics: Visitor;
   updateServer: (server: Server) => void;
   addPlayer: ({ name, accountId, serverId, serverConnection }: AddPlayer) => Promise<void>;
   setPlayerClientStatus: ({ accountId, isVoodooClient }: PlayerClientStatus) => void;
@@ -244,10 +240,10 @@ export type VoodooServer = {
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
   command: ({ accountId, command }: Command) => Promise<any>;
   prepareSpell: ({ accountId, incantations, spell }: PrepareSpell) => Promise<PreparedSpells>;
-  track: ({ serverId, accountId, category, action, value }: Track) => void;
+  track: ({ accountId, serverId, category, action, value }: Track) => void;
 };
 
-export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
+export const createVoodooServer = (): VoodooServer => ({
   config: {
     CONDUIT_DISTANCE: 10,
     PREPARED_SPELLS_CONFIG: {
@@ -267,8 +263,6 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
 
   spellbook,
 
-  analytics,
-
   updateServer: function (server) {
     const servers = this.servers.filter(({ id }) => id !== server.id);
     this.servers = [...servers, server];
@@ -282,6 +276,7 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     const newPlayer = {
       name,
       isVoodooClient: false,
+      analytics: ua(process.env.GA_TRACKING_ID!, { uid: accountId.toString() }),
       serverId,
       serverName,
       serverConnection,
@@ -295,8 +290,8 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     logger.success(`[${serverName ?? serverId} | ${name}] added`);
 
     this.track({
-      serverId,
       accountId,
+      serverId,
       category: TrackCategory.Players,
       action: TrackAction.PlayerAdded
     });
@@ -320,8 +315,8 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     logger.warn(`[${serverName ?? serverId} | ${name}] removed`);
 
     this.track({
-      serverId,
       accountId,
+      serverId,
       category: TrackCategory.Players,
       action: TrackAction.PlayerRemoved
     });
@@ -335,12 +330,6 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
       .forEach(([accountId]) => delete this.players[Number(accountId)]);
 
     logger.warn(`[${serverName ?? serverId}] removed all players`);
-
-    this.track({
-      serverId,
-      category: TrackCategory.Players,
-      action: TrackAction.AllPlayersRemoved
-    });
   },
 
   getPlayerDetailed: async function ({ accountId }) {
@@ -412,8 +401,8 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     logger.success(`[${serverName ?? serverId} | ${name}] gained ${amount} ${school} XP`);
 
     this.track({
-      serverId,
       accountId,
+      serverId,
       category: TrackCategory.Experience,
       action: TrackAction.ExperienceAdded,
       value: amount
@@ -459,15 +448,15 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     logger.success(`[${serverName ?? serverId} | ${name}] upgraded ${spell} (${upgrade}) for ${UPGRADE_COST_XP} XP`);
 
     this.track({
-      serverId,
       accountId,
+      serverId,
       category: TrackCategory.Experience,
       action: TrackAction.UpgradeAdded
     });
 
     this.track({
-      serverId,
       accountId,
+      serverId,
       category: TrackCategory.Experience,
       action: TrackAction.ExperienceRemoved,
       value: UPGRADE_COST_XP
@@ -560,8 +549,8 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     logger.info(`[${serverName ?? serverId} | ${name}] prepared spell: ${spell.name}`);
 
     this.track({
-      serverId,
       accountId,
+      serverId,
       category: TrackCategory.SpellPrepared,
       action: spell.name
     });
@@ -569,15 +558,16 @@ export const createVoodooServer = (analytics: Visitor): VoodooServer => ({
     return preparedSpells;
   },
 
-  track: function ({ serverId, accountId, category, action, value }) {
+  track: function ({ accountId, serverId, category, action, value }) {
     try {
-      const p = (serverId ?? (accountId ? this.players[accountId]?.serverId ?? 0 : 0)).toString();
+      const { analytics } = this.players[accountId];
+      const p = (serverId ?? this.players[accountId]?.serverId ?? 0).toString();
 
-      return this.analytics
+      return analytics
         .event({
           ec: category,
           ea: action,
-          el: (accountId ?? 0).toString(),
+          el: accountId.toString(),
           ev: value,
           p
         })

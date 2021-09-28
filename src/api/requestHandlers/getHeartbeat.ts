@@ -33,13 +33,6 @@ export const getHeartbeat =
         servers: [...voodoo.servers]
       };
 
-      voodoo.track({
-        serverId,
-        accountId,
-        category: TrackCategory.Sessions,
-        action: TrackAction.SessionHeartbeat
-      });
-
       clientResponse.json({ ok: true, result: update });
     } catch (error) {
       clientResponse.status(500).json({ ok: false, error: error.message });

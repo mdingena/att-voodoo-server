@@ -34,8 +34,8 @@ export const getSession =
       };
 
       voodoo.track({
-        serverId,
         accountId,
+        serverId,
         category: TrackCategory.Sessions,
         action: TrackAction.SessionCreated
       });

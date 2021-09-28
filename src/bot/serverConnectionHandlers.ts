@@ -24,12 +24,6 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
     });
 
     logger.warn(`Disconnected from ${name}`);
-
-    voodoo.track({
-      serverId: connection.server.info.id,
-      category: TrackCategory.Servers,
-      action: TrackAction.ServerDisconnected
-    });
   };
 
   /* Server info updated event handler. */
@@ -88,10 +82,4 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   }
 
   logger.success(`Connected to ${connection.server.info.name}`);
-
-  voodoo.track({
-    serverId: connection.server.info.id,
-    category: TrackCategory.Servers,
-    action: TrackAction.ServerConnected
-  });
 };
