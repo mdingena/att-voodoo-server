@@ -288,18 +288,22 @@ export const createVoodooServer = (): VoodooServer => ({
     this.players = { ...this.players, [accountId]: newPlayer };
 
     logger.success(`[${serverName ?? serverId} | ${name}] added`);
-
-    this.track({
-      accountId,
-      serverId,
-      category: TrackCategory.Players,
-      action: TrackAction.PlayerAdded
-    });
   },
 
   setPlayerClientStatus: function ({ accountId, isVoodooClient }) {
     if (this.players[accountId]) {
       this.players[accountId].isVoodooClient = isVoodooClient;
+
+      if (isVoodooClient) {
+        const { serverId } = this.players[accountId];
+
+        this.track({
+          accountId,
+          serverId,
+          category: TrackCategory.Players,
+          action: TrackAction.PlayerAdded
+        });
+      }
     }
   },
 
@@ -308,14 +312,16 @@ export const createVoodooServer = (): VoodooServer => ({
       return logger.error(`Attempted to remove player ${accountId} but no such player found.`);
     }
 
-    const { name, serverId, serverName } = this.players[accountId];
+    const { name, serverId, serverName, isVoodooClient } = this.players[accountId];
 
-    this.track({
-      accountId,
-      serverId,
-      category: TrackCategory.Players,
-      action: TrackAction.PlayerRemoved
-    });
+    if (isVoodooClient) {
+      this.track({
+        accountId,
+        serverId,
+        category: TrackCategory.Players,
+        action: TrackAction.PlayerRemoved
+      });
+    }
 
     delete this.players[accountId];
 
