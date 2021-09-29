@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { TrackAction, TrackCategory, VoodooServer } from '../../voodoo';
+import { VoodooServer } from '../../voodoo';
 import { selectSession, upsertHeartbeat } from '../../db/sql';
 
 export const getHeartbeat =
