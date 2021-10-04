@@ -61,6 +61,15 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'healing pod';
 
     /**
+     * ARROW
+     */
+    case PrefabHash.Arrow:
+      return 'rusty arrow';
+
+    case PrefabHash.Ka_Karimata_Arrow:
+      return 'karimata arrow';
+
+    /**
      * CRYSTAL
      */
     case PrefabHash.Crystal_Gem_Blue:
