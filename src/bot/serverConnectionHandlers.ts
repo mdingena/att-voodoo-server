@@ -1,10 +1,18 @@
 import { Server, ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { TrackAction, TrackCategory, VoodooServer } from '../voodoo';
+import { VoodooServer } from '../voodoo';
 
 const logger = new Logger('Bot');
 
 export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (connection: ServerConnection) => {
+  /* Do not connect to Quest servers. */
+  // @ts-ignore
+  if (connection.server.info.fleet !== 'att-release') {
+    logger.warn(`Server '${connection.server.info.name}' is not a PCVR server.`);
+    connection.disconnect();
+    return;
+  }
+
   /* Connection closed event handler. */
   const handleClosed = ({
     server: {

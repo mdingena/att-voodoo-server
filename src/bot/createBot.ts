@@ -32,12 +32,15 @@ export const createBot = async (voodoo: VoodooServer): Promise<Client> => {
         await group.servers.refreshStatus(true);
 
         group.servers.items.forEach(server => {
-          voodoo.updateServer({
-            id: server.info.id,
-            name: server.info.name,
-            online: server.isOnline,
-            players: server.info.online_players.length
-          });
+          // @ts-ignore
+          if (server.info.fleet === 'att-release') {
+            voodoo.updateServer({
+              id: server.info.id,
+              name: server.info.name,
+              online: server.isOnline,
+              players: server.info.online_players.length
+            });
+          }
         });
       }
     })
