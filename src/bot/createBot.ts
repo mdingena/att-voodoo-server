@@ -36,6 +36,7 @@ export const createBot = async (voodoo: VoodooServer): Promise<Client> => {
           if (server.info.fleet === 'att-release') {
             voodoo.updateServer({
               id: server.info.id,
+              groupId: server.info.group_id ?? 0,
               name: server.info.name,
               online: server.isOnline,
               players: server.info.online_players.length

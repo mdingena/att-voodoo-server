@@ -22,6 +22,7 @@ const logger = new Logger('Voodoo');
 
 type Server = {
   id: number;
+  groupId: number;
   name: string;
   online: boolean;
   players: number;

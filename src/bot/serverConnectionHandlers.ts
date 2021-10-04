@@ -17,7 +17,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   const handleClosed = ({
     server: {
       isOnline,
-      info: { id, name, online_players }
+      info: { id, group_id, name, online_players }
     }
   }: ServerConnection) => {
     connection.server.off('status', handleServerStatus);
@@ -26,6 +26,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
     voodoo.removePlayers({ serverId: id });
     voodoo.updateServer({
       id,
+      groupId: group_id ?? 0,
       name,
       online: isOnline,
       players: online_players.length
@@ -38,6 +39,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   const handleServerStatus = (server: Server) => {
     voodoo.updateServer({
       id: server.info.id,
+      groupId: server.info.group_id ?? 0,
       name: server.info.name,
       online: server.isOnline,
       players: server.info.online_players.length
@@ -68,6 +70,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   /* Update server info immediately after connecting. */
   voodoo.updateServer({
     id: connection.server.info.id,
+    groupId: connection.server.info.group_id ?? 0,
     name: connection.server.info.name,
     online: connection.server.isOnline,
     players: connection.server.info.online_players.length
