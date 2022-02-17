@@ -1,30 +1,30 @@
-import { Prefab, PrefabHash } from 'att-string-transcoder';
+import { Prefab, PrefabData } from 'att-string-transcoder';
 
-export const parseHiltedApparatus = (prefab: Prefab): string | undefined => {
+export const parseHiltedApparatus = (prefab: PrefabData): string | undefined => {
   const children = Object.keys(prefab.childPrefabs ?? []);
 
   if (children.length) return 'hilted apparatus';
 
   switch (prefab.prefabObject.hash) {
-    case PrefabHash.Curled_Wooden_Handle:
+    case Prefab.Curled_Wooden_Handle.hash:
       return 'curled wooden handle';
 
-    case PrefabHash.Handle_Bow:
+    case Prefab.Handle_Bow.hash:
       return 'bow handle';
 
-    case PrefabHash.Handle_Fist:
+    case Prefab.Handle_Fist.hash:
       return 'fist handle';
 
-    case PrefabHash.Handle_Medium_Straight:
+    case Prefab.Handle_Medium_Straight.hash:
       return 'medium straight wooden handle';
 
-    case PrefabHash.Handle_Short:
+    case Prefab.Handle_Short.hash:
       return 'short wooden handle';
 
-    case PrefabHash.Shield_Core_Handle:
+    case Prefab.Shield_Core_Handle.hash:
       return 'shield handle';
 
-    case PrefabHash.Hebios_Handle_Kunai:
+    case Prefab.Hebios_Handle_Kunai.hash:
       return 'kunai handle';
 
     default:

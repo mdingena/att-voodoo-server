@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const fire: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -13,7 +13,7 @@ export const fire: SpellFunction = async (voodoo, accountId, upgradeConfigs) => 
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Grass_Clump,
+      hash: Prefab.Grass_Clump.hash,
       position,
       rotation
     },

@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const craftSoulbond: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -13,7 +13,7 @@ export const craftSoulbond: SpellFunction = async (voodoo, accountId, upgradeCon
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Spriggull_Feather_Green,
+      hash: Prefab.Spriggull_Feather_Green.hash,
       position,
       rotation
     },

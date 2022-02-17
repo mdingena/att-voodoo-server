@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const transmuteMythrilIngotToOre: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -15,7 +15,7 @@ export const transmuteMythrilIngotToOre: SpellFunction = async (voodoo, accountI
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Mythril_Ore,
+      hash: Prefab.Mythril_Ore.hash,
       position: leftHand.position,
       rotation: leftHand.rotation
     },
@@ -29,7 +29,7 @@ export const transmuteMythrilIngotToOre: SpellFunction = async (voodoo, accountI
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Mythril_Ore,
+      hash: Prefab.Mythril_Ore.hash,
       position: rightHand.position,
       rotation: rightHand.rotation
     },

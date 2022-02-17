@@ -1,6 +1,6 @@
-import { Prefab, PhysicalMaterialPart, PhysicalMaterialPartHash } from 'att-string-transcoder';
+import { PrefabData, PhysicalMaterialPart, PhysicalMaterialPartHash } from 'att-string-transcoder';
 
-export const parseWedge = (prefab: Prefab): string | undefined => {
+export const parseWedge = (prefab: PrefabData): string | undefined => {
   const component = prefab.components?.PhysicalMaterialPart as PhysicalMaterialPart;
 
   if (!component) return undefined;

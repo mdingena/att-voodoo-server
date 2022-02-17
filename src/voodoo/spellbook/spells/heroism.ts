@@ -1,15 +1,9 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 import { getNearbySoulbonds } from '../getNearbySoulbonds';
-
-type PlayerCheckStatHealthResponse = {
-  Result?: {
-    Value: number;
-  };
-};
 
 export const heroism: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'heroism' });
@@ -20,7 +14,7 @@ export const heroism: SpellFunction = async (voodoo, accountId, upgradeConfigs) 
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Potion_Medium,
+      hash: Prefab.Potion_Medium.hash,
       position,
       rotation
     },

@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { VoodooServer, PreparedSpells, spawn, spawnFrom } from '../../voodoo';
-import { Prefab } from 'att-string-transcoder';
+import { PrefabData } from 'att-string-transcoder';
 import { selectSession } from '../../db/sql';
 
 export const getSeal =
@@ -72,7 +72,7 @@ export const getSeal =
           const player = await voodoo.getPlayerDetailed({ accountId });
           const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-          const respawn: Prefab = {
+          const respawn: PrefabData = {
             ...prefab,
             prefabObject: {
               ...prefab.prefabObject,
@@ -123,7 +123,7 @@ export const getSeal =
           }
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       voodoo.logger.error(error);
       clientResponse.status(500).json({ ok: false, error: error.message });
     }

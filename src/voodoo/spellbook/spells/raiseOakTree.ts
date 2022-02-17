@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { composeTree, generateComposition, PrefabHash, SpeciesHash } from 'att-string-transcoder';
+import { composeTree, generateComposition, Prefab, SpeciesHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const raiseOakTree: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -17,7 +17,7 @@ export const raiseOakTree: SpellFunction = async (voodoo, accountId, upgradeConf
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Tree,
+      hash: Prefab.Tree.hash,
       position: rightHand.position
     },
     components: {

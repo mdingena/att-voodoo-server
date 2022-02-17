@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const transmuteGoldToSilver: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -13,7 +13,7 @@ export const transmuteGoldToSilver: SpellFunction = async (voodoo, accountId, up
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Silver_Ingot,
+      hash: Prefab.Silver_Ingot.hash,
       position,
       rotation
     },

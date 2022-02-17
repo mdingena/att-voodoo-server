@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const conjureCrystalSword: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -13,7 +13,7 @@ export const conjureCrystalSword: SpellFunction = async (voodoo, accountId, upgr
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Crystal_Sword_Blue,
+      hash: Prefab.Crystal_Sword_Blue.hash,
       position: rightHand.position,
       rotation: rightHand.rotation
     },
@@ -30,7 +30,7 @@ export const conjureCrystalSword: SpellFunction = async (voodoo, accountId, upgr
 
     spawn(voodoo, accountId, {
       prefabObject: {
-        hash: PrefabHash.Crystal_Sword_Blue,
+        hash: Prefab.Crystal_Sword_Blue.hash,
         position: leftHand.position,
         rotation: leftHand.rotation
       },

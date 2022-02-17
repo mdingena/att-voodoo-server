@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const liquateRedIron: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -15,7 +15,7 @@ export const liquateRedIron: SpellFunction = async (voodoo, accountId, upgradeCo
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Copper_Ingot,
+      hash: Prefab.Copper_Ingot.hash,
       position: leftHand.position,
       rotation: leftHand.rotation
     },
@@ -29,7 +29,7 @@ export const liquateRedIron: SpellFunction = async (voodoo, accountId, upgradeCo
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Iron_Ingot,
+      hash: Prefab.Iron_Ingot.hash,
       position: rightHand.position,
       rotation: rightHand.rotation
     },

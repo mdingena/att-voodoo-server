@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const smokescreen: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -13,7 +13,7 @@ export const smokescreen: SpellFunction = async (voodoo, accountId, upgradeConfi
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Ash_Gotera_Smoke,
+      hash: Prefab.Ash_Gotera_Smoke.hash,
       position
     }
   });
