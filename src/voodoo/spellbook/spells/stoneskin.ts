@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 import { getNearbySoulbonds } from '../getNearbySoulbonds';
 
@@ -15,7 +15,7 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Potion_Medium,
+      hash: Prefab.Potion_Medium.hash,
       position: rightHand.position,
       rotation: rightHand.rotation
     },
@@ -30,7 +30,7 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Iron_Boulder_Parts,
+      hash: Prefab.Iron_Boulder_Parts.hash,
       position: eyes.position
     }
   });

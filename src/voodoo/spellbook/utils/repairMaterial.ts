@@ -3,7 +3,7 @@ import {
   DurabilityModule,
   PhysicalMaterialPart,
   PhysicalMaterialPartHash,
-  PrefabHash
+  PrefabData
 } from 'att-string-transcoder';
 
 const IRON_HANDLES = ['Handle_Large_Cool', 'Handle_Medium_Cool', 'Handle_Short_Cool', 'Metal_Bow'];
@@ -15,7 +15,7 @@ const REDWOOD_HANDLES = [
   'Hebios_Handle_Wakizashi'
 ];
 
-export const repairMaterial = (prefab: Prefab, material: PhysicalMaterialPartHash, amount: number): Prefab => {
+export const repairMaterial = (prefab: PrefabData, material: PhysicalMaterialPartHash, amount: number): PrefabData => {
   const durabilityModule = prefab.components?.DurabilityModule as DurabilityModule | undefined;
   const physicalMaterialPart = prefab.components?.PhysicalMaterialPart as PhysicalMaterialPart | undefined;
 
@@ -25,7 +25,7 @@ export const repairMaterial = (prefab: Prefab, material: PhysicalMaterialPartHas
         durabilityModule.integrity = Math.min(1, (durabilityModule.integrity ?? 0) + amount);
       }
     } else {
-      const prefabName = PrefabHash[prefab.prefabObject.hash];
+      const prefabName = Object.entries(Prefab).find(([_, value]) => value.hash === prefab.prefabObject.hash)![0];
 
       if (
         (material === PhysicalMaterialPartHash.Iron && IRON_HANDLES.includes(prefabName)) ||

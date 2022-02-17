@@ -1,9 +1,9 @@
 import { SpellFunction } from '../spellbook';
 import { anamnesis, ANAMNESIS_MAP } from './anamnesis';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 
 export const anamnesisPotatoFullUnripe: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
-  const hash = ANAMNESIS_MAP.get(PrefabHash.Potato_Full_Unripe);
+  const hash = ANAMNESIS_MAP.get(Prefab.Potato_Full_Unripe.hash);
 
   if (!hash) return;
 

@@ -2,7 +2,7 @@ import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
 import { spawnVelocity } from '../spawnVelocity';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -16,7 +16,7 @@ export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Wyrm_Crystal_Spit,
+      hash: Prefab.Wyrm_Crystal_Spit.hash,
       position: rightHand.position,
       rotation: rightHand.rotation
     },
@@ -36,7 +36,7 @@ export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs
 
     spawn(voodoo, accountId, {
       prefabObject: {
-        hash: PrefabHash.Wyrm_Crystal_Spit,
+        hash: Prefab.Wyrm_Crystal_Spit.hash,
         position: leftHand.position,
         rotation: leftHand.rotation
       },

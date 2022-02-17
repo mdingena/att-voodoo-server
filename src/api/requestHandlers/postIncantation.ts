@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
 import { VoodooServer, PreparedSpells, parsePrefab, spawn, spawnFrom } from '../../voodoo';
-import { Prefab, decodeString } from 'att-string-transcoder';
+import { PrefabData, decodeString } from 'att-string-transcoder';
 
 export const postIncantation =
   (voodoo: VoodooServer): RequestHandler =>
@@ -113,7 +113,7 @@ export const postIncantation =
             const player = await voodoo.getPlayerDetailed({ accountId });
             const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
 
-            const respawn: Prefab = {
+            const respawn: PrefabData = {
               ...prefab,
               prefabObject: {
                 ...prefab.prefabObject,
@@ -173,7 +173,7 @@ export const postIncantation =
           }
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       voodoo.logger.error(error);
       clientResponse.status(500).json({ ok: false, error: error.message });
     }

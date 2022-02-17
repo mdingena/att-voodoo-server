@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const transmuteCopperIngotToOre: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -15,7 +15,7 @@ export const transmuteCopperIngotToOre: SpellFunction = async (voodoo, accountId
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Copper_Ore,
+      hash: Prefab.Copper_Ore.hash,
       position: leftHand.position,
       rotation: leftHand.rotation
     },
@@ -29,7 +29,7 @@ export const transmuteCopperIngotToOre: SpellFunction = async (voodoo, accountId
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Copper_Ore,
+      hash: Prefab.Copper_Ore.hash,
       position: rightHand.position,
       rotation: rightHand.rotation
     },

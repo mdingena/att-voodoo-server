@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash, LiquidContainer } from 'att-string-transcoder';
+import { Prefab, LiquidContainer } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const flaskOfEndlessTeleportation: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -18,7 +18,7 @@ export const flaskOfEndlessTeleportation: SpellFunction = async (voodoo, account
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Potion_Medium,
+      hash: Prefab.Potion_Medium.hash,
       position,
       rotation
     },

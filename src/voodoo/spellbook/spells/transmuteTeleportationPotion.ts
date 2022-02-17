@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash, LiquidContainer, PresetHash } from 'att-string-transcoder';
+import { Prefab, LiquidContainer, PresetHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const transmuteTeleportationPotion: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -18,7 +18,7 @@ export const transmuteTeleportationPotion: SpellFunction = async (voodoo, accoun
 
   return spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Potion_Medium,
+      hash: Prefab.Potion_Medium.hash,
       position,
       rotation
     },

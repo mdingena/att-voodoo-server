@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { spawnFrom } from '../spawnFrom';
-import { PrefabHash } from 'att-string-transcoder';
+import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const liquateViridium: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -15,7 +15,7 @@ export const liquateViridium: SpellFunction = async (voodoo, accountId, upgradeC
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Gold_Ingot,
+      hash: Prefab.Gold_Ingot.hash,
       position: leftHand.position,
       rotation: leftHand.rotation
     },
@@ -29,7 +29,7 @@ export const liquateViridium: SpellFunction = async (voodoo, accountId, upgradeC
 
   spawn(voodoo, accountId, {
     prefabObject: {
-      hash: PrefabHash.Mythril_Ingot,
+      hash: Prefab.Mythril_Ingot.hash,
       position: rightHand.position,
       rotation: rightHand.rotation
     },

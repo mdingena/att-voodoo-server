@@ -1,4 +1,4 @@
-import { DecodedString, PrefabHash } from 'att-string-transcoder';
+import { DecodedString, Prefab } from 'att-string-transcoder';
 import { parseFlask, parseHiltedApparatus, parseLeather, parseWedge } from '../parsers';
 
 export const parsePrefab = (decoded: DecodedString): string | undefined => {
@@ -6,476 +6,476 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     /**
      * FUEL
      */
-    case PrefabHash.Grass_Clump:
+    case Prefab.Grass_Clump.hash:
       return 'grass clump';
 
-    case PrefabHash.Coal:
+    case Prefab.Coal.hash:
       return 'coal';
 
-    case PrefabHash.MRK_Fuel_Core:
+    case Prefab.MRK_Fuel_Core.hash:
       return 'fuel core';
 
-    case PrefabHash.MRK_Molten_Core:
+    case Prefab.MRK_Molten_Core.hash:
       return 'molten core';
 
     /**
      * ROCK
      */
-    case PrefabHash.Stone:
+    case Prefab.Stone.hash:
       return 'rock';
 
     /**
      * FLINT
      */
-    case PrefabHash.Flint:
+    case Prefab.Flint.hash:
       return 'flint';
 
     /**
      * SANDSTONE
      */
-    case PrefabHash.Sandstone_Stone:
+    case Prefab.Sandstone_Stone.hash:
       return 'sandstone';
 
     /**
      * SALT
      */
-    case PrefabHash.Salt:
+    case Prefab.Salt.hash:
       return 'salt';
 
     /**
      * DYNAMITE
      */
-    case PrefabHash.Dynamite:
+    case Prefab.Dynamite.hash:
       return 'dynamite';
 
     /**
      * FIREWORK
      */
-    case PrefabHash.Firework:
+    case Prefab.Firework.hash:
       return 'firework';
 
     /**
      * HEALING POD
      */
-    case PrefabHash.Healing_Pod:
+    case Prefab.Healing_Pod.hash:
       return 'healing pod';
 
     /**
      * ARROW
      */
-    case PrefabHash.Arrow:
+    case Prefab.Arrow.hash:
       return 'rusty arrow';
 
-    case PrefabHash.Ka_Karimata_Arrow:
+    case Prefab.Ka_Karimata_Arrow.hash:
       return 'karimata arrow';
 
     /**
      * CRYSTAL
      */
-    case PrefabHash.Crystal_Gem_Blue:
+    case Prefab.Crystal_Gem_Blue.hash:
       return 'blue crystal gem';
 
-    case PrefabHash.Crystal_Shard_Blue:
+    case Prefab.Crystal_Shard_Blue.hash:
       return 'blue crystal shard';
 
     /**
      * FEATHER
      */
-    case PrefabHash.Spriggull_Feather_Blue:
+    case Prefab.Spriggull_Feather_Blue.hash:
       return 'blue spriggull feather';
 
-    case PrefabHash.Spriggull_Fletching_Blue:
+    case Prefab.Spriggull_Fletching_Blue.hash:
       return 'blue spriggull fletching';
 
-    case PrefabHash.Spriggull_Feather_Red:
+    case Prefab.Spriggull_Feather_Red.hash:
       return 'red spriggull feather';
 
-    case PrefabHash.Spriggull_Fletching_Red:
+    case Prefab.Spriggull_Fletching_Red.hash:
       return 'red spriggull fletching';
 
     /**
      * BONE
      */
-    case PrefabHash.Small_Bone_Spike:
+    case Prefab.Small_Bone_Spike.hash:
       return 'spriggull bone shard';
 
-    case PrefabHash.SpriggullDrumstick_Bone:
+    case Prefab.SpriggullDrumstick_Bone.hash:
       return 'spriggull leg bone';
 
-    case PrefabHash.Babu_Leg_Bone:
+    case Prefab.Babu_Leg_Bone.hash:
       return 'babu leg bone';
 
     /**
      * TREE SEEDS
      */
-    case PrefabHash.Ash_Tree_Seed:
+    case Prefab.Ash_Tree_Seed.hash:
       return 'ash tree seed';
 
-    case PrefabHash.Birch_Tree_Seed:
+    case Prefab.Birch_Tree_Seed.hash:
       return 'birch tree seed';
 
-    case PrefabHash.Oak_Tree_Seed:
+    case Prefab.Oak_Tree_Seed.hash:
       return 'oak tree seed';
 
-    case PrefabHash.Redwood_Tree_Seed:
+    case Prefab.Redwood_Tree_Seed.hash:
       return 'redwood tree seed';
 
-    case PrefabHash.Walnut_Tree_Seed:
+    case Prefab.Walnut_Tree_Seed.hash:
       return 'wallnut tree seed';
 
     /**
      * MEAT
      */
-    case PrefabHash.SpriggullDrumstick_Full_Burnt:
+    case Prefab.SpriggullDrumstick_Full_Burnt.hash:
       return 'burnt spriggull leg';
 
-    case PrefabHash.SpriggullDrumstick_Full_Cooked:
+    case Prefab.SpriggullDrumstick_Full_Cooked.hash:
       return 'cooked spriggull leg';
 
-    case PrefabHash.SpriggullDrumstick_Full_Ripe:
+    case Prefab.SpriggullDrumstick_Full_Ripe.hash:
       return 'uncooked spriggull leg';
 
-    case PrefabHash.SpriggullDrumstick_Half_Burnt:
+    case Prefab.SpriggullDrumstick_Half_Burnt.hash:
       return 'burnt spriggull chop';
 
-    case PrefabHash.SpriggullDrumstick_Half_Cooked:
+    case Prefab.SpriggullDrumstick_Half_Cooked.hash:
       return 'cooked spriggull chop';
 
-    case PrefabHash.SpriggullDrumstick_Half_Ripe:
+    case Prefab.SpriggullDrumstick_Half_Ripe.hash:
       return 'uncooked spriggull chop';
 
-    case PrefabHash.Babu_Leg_Full_Burnt:
+    case Prefab.Babu_Leg_Full_Burnt.hash:
       return 'burnt babu leg';
 
-    case PrefabHash.Babu_Leg_Full_Cooked:
+    case Prefab.Babu_Leg_Full_Cooked.hash:
       return 'cooked babu leg';
 
-    case PrefabHash.Babu_Leg_Full_Ripe:
+    case Prefab.Babu_Leg_Full_Ripe.hash:
       return 'uncooked babu leg';
 
-    case PrefabHash.Babu_Leg_Half_Burnt:
+    case Prefab.Babu_Leg_Half_Burnt.hash:
       return 'burnt babu chop';
 
-    case PrefabHash.Babu_Leg_Half_Cooked:
+    case Prefab.Babu_Leg_Half_Cooked.hash:
       return 'cooked babu chop';
 
-    case PrefabHash.Babu_Leg_Half_Ripe:
+    case Prefab.Babu_Leg_Half_Ripe.hash:
       return 'uncooked babu chop';
 
-    case PrefabHash.Dais_Meat_Full_Burnt:
+    case Prefab.Dais_Meat_Full_Burnt.hash:
       return 'burnt dais leg';
 
-    case PrefabHash.Dais_Meat_Full_Cooked:
+    case Prefab.Dais_Meat_Full_Cooked.hash:
       return 'cooked dais leg';
 
-    case PrefabHash.Dais_Meat_Full_Ripe:
+    case Prefab.Dais_Meat_Full_Ripe.hash:
       return 'uncooked dais leg';
 
-    case PrefabHash.Dais_Meat_Half_Burnt:
+    case Prefab.Dais_Meat_Half_Burnt.hash:
       return 'burnt dais chop';
 
-    case PrefabHash.Dais_Meat_Half_Cooked:
+    case Prefab.Dais_Meat_Half_Cooked.hash:
       return 'cooked dais chop';
 
-    case PrefabHash.Dais_Meat_Half_Ripe:
+    case Prefab.Dais_Meat_Half_Ripe.hash:
       return 'uncooked dais chop';
 
     /**
      * MUSHROOM
      */
-    case PrefabHash.MushroomBrown_Full_Burnt:
+    case Prefab.MushroomBrown_Full_Burnt.hash:
       return 'burnt brown mushroom';
 
-    case PrefabHash.MushroomBrown_Full_Cooked:
+    case Prefab.MushroomBrown_Full_Cooked.hash:
       return 'cooked brown mushroom';
 
-    case PrefabHash.MushroomBrown_Full_Ripe:
+    case Prefab.MushroomBrown_Full_Ripe.hash:
       return 'ripe brown mushroom';
 
-    case PrefabHash.MushroomCaveSmall_Full_Burnt:
+    case Prefab.MushroomCaveSmall_Full_Burnt.hash:
       return 'burnt cave mushroom';
 
-    case PrefabHash.MushroomCaveSmall_Full_Cooked:
+    case Prefab.MushroomCaveSmall_Full_Cooked.hash:
       return 'cooked cave mushroom';
 
-    case PrefabHash.MushroomCaveSmall_Full_Ripe:
+    case Prefab.MushroomCaveSmall_Full_Ripe.hash:
       return 'ripe cave mushroom';
 
-    case PrefabHash.MushroomGlowing_Full_Burnt:
+    case Prefab.MushroomGlowing_Full_Burnt.hash:
       return 'burnt glowing mushroom';
 
-    case PrefabHash.MushroomGlowing_Full_Cooked:
+    case Prefab.MushroomGlowing_Full_Cooked.hash:
       return 'cooked glowing mushroom';
 
-    case PrefabHash.MushroomGlowing_Full_Ripe:
+    case Prefab.MushroomGlowing_Full_Ripe.hash:
       return 'ripe glowing mushroom';
 
-    case PrefabHash.MushroomRed_Full_Burnt:
+    case Prefab.MushroomRed_Full_Burnt.hash:
       return 'burnt red mushroom';
 
-    case PrefabHash.MushroomRed_Full_Cooked:
+    case Prefab.MushroomRed_Full_Cooked.hash:
       return 'cooked red mushroom';
 
-    case PrefabHash.MushroomRed_Full_Ripe:
+    case Prefab.MushroomRed_Full_Ripe.hash:
       return 'ripe red mushroom';
 
     /**
      * INGOT
      */
-    case PrefabHash.Carsi_Ingot:
+    case Prefab.Carsi_Ingot.hash:
       return 'palladium ingot';
 
-    case PrefabHash.Copper_Ingot:
+    case Prefab.Copper_Ingot.hash:
       return 'copper ingot';
 
-    case PrefabHash.Evinon_Steel_Ingot:
+    case Prefab.Evinon_Steel_Ingot.hash:
       return 'valyan ingot';
 
-    case PrefabHash.Gold_Ingot:
+    case Prefab.Gold_Ingot.hash:
       return 'gold ingot';
 
-    case PrefabHash.Iron_Ingot:
+    case Prefab.Iron_Ingot.hash:
       return 'iron ingot';
 
-    case PrefabHash.Mythril_Ingot:
+    case Prefab.Mythril_Ingot.hash:
       return 'mythril ingot';
 
-    case PrefabHash.Orchi_Ingot:
+    case Prefab.Orchi_Ingot.hash:
       return 'viridium ingot';
 
-    case PrefabHash.Red_Iron_Ingot:
+    case Prefab.Red_Iron_Ingot.hash:
       return 'red iron ingot';
 
-    case PrefabHash.Silver_Ingot:
+    case Prefab.Silver_Ingot.hash:
       return 'silver ingot';
 
-    case PrefabHash.White_Gold_Ingot:
+    case Prefab.White_Gold_Ingot.hash:
       return 'electrum ingot';
 
     /**
      * RUSTY TOOLS
      */
-    case PrefabHash.Rusty_Axe:
+    case Prefab.Rusty_Axe.hash:
       return 'rusty axe';
 
-    case PrefabHash.Rusty_Pickaxe:
+    case Prefab.Rusty_Pickaxe.hash:
       return 'rusty pickaxe';
 
-    case PrefabHash.Rusty_Short_Sword:
+    case Prefab.Rusty_Short_Sword.hash:
       return 'rusty shortsword';
 
-    case PrefabHash.Rusty_Pitchfork:
+    case Prefab.Rusty_Pitchfork.hash:
       return 'rusty pitchfork';
 
     /**
      * WOODCUT WEDGE
      */
-    case PrefabHash.Woodcut_Wedge:
+    case Prefab.Woodcut_Wedge.hash:
       return parseWedge(decoded.prefab);
 
     /**
      * HILTED APPARATUS
      */
-    case PrefabHash.Curled_Wooden_Handle:
-    case PrefabHash.Gacha_Handle:
-    case PrefabHash.Handle_Bow:
-    case PrefabHash.Handle_Fist:
-    case PrefabHash.Handle_Large_Branch:
-    case PrefabHash.Handle_Large_Cool:
-    case PrefabHash.Handle_Large_Standard:
-    case PrefabHash.Handle_Long_Straight:
-    case PrefabHash.Handle_Medium_Branch:
-    case PrefabHash.Handle_Medium_Cool:
-    case PrefabHash.Handle_Medium_Curved:
-    case PrefabHash.Handle_Medium_Ridged:
-    case PrefabHash.Handle_Medium_Standard:
-    case PrefabHash.Handle_Medium_Straight:
-    case PrefabHash.Handle_Round_Fist:
-    case PrefabHash.Handle_Short:
-    case PrefabHash.Handle_Short_C_Curve:
-    case PrefabHash.Handle_Short_Cool:
-    case PrefabHash.Handle_Short_Pointy_End:
-    case PrefabHash.Handle_Short_S_Curve:
-    case PrefabHash.Handle_Short_Taper:
-    case PrefabHash.Handle_Spear:
-    case PrefabHash.Handle_Tonfa:
-    case PrefabHash.Hebios_Handle_Katana:
-    case PrefabHash.Hebios_Handle_Kunai:
-    case PrefabHash.Hebios_Handle_Naginata:
-    case PrefabHash.Hebios_Handle_Wakizashi:
-    case PrefabHash.Rod_Slim_40cm:
-    case PrefabHash.Rod_Medium:
-    case PrefabHash.Shield_Core_Handle:
+    case Prefab.Curled_Wooden_Handle.hash:
+    case Prefab.Gacha_Handle.hash:
+    case Prefab.Handle_Bow.hash:
+    case Prefab.Handle_Fist.hash:
+    case Prefab.Handle_Large_Branch.hash:
+    case Prefab.Handle_Large_Cool.hash:
+    case Prefab.Handle_Large_Standard.hash:
+    case Prefab.Handle_Long_Straight.hash:
+    case Prefab.Handle_Medium_Branch.hash:
+    case Prefab.Handle_Medium_Cool.hash:
+    case Prefab.Handle_Medium_Curved.hash:
+    case Prefab.Handle_Medium_Ridged.hash:
+    case Prefab.Handle_Medium_Standard.hash:
+    case Prefab.Handle_Medium_Straight.hash:
+    case Prefab.Handle_Round_Fist.hash:
+    case Prefab.Handle_Short.hash:
+    case Prefab.Handle_Short_C_Curve.hash:
+    case Prefab.Handle_Short_Cool.hash:
+    case Prefab.Handle_Short_Pointy_End.hash:
+    case Prefab.Handle_Short_S_Curve.hash:
+    case Prefab.Handle_Short_Taper.hash:
+    case Prefab.Handle_Spear.hash:
+    case Prefab.Handle_Tonfa.hash:
+    case Prefab.Hebios_Handle_Katana.hash:
+    case Prefab.Hebios_Handle_Kunai.hash:
+    case Prefab.Hebios_Handle_Naginata.hash:
+    case Prefab.Hebios_Handle_Wakizashi.hash:
+    case Prefab.Rod_Slim_40cm.hash:
+    case Prefab.Rod_Medium.hash:
+    case Prefab.Shield_Core_Handle.hash:
       return parseHiltedApparatus(decoded.prefab);
 
     /**
      * PRODUCE
      */
-    case PrefabHash.Apple_Core_Burnt:
+    case Prefab.Apple_Core_Burnt.hash:
       return 'burnt apple core';
 
-    case PrefabHash.Apple_Core_Cooked:
+    case Prefab.Apple_Core_Cooked.hash:
       return 'cooked apple core';
 
-    case PrefabHash.Apple_Core_Ripe:
+    case Prefab.Apple_Core_Ripe.hash:
       return 'ripe apple core';
 
-    case PrefabHash.Apple_Core_Unripe:
+    case Prefab.Apple_Core_Unripe.hash:
       return 'unripe apple core';
 
-    case PrefabHash.Apple_Full_Burnt:
+    case Prefab.Apple_Full_Burnt.hash:
       return 'burnt apple';
 
-    case PrefabHash.Apple_Full_Cooked:
+    case Prefab.Apple_Full_Cooked.hash:
       return 'cooked apple';
 
-    case PrefabHash.Apple_Full_Ripe:
+    case Prefab.Apple_Full_Ripe.hash:
       return 'ripe apple';
 
-    case PrefabHash.Apple_Full_Unripe:
+    case Prefab.Apple_Full_Unripe.hash:
       return 'unripe apple';
 
-    case PrefabHash.Blueberry_Full_Burnt:
+    case Prefab.Blueberry_Full_Burnt.hash:
       return 'burnt blueberry';
 
-    case PrefabHash.Blueberry_Full_Cooked:
+    case Prefab.Blueberry_Full_Cooked.hash:
       return 'cooked blueberry';
 
-    case PrefabHash.Blueberry_Full_Ripe:
+    case Prefab.Blueberry_Full_Ripe.hash:
       return 'ripe blueberry';
 
-    case PrefabHash.Blueberry_Full_Unripe:
+    case Prefab.Blueberry_Full_Unripe.hash:
       return 'unripe blueberry';
 
-    case PrefabHash.Carrot_Full_Burnt:
+    case Prefab.Carrot_Full_Burnt.hash:
       return 'burnt carrot';
 
-    case PrefabHash.Carrot_Full_Cooked:
+    case Prefab.Carrot_Full_Cooked.hash:
       return 'cooked carrot';
 
-    case PrefabHash.Carrot_Full_Ripe:
+    case Prefab.Carrot_Full_Ripe.hash:
       return 'ripe carrot';
 
-    case PrefabHash.Carrot_Full_Unripe:
+    case Prefab.Carrot_Full_Unripe.hash:
       return 'unripe carrot';
 
-    case PrefabHash.Carrot_Leaves:
+    case Prefab.Carrot_Leaves.hash:
       return 'carrot leaves';
 
-    case PrefabHash.Eggplant_Full_Burnt:
+    case Prefab.Eggplant_Full_Burnt.hash:
       return 'burnt eggplant';
 
-    case PrefabHash.Eggplant_Full_Cooked:
+    case Prefab.Eggplant_Full_Cooked.hash:
       return 'cooked eggplant';
 
-    case PrefabHash.Eggplant_Full_Ripe:
+    case Prefab.Eggplant_Full_Ripe.hash:
       return 'ripe eggplant';
 
-    case PrefabHash.Eggplant_Full_Unripe:
+    case Prefab.Eggplant_Full_Unripe.hash:
       return 'unripe eggplant';
 
-    case PrefabHash.Garlic_Full_Burnt:
+    case Prefab.Garlic_Full_Burnt.hash:
       return 'burnt garlic';
 
-    case PrefabHash.Garlic_Full_Cooked:
+    case Prefab.Garlic_Full_Cooked.hash:
       return 'cooked garlic';
 
-    case PrefabHash.Garlic_Full_Ripe:
+    case Prefab.Garlic_Full_Ripe.hash:
       return 'ripe garlic';
 
-    case PrefabHash.Garlic_Full_Unripe:
+    case Prefab.Garlic_Full_Unripe.hash:
       return 'unripe garlic';
 
-    case PrefabHash.Garlic_Leaves:
+    case Prefab.Garlic_Leaves.hash:
       return 'garlic leaves';
 
-    case PrefabHash.Garlic_Roots:
+    case Prefab.Garlic_Roots.hash:
       return 'garlic roots';
 
-    case PrefabHash.Onion_Full_Burnt:
+    case Prefab.Onion_Full_Burnt.hash:
       return 'burnt onion';
 
-    case PrefabHash.Onion_Full_Cooked:
+    case Prefab.Onion_Full_Cooked.hash:
       return 'cooked onion';
 
-    case PrefabHash.Onion_Full_Ripe:
+    case Prefab.Onion_Full_Ripe.hash:
       return 'ripe onion';
 
-    case PrefabHash.Onion_Full_Unripe:
+    case Prefab.Onion_Full_Unripe.hash:
       return 'unripe onion';
 
-    case PrefabHash.Onion_Leaves:
+    case Prefab.Onion_Leaves.hash:
       return 'onion leaves';
 
-    case PrefabHash.Onion_Roots:
+    case Prefab.Onion_Roots.hash:
       return 'onion roots';
 
-    case PrefabHash.Potato_Full_Burnt:
+    case Prefab.Potato_Full_Burnt.hash:
       return 'burnt potato';
 
-    case PrefabHash.Potato_Full_Cooked:
+    case Prefab.Potato_Full_Cooked.hash:
       return 'cooked potato';
 
-    case PrefabHash.Potato_Full_Ripe:
+    case Prefab.Potato_Full_Ripe.hash:
       return 'ripe potato';
 
-    case PrefabHash.Potato_Full_Unripe:
+    case Prefab.Potato_Full_Unripe.hash:
       return 'unripe potato';
 
-    case PrefabHash.Potato_Sapling:
+    case Prefab.Potato_Sapling.hash:
       return 'potato sapling';
 
-    case PrefabHash.pumpkin_piece_burnt:
+    case Prefab.pumpkin_piece_burnt.hash:
       return 'burnt pumpkin piece';
 
-    case PrefabHash.pumpkin_piece_cooked:
+    case Prefab.pumpkin_piece_cooked.hash:
       return 'cooked pumpkin piece';
 
-    case PrefabHash.pumpkin_piece_ripe:
+    case Prefab.pumpkin_piece_ripe.hash:
       return 'ripe pumpkin piece';
 
-    case PrefabHash.pumpkin_piece_unripe:
+    case Prefab.pumpkin_piece_unripe.hash:
       return 'unripe pumpkin piece';
 
-    case PrefabHash.Tomato_Full_Burnt:
+    case Prefab.Tomato_Full_Burnt.hash:
       return 'burnt tomato';
 
-    case PrefabHash.Tomato_Full_Cooked:
+    case Prefab.Tomato_Full_Cooked.hash:
       return 'cooked tomato';
 
-    case PrefabHash.Tomato_Full_Ripe:
+    case Prefab.Tomato_Full_Ripe.hash:
       return 'ripe tomato';
 
-    case PrefabHash.Tomato_Full_Unripe:
+    case Prefab.Tomato_Full_Unripe.hash:
       return 'unripe tomato';
 
     /**
      * FLASK
      */
-    case PrefabHash.Potion_Medium:
+    case Prefab.Potion_Medium.hash:
       return parseFlask(decoded.prefab);
 
     /**
      * LEATHER
      */
-    case PrefabHash.Soft_Fabric_Medium_Strips:
-    case PrefabHash.Soft_Fabric_Medium_Roll:
-    case PrefabHash.Soft_Fabric_Large_Roll:
+    case Prefab.Soft_Fabric_Medium_Strips.hash:
+    case Prefab.Soft_Fabric_Medium_Roll.hash:
+    case Prefab.Soft_Fabric_Large_Roll.hash:
       return parseLeather(decoded.prefab);
 
     /**
      * GOTERA
      */
-    case PrefabHash.Gotera_Seedling_Orb:
+    case Prefab.Gotera_Seedling_Orb.hash:
       return 'gotera seedling';
 
-    case PrefabHash.Redwood_Gotera_Core:
+    case Prefab.Redwood_Gotera_Core.hash:
       return 'redwood gotera core';
 
     /**
      * SOULBOUND
      */
-    case PrefabHash.Spriggull_Feather_Green:
+    case Prefab.Spriggull_Feather_Green.hash:
       return 'soulbond';
 
     /**
