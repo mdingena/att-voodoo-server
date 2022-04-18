@@ -20,9 +20,9 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
       info: { id, group_id, name, online_players }
     }
   }: ServerConnection) => {
-    connection.server.off('status', handleServerStatus);
-    connection.unsubscribe('PlayerJoined', handlePlayerJoined);
-    connection.unsubscribe('PlayerLeft', handlePlayerLeft);
+    // connection.server.off('status', handleServerStatus);
+    // connection.unsubscribe('PlayerJoined', handlePlayerJoined);
+    // connection.unsubscribe('PlayerLeft', handlePlayerLeft);
     voodoo.removePlayers({ serverId: id });
     voodoo.updateServer({
       id,
