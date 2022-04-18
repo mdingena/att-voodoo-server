@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/node';
 import { createVoodooServer, gracefulShutdown } from './voodoo';
 import { createBot } from './bot';
-import { createApi, keepAwake } from './api';
+import { createApi, keepAwake, regularlyMigrateWebsocket } from './api';
 import { regularlyPurgeSessions } from './db';
 
 if (!!process.env.SENTRY_DSN) {
@@ -22,11 +22,12 @@ if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID) {
   /* Enable graceful shutdown. */
   process.on('SIGTERM', gracefulShutdown(voodoo));
 
-  await createBot(voodoo);
+  const bot = await createBot(voodoo);
   createApi(voodoo);
 
   voodoo.logger.success('Voodoo Server is online');
 
   keepAwake(voodoo);
   regularlyPurgeSessions(voodoo);
+  regularlyMigrateWebsocket(bot);
 })();
