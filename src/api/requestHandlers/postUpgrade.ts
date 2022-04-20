@@ -49,8 +49,8 @@ export const postUpgrade =
       const experience = await voodoo.addUpgrade({ accountId, school, spell, upgrade });
 
       clientResponse.json({ ok: true, result: experience });
-    } catch (error) {
+    } catch (error: unknown) {
       voodoo.logger.error(error);
-      clientResponse.status(500).json({ ok: false, error: error.message });
+      clientResponse.status(500).json({ ok: false, error: (error as Error).message });
     }
   };

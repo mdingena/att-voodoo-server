@@ -34,7 +34,7 @@ export const getHeartbeat =
       };
 
       clientResponse.json({ ok: true, result: update });
-    } catch (error) {
-      clientResponse.status(500).json({ ok: false, error: error.message });
+    } catch (error: unknown) {
+      clientResponse.status(500).json({ ok: false, error: (error as Error).message });
     }
   };

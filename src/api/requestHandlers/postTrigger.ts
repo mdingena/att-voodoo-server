@@ -85,8 +85,8 @@ export const postTrigger =
           preparedSpells
         }
       });
-    } catch (error) {
+    } catch (error: unknown) {
       voodoo.logger.error(error);
-      clientResponse.status(500).json({ ok: false, error: error.message });
+      clientResponse.status(500).json({ ok: false, error: (error as Error).message });
     }
   };

@@ -579,8 +579,8 @@ export const createVoodooServer = (): VoodooServer => ({
           p
         })
         .send();
-    } catch (error) {
-      this.logger.error(error.message);
+    } catch (error: unknown) {
+      this.logger.error((error as Error).message);
     }
   }
 });
