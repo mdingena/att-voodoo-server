@@ -27,7 +27,7 @@ export const trueStrike: SpellFunction = async (voodoo, accountId, upgradeConfig
     }
   });
 
-  const multiplier = 1 + attributes.intensify / 100;
+  const multiplier = attributes.intensify / 100;
   const duration = attributes.concentration;
   const searchRadius = attributes.projection;
 
@@ -42,6 +42,7 @@ export const trueStrike: SpellFunction = async (voodoo, accountId, upgradeConfig
 
   for (const playerId of playerIds) {
     const baseDamage = await voodoo.getPlayerCheckStatBase({ accountId: playerId, stat: 'damage' });
+    const currentDamage = await voodoo.getPlayerCheckStatCurrent({ accountId: playerId, stat: 'damage' })
 
     if (baseDamage) {
       const buffedDamage = baseDamage * multiplier;
