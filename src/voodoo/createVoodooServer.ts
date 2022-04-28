@@ -351,6 +351,19 @@ export const createVoodooServer = (): VoodooServer => ({
       return undefined;
     }
   },
+  
+  getPlayerCheckStat: async function ({ accountId, stat }) {
+    try {
+      const checkStatResponse: PlayerCheckStatResponse = await this.command({
+        accountId,
+        command: `player check-stat ${accountId} ${stat}`
+      });
+
+      return checkStatResponse.Result?;
+    } catch (error) {
+      return undefined;
+    }
+  },
 
   getPlayerCheckStatBase: async function ({ accountId, stat }) {
     try {
