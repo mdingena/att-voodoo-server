@@ -51,13 +51,13 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
   for (const playerId of playerIds) {
     const playerDamageProtection = voodoo.getPlayerCheckStat({ accountId: playerId, stat: 'speed' });
 
-    const buffedDamageProtection = playerDamageProtection.base * (1 + bonus);
+    const buffedDamageProtection = playerDamageProtection.Base * (1 + bonus);
     
-    const damageprotectionDelta = buffedDamageProtection - playerDamageProtection.value;
+    const damageprotectionDelta = buffedDamageProtection - playerDamageProtection.Value;
     
     
     if (damageprotectionDelta > 0) {
-      const damageprotectionBuff = playerDamageProtection.base * bonus;
+      const damageprotectionBuff = playerDamageProtection.Base * bonus;
 
       voodoo.command({
         accountId,
