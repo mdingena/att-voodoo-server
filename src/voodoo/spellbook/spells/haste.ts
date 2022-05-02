@@ -27,7 +27,7 @@ export const haste: SpellFunction = async (voodoo, accountId, upgradeConfigs) =>
     }
   });
 
-  const multiplier = 1 + attributes.intensify / 100;
+  const bonus = attributes.intensify / 100;
   const duration = attributes.concentration;
   const searchRadius = attributes.projection;
 
@@ -41,14 +41,20 @@ export const haste: SpellFunction = async (voodoo, accountId, upgradeConfigs) =>
   const playerIds = [accountId, ...nearbySoulbondIds];
 
   for (const playerId of playerIds) {
-    const baseSpeed = await voodoo.getPlayerCheckStatBase({ accountId: playerId, stat: 'speed' });
+    const playerSpeed = await voodoo.getPlayerCheckStat({ accountId: playerId, stat: 'speed' });
 
-    if (baseSpeed) {
-      const buffedSpeed = baseSpeed * multiplier;
+    const baseSpeed = playerSpeed.base ?? 1;
+    const currentSpeed = playerSpeed.current ?? 1;
+
+    const buffedSpeed = baseSpeed * (1 + bonus);
+    const speedDelta = buffedSpeed - currentSpeed;
+
+    if (speedDelta > 0) {
+      const speedBuff = baseSpeed * bonus;
 
       voodoo.command({
         accountId,
-        command: `player modify-stat ${playerId} speed ${buffedSpeed} ${duration} false`
+        command: `player modify-stat ${playerId} speed ${speedBuff} ${duration} false`
       });
     }
   }

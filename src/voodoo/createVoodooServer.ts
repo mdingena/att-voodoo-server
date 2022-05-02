@@ -101,6 +101,11 @@ interface GetPlayerDetailed {
   accountId: number;
 }
 
+interface GetPlayerCheckStat {
+  accountId: number;
+  stat: string;
+}
+
 interface GetPlayerCheckStatBase {
   accountId: number;
   stat: string;
@@ -142,6 +147,11 @@ type PlayerCheckStatResponse = {
     Base: number;
     Value: number;
   };
+};
+
+type PlayerStat = {
+  base?: number;
+  current?: number;
 };
 
 interface GetExperience {
@@ -230,8 +240,9 @@ export type VoodooServer = {
   removePlayer: ({ accountId }: RemovePlayer) => void;
   removePlayers: ({ serverId }: RemovePlayers) => void;
   getPlayerDetailed: ({ accountId }: GetPlayerDetailed) => Promise<PlayerDetailed | undefined>;
-  getPlayerCheckStatBase: ({ accountId }: GetPlayerCheckStatBase) => Promise<number | undefined>;
-  getPlayerCheckStatCurrent: ({ accountId }: GetPlayerCheckStatCurrent) => Promise<number | undefined>;
+  getPlayerCheckStat: ({ accountId, stat }: GetPlayerCheckStat) => Promise<PlayerStat>;
+  getPlayerCheckStatBase: ({ accountId, stat }: GetPlayerCheckStatBase) => Promise<number | undefined>;
+  getPlayerCheckStatCurrent: ({ accountId, stat }: GetPlayerCheckStatCurrent) => Promise<number | undefined>;
   getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
   addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
   getSpellUpgrades: ({ accountId, spell }: GetSpellUpgrades) => { [key: string]: number };
@@ -352,30 +363,35 @@ export const createVoodooServer = (): VoodooServer => ({
     }
   },
 
-  getPlayerCheckStatBase: async function ({ accountId, stat }) {
+  getPlayerCheckStat: async function ({ accountId, stat }) {
     try {
       const checkStatResponse: PlayerCheckStatResponse = await this.command({
         accountId,
         command: `player check-stat ${accountId} ${stat}`
       });
 
-      return checkStatResponse.Result?.Base;
+      return {
+        base: checkStatResponse.Result?.Base,
+        current: checkStatResponse.Result?.Value
+      };
     } catch (error) {
-      return undefined;
+      return {
+        base: undefined,
+        current: undefined
+      };
     }
   },
 
-  getPlayerCheckStatCurrent: async function ({ accountId, stat }) {
-    try {
-      const checkStatResponse: PlayerCheckStatResponse = await this.command({
-        accountId,
-        command: `player check-stat ${accountId} ${stat}`
-      });
+  getPlayerCheckStatBase: async function ({ accountId, stat }) {
+    const playerStat = await this.getPlayerCheckStat({ accountId, stat });
 
-      return checkStatResponse.Result?.Value;
-    } catch (error) {
-      return undefined;
-    }
+    return playerStat.base;
+  },
+
+  getPlayerCheckStatCurrent: async function ({ accountId, stat }) {
+    const playerStat = await this.getPlayerCheckStat({ accountId, stat });
+
+    return playerStat.current;
   },
 
   getExperience: async function ({ accountId, serverId }) {

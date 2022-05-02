@@ -35,7 +35,7 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
     }
   });
 
-  const multiplier = 1 + attributes.intensify / 100;
+  const bonus = attributes.intensify / 100;
   const duration = attributes.concentration;
   const searchRadius = attributes.projection;
 
@@ -49,14 +49,20 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
   const playerIds = [accountId, ...nearbySoulbondIds];
 
   for (const playerId of playerIds) {
-    const baseDamageProtection = await voodoo.getPlayerCheckStatBase({ accountId: playerId, stat: 'damageprotection' });
+    const playerDamageProtection = await voodoo.getPlayerCheckStat({ accountId: playerId, stat: 'damageprotection' });
 
-    if (baseDamageProtection) {
-      const buffedDamageProtection = baseDamageProtection * multiplier;
+    const baseDamageProtection = playerDamageProtection.base ?? 0;
+    const currentDamageProtection = playerDamageProtection.current ?? 0;
+
+    const buffedDamageProtection = baseDamageProtection * (1 + bonus);
+    const damageprotectionDelta = buffedDamageProtection - currentDamageProtection;
+
+    if (damageprotectionDelta > 0) {
+      const damageprotectionBuff = baseDamageProtection * bonus;
 
       voodoo.command({
         accountId,
-        command: `player modify-stat ${playerId} damageprotection ${buffedDamageProtection} ${duration} false`
+        command: `player modify-stat ${playerId} damageprotection ${damageprotectionBuff} ${duration} false`
       });
     }
   }
