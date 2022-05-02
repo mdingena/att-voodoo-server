@@ -47,29 +47,23 @@ export const heroism: SpellFunction = async (voodoo, accountId, upgradeConfigs) 
     ]);
 
     let buffedMaxHealth = 0,
-      buffedHealth = 0,
-      delta = 0;
+      healthDelta = 0;
 
     /* Raise max health. */
     if (baseMaxHealth) {
       buffedMaxHealth = baseMaxHealth * multiplier;
-      delta = buffedMaxHealth - baseMaxHealth;
+      healthDelta = buffedMaxHealth - baseMaxHealth;
     }
 
-    /* Increase health by same amount as max health buff. */
-    if (currentHealth && delta) {
-      buffedHealth = currentHealth + delta;
-    }
-
-    if (buffedMaxHealth && buffedHealth) {
+    if (buffedMaxHealth && healthDelta) {
       voodoo.command({
         accountId,
-        command: `player modify-stat ${playerId} maxhealth ${buffedMaxHealth} ${duration} false`
+        command: `player modify-stat ${playerId} maxhealth ${healthDelta} ${duration} false`
       });
 
       voodoo.command({
         accountId,
-        command: `player modify-stat ${playerId} health ${buffedHealth} ${duration} false`
+        command: `player modify-stat ${playerId} health ${healthDelta} ${duration} false`
       });
     }
   }

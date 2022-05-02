@@ -43,13 +43,14 @@ export const trueStrike: SpellFunction = async (voodoo, accountId, upgradeConfig
   for (const playerId of playerIds) {
     const playerDamage = await voodoo.getPlayerCheckStat({ accountId: playerId, stat: 'damage' });
 
-    const buffedDamage = playerDamage.Base * (1 + bonus);
-    
-    const damageDelta = buffedDamage - playerDamage.Value;
-    
-    
+    const baseDamage = playerDamage.base ?? 1;
+    const currentDamage = playerDamage.current ?? 1;
+
+    const buffedDamage = baseDamage * (1 + bonus);
+    const damageDelta = buffedDamage - currentDamage;
+
     if (damageDelta > 0) {
-      const damageBuff = playerDamage.Base * bonus;
+      const damageBuff = baseDamage * bonus;
 
       voodoo.command({
         accountId,

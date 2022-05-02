@@ -27,7 +27,7 @@ export const healWounds: SpellFunction = async (voodoo, accountId, upgradeConfig
     }
   });
 
-  const heal = attributes.intensify / 4;
+  const heal = attributes.intensify / 4; // 0.25 equals one "heart"
   const searchRadius = attributes.projection;
 
   let nearbySoulbondIds: number[] = [];
