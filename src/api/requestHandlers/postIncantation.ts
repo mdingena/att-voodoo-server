@@ -34,7 +34,7 @@ export const postIncantation =
         });
       }
 
-      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => /^Green_Crystal_cluster_03.*/i.test(Name));
+      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => new RegExp(voodoo.config.CONDUIT_TYPE.join('|')).test(Name));
 
       if (!nearConduit) {
         voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
