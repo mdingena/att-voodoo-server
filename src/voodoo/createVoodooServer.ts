@@ -266,7 +266,7 @@ export const createVoodooServer = (): VoodooServer => ({
       constant: 0.0000343
     },
     UPGRADE_COST_XP: 1000,
-    CONDUIT_PREFAB: /^Green_Crystal_cluster_03.*|^Puzzle Orb 1.*/
+    CONDUIT_PREFAB: /^Green_Crystal_cluster_03.*|^Puzzle Orb 1.*/i
   },
 
   logger,
