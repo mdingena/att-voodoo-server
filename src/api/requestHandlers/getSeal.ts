@@ -34,7 +34,7 @@ export const getSeal =
         });
       }
 
-      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => new RegExp(voodoo.config.CONDUIT_TYPE.join('|')).test(Name));
+      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => voodoo.config.CONDUIT_PREFAB.test(Name));
 
       if (!nearConduit) {
         voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });

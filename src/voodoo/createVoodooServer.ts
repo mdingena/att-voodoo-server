@@ -16,7 +16,7 @@ type Config = {
   CONDUIT_DISTANCE: number;
   PREPARED_SPELLS_CONFIG: UpgradeConfig;
   UPGRADE_COST_XP: number;
-  CONDUIT_TYPE: [string, string]
+  CONDUIT_PREFAB: RegExp;
 };
 
 const logger = new Logger('Voodoo');
@@ -266,7 +266,7 @@ export const createVoodooServer = (): VoodooServer => ({
       constant: 0.0000343
     },
     UPGRADE_COST_XP: 1000,
-    CONDUIT_TYPE: ['^Green_Crystal_cluster_03.*', '^Puzzle Orb 1.*']
+    CONDUIT_PREFAB: /^Green_Crystal_cluster_03.*|^Puzzle Orb 1.*/
   },
 
   logger,
