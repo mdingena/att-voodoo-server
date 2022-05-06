@@ -1,8 +1,8 @@
 import ua, { Visitor } from 'universal-analytics';
 import { ServerConnection } from 'js-tale';
 import Logger from 'js-tale/dist/logger';
-import { DecodedString } from 'att-string-transcoder';
-import { spellbook, Spellbook, Spell, School, upgradeAttribute, UpgradeConfig } from './spellbook';
+import { DecodedString, PrefabData } from 'att-string-transcoder';
+import { spellbook, Spellbook, Spell, School, upgradeAttribute, UpgradeConfig, spawnFrom, spawn } from './spellbook';
 import { db } from '../db';
 import {
   selectExperience,
@@ -192,6 +192,10 @@ interface ClearIncantations {
   accountId: number;
 }
 
+interface ReturnMaterials {
+  accountId: number;
+}
+
 interface Command {
   accountId: number;
   command: string;
@@ -251,6 +255,7 @@ export type VoodooServer = {
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
+  returnMaterials: ({ accountId }: ReturnMaterials) => void;
   command: ({ accountId, command }: Command) => Promise<any>;
   prepareSpell: ({ accountId, incantations, spell }: PrepareSpell) => Promise<PreparedSpells>;
   track: ({ accountId, serverId, category, action, value }: Track) => void;
@@ -529,6 +534,40 @@ export const createVoodooServer = (): VoodooServer => ({
     logger.success(`[${player.serverName ?? player.serverId} | ${player.name}] cleared incantations`);
 
     return [];
+  },
+
+  returnMaterials: async function ({ accountId }) {
+    const player = this.players[accountId];
+
+    if (!player) return;
+
+    for (const incantation of player.incantations) {
+      const { prefab } = incantation.decodedString;
+      const playerDetailed = await this.getPlayerDetailed({ accountId });
+      const { position, rotation } = spawnFrom(playerDetailed, 'eyes', 1);
+
+      const respawn: PrefabData = {
+        ...prefab,
+        prefabObject: {
+          ...prefab.prefabObject,
+          position,
+          rotation,
+          scale: 1
+        },
+        components: {
+          ...prefab.components,
+          NetworkRigidbody: {
+            ...prefab.components?.NetworkRigidbody,
+            position,
+            rotation
+          }
+        }
+      };
+
+      spawn(this, accountId, respawn);
+    }
+
+    this.clearIncantations({ accountId });
   },
 
   command: async function ({ accountId, command }) {
