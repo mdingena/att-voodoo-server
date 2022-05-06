@@ -566,6 +566,8 @@ export const createVoodooServer = (): VoodooServer => ({
 
       spawn(this, accountId, respawn);
     }
+
+    this.clearIncantations({ accountId });
   },
 
   command: async function ({ accountId, command }) {
