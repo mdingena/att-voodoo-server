@@ -6,6 +6,9 @@ export const parseHiltedApparatus = (prefab: PrefabData): string | undefined => 
   if (children.length) return 'hilted apparatus';
 
   switch (prefab.prefabObject.hash) {
+    case Prefab.Arrow_Shaft_Wooden.hash:
+      return 'arrow shaft';
+
     case Prefab.Curled_Wooden_Handle.hash:
       return 'curled wooden handle';
 

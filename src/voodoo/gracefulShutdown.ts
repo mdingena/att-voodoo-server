@@ -8,7 +8,7 @@ let showTimeLeft = false;
  * Print either a warning message or the remaining time before termination.
  */
 const message = (timeLeft: number) =>
-  showTimeLeft ? `Voodoo service is restarting in ${timeLeft} seconds` : 'Please finish your incantations!';
+  showTimeLeft ? `Voodoo service is restarting in ${timeLeft} seconds` : 'Please hold your incantations!';
 
 /**
  * Count down during graceful shutdown and exit process.
@@ -40,4 +40,11 @@ export const gracefulShutdown = (voodoo: VoodooServer) => () => {
 
   setInterval(() => tick(voodoo), 970);
   tick(voodoo);
+
+  /* Return all consumed spell materials for unfinished incantations. */
+  for (const key in voodoo.players) {
+    const accountId = Number(key);
+
+    voodoo.returnMaterials({ accountId });
+  }
 };

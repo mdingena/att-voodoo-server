@@ -276,6 +276,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     /**
      * HILTED APPARATUS
      */
+    case Prefab.Arrow_Shaft_Wooden.hash:
     case Prefab.Curled_Wooden_Handle.hash:
     case Prefab.Gacha_Handle.hash:
     case Prefab.Handle_Bow.hash:
