@@ -6,7 +6,21 @@ import {
   PrefabData
 } from 'att-string-transcoder';
 
-const IRON_HANDLES = ['Handle_Large_Cool', 'Handle_Medium_Cool', 'Handle_Short_Cool', 'Metal_Bow', 'Handle_Fist'];
+const IRON_HANDLES = [
+  'Handle_Fist',
+  'Handle_Large_Cool',
+  'Handle_Medium_Cool',
+  'Handle_Medium_Curved',
+  'Handle_Medium_Ridged',
+  'Handle_Medium_Standard',
+  'Handle_Short_C_Curve',
+  'Handle_Short_Cool',
+  'Handle_Short_Pointy_End',
+  'Handle_Short_S_Curve',
+  'Handle_Short_Taper',
+  'Handle_Spear',
+  'Metal_Bow'
+];
 
 const REDWOOD_HANDLES = [
   'Hebios_Handle_Katana',
