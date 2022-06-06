@@ -569,7 +569,14 @@ export const createVoodooServer = (): VoodooServer => ({
 
     if (!player) throw Error('Player not found');
 
-    const result = await player.serverConnection.send(command);
+    const response = await player.serverConnection.send(command);
+
+    if (typeof response === 'undefined') {
+      console.error('Something went wrong sending a console command.');
+      return;
+    }
+
+    const result = response.data.Result;
 
     console.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
 
