@@ -571,6 +571,8 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const response = await player.serverConnection.send(command);
 
+    console.log('### TEMP ###', JSON.stringify(response, null, 2));
+
     if (typeof response === 'undefined') {
       console.error('Something went wrong sending a console command.');
       return;
