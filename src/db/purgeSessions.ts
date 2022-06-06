@@ -8,7 +8,7 @@ const PURGE_INTERVAL = 60000;
 const purgeSessions = async (voodoo: VoodooServer) => {
   const results = (await db.query(deleteSessions)) as unknown as [QueryResult, QueryResult];
   const rows = Math.max(results[0].rowCount, results[1].rowCount);
-  if (rows) voodoo.logger.info(`Purged ${rows} stale sessions`);
+  if (rows) console.info(`Purged ${rows} stale sessions`);
 };
 
 export const regularlyPurgeSessions = (voodoo: VoodooServer): NodeJS.Timeout => {

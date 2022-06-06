@@ -34,5 +34,5 @@ export const repairRedwoodDevice: SpellFunction = async (voodoo, accountId, upgr
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Redwood Device`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Repair Redwood Device`);
 };

@@ -46,5 +46,5 @@ export const aptitude: SpellFunction = async (voodoo, accountId, upgradeConfigs)
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Aptitude`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Aptitude`);
 };

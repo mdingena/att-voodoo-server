@@ -26,5 +26,5 @@ export const transmuteIronToGold: SpellFunction = async (voodoo, accountId, upgr
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Transmute Iron To Gold`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Transmute Iron To Gold`);
 };

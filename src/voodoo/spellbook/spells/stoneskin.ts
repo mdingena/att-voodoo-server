@@ -68,5 +68,5 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
   }
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Stoneskin`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Stoneskin`);
 };

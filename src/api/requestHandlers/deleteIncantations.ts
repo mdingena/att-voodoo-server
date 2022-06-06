@@ -62,7 +62,7 @@ export const deleteIncantations =
 
       clientResponse.json({ ok: true, result: incantations });
     } catch (error: any) {
-      voodoo.logger.error(error);
+      console.error(error);
       clientResponse.status(500).json({ ok: false, error: error.message });
     }
   };

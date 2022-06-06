@@ -10,5 +10,5 @@ export const anamnesisBlueberryFullBurnt: SpellFunction = async (voodoo, account
   anamnesis(hash)(voodoo, accountId, upgradeConfigs);
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Anamnesis (burnt blueberry)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Anamnesis (burnt blueberry)`);
 };

@@ -10,5 +10,5 @@ export const anamnesisTomatoFullCooked: SpellFunction = async (voodoo, accountId
   anamnesis(hash)(voodoo, accountId, upgradeConfigs);
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Anamnesis (cooked tomato)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Anamnesis (cooked tomato)`);
 };

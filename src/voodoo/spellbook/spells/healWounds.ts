@@ -53,5 +53,5 @@ export const healWounds: SpellFunction = async (voodoo, accountId, upgradeConfig
   }
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Heal Wounds`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Heal Wounds`);
 };

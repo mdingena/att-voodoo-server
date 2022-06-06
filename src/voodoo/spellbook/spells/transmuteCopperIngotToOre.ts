@@ -42,5 +42,5 @@ export const transmuteCopperIngotToOre: SpellFunction = async (voodoo, accountId
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Transmute Ingot To Ore (Copper)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Transmute Ingot To Ore (Copper)`);
 };

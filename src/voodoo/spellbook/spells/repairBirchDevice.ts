@@ -34,5 +34,5 @@ export const repairBirchDevice: SpellFunction = async (voodoo, accountId, upgrad
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Birch Device`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Repair Birch Device`);
 };

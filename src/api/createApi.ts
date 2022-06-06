@@ -1,6 +1,5 @@
 import express from 'express';
 import nocache from 'nocache';
-import Logger from 'js-tale/dist/logger';
 import { VoodooServer } from '../voodoo';
 import { auth } from './middleware';
 import {
@@ -17,7 +16,6 @@ import {
 } from './requestHandlers';
 
 const port = process.env.PORT || 3000;
-const logger = new Logger('Express');
 
 const api = express();
 api.set('etag', false);
@@ -38,7 +36,7 @@ export const createApi = (voodoo: VoodooServer) => {
   api.post('/upgrade', postUpgrade(voodoo));
 
   api.listen(port, () => {
-    logger.success(`API listening on port ${port}`);
+    console.log(`API listening on port ${port}`);
   });
 
   return api;

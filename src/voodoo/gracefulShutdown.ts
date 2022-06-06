@@ -36,7 +36,7 @@ const tick = (voodoo: VoodooServer) => {
  * Gracefully shutdown by messaging players after receiving SIGTERM.
  */
 export const gracefulShutdown = (voodoo: VoodooServer) => () => {
-  voodoo.logger.warn('SIGTERM received, beginning graceful shutdown.');
+  console.warn('SIGTERM received, beginning graceful shutdown.');
 
   setInterval(() => tick(voodoo), 970);
   tick(voodoo);

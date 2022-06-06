@@ -10,5 +10,5 @@ export const anamnesisOnionFullRipe: SpellFunction = async (voodoo, accountId, u
   anamnesis(hash)(voodoo, accountId, upgradeConfigs);
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Anamnesis (ripe onion)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Anamnesis (ripe onion)`);
 };

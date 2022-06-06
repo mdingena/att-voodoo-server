@@ -42,5 +42,5 @@ export const liquateElectrum: SpellFunction = async (voodoo, accountId, upgradeC
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Liquate Alloy (Electrum)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Liquate Alloy (Electrum)`);
 };

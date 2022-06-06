@@ -35,5 +35,5 @@ export const raiseOakTree: SpellFunction = async (voodoo, accountId, upgradeConf
   voodoo.command({ accountId, command: 'select snap-ground' });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Raise Oak Tree`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Raise Oak Tree`);
 };

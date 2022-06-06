@@ -1,96 +1,91 @@
-import { Server, ServerConnection } from 'js-tale';
-import Logger from 'js-tale/dist/logger';
+import { Server, ServerConnection, SubscriptionEventMessage } from 'att-client';
 import { VoodooServer } from '../voodoo';
 
-const logger = new Logger('Bot');
+type PlayerList = { id: number; username: string }[];
 
 export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (connection: ServerConnection) => {
   /* Do not connect to Quest servers. */
-  // @ts-ignore
-  if (connection.server.info.fleet !== 'att-release') {
-    logger.warn(`Server '${connection.server.info.name}' is not a PCVR server.`);
-    connection.disconnect();
+  if (connection.server.fleet !== 'att-release') {
+    console.warn(`Server '${connection.server.name}' is not a PCVR server.`);
+    connection.server.disconnect();
     return;
   }
 
   /* Connection closed event handler. */
-  const handleClosed = ({
-    server: {
-      isOnline,
-      info: { id, group_id, name, online_players }
-    }
-  }: ServerConnection) => {
-    // connection.server.off('status', handleServerStatus);
-    // connection.unsubscribe('PlayerJoined', handlePlayerJoined);
-    // connection.unsubscribe('PlayerLeft', handlePlayerLeft);
-    voodoo.removePlayers({ serverId: id });
+  const handleClosed = () => {
+    voodoo.removePlayers({ serverId: connection.server.id });
     voodoo.updateServer({
-      id,
-      groupId: group_id ?? 0,
-      name,
-      online: isOnline,
-      players: online_players.length
+      id: connection.server.id,
+      groupId: connection.server.group.id,
+      name: connection.server.name,
+      online: connection.server.status === 'connected',
+      players: connection.server.players.length
     });
 
-    logger.warn(`Disconnected from ${name}`);
+    console.warn(`Disconnected from ${name}`);
   };
 
   /* Server info updated event handler. */
-  const handleServerStatus = (server: Server) => {
+  const handleServerUpdate = (server: Server) => {
     voodoo.updateServer({
-      id: server.info.id,
-      groupId: server.info.group_id ?? 0,
-      name: server.info.name,
-      online: server.isOnline,
-      players: server.info.online_players.length
+      id: server.id,
+      groupId: server.group.id,
+      name: server.name,
+      online: server.status === 'connected',
+      players: server.players.length
     });
   };
 
   /* Player joined the server event handler. */
-  const handlePlayerJoined = (event: any) => {
+  const handlePlayerJoined = (message: SubscriptionEventMessage<'PlayerJoined'>) => {
+    const { user } = message.data;
     voodoo.addPlayer({
-      name: event.user.username,
-      accountId: event.user.id,
-      serverId: connection.server.info.id,
+      name: user.username,
+      accountId: user.id,
+      serverId: connection.server.id,
       serverConnection: connection
     });
   };
 
   /* Player left the server event handler. */
-  const handlePlayerLeft = (event: any) => {
-    voodoo.removePlayer({ accountId: event.user.id });
+  const handlePlayerLeft = (message: SubscriptionEventMessage<'PlayerLeft'>) => {
+    voodoo.removePlayer({ accountId: message.data.user.id });
   };
 
   /* Register event handlers. */
-  connection.on('closed', handleClosed);
+  connection.on('close', handleClosed);
   connection.subscribe('PlayerJoined', handlePlayerJoined);
   connection.subscribe('PlayerLeft', handlePlayerLeft);
-  connection.server.on('status', handleServerStatus);
+  connection.server.on('update', handleServerUpdate);
 
   /* Update server info immediately after connecting. */
   voodoo.updateServer({
-    id: connection.server.info.id,
-    groupId: connection.server.info.group_id ?? 0,
-    name: connection.server.info.name,
-    online: connection.server.isOnline,
-    players: connection.server.info.online_players.length
+    id: connection.server.id,
+    groupId: connection.server.group.id,
+    name: connection.server.name,
+    online: connection.server.status === 'connected',
+    players: connection.server.players.length
   });
 
   /* Add all players on the server immediately after connecting. */
   try {
-    const { Result: players } = await connection.send('player list');
+    const response = await connection.send<PlayerList>('player list');
+
+    if (typeof response === 'undefined') throw new Error("Couldn't get player list.");
+
+    const players = response.data.Result;
 
     players.map((player: any) =>
       voodoo.addPlayer({
         name: player.username,
         accountId: player.id,
-        serverId: connection.server.info.id,
+        serverId: connection.server.id,
         serverConnection: connection
       })
     );
   } catch (error) {
-    logger.error(error);
+    console.error(error);
   }
 
-  logger.success(`Connected to ${connection.server.info.name}`);
+  console.log(`Connected to ${connection.server.name}`);
 };

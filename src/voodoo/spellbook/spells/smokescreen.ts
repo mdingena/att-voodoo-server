@@ -21,5 +21,5 @@ export const smokescreen: SpellFunction = async (voodoo, accountId, upgradeConfi
   voodoo.command({ accountId, command: 'select snap-ground' });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Smokescreen`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Smokescreen`);
 };

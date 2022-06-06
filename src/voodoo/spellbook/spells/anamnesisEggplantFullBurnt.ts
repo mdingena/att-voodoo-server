@@ -10,5 +10,5 @@ export const anamnesisEggplantFullBurnt: SpellFunction = async (voodoo, accountI
   anamnesis(hash)(voodoo, accountId, upgradeConfigs);
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Anamnesis (burnt eggplant)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Anamnesis (burnt eggplant)`);
 };

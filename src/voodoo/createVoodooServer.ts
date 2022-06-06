@@ -1,6 +1,5 @@
 import ua, { Visitor } from 'universal-analytics';
-import { ServerConnection } from 'js-tale';
-import Logger from 'js-tale/dist/logger';
+import { ServerConnection } from 'att-client';
 import { DecodedString, PrefabData } from 'att-string-transcoder';
 import { spellbook, Spellbook, Spell, School, upgradeAttribute, UpgradeConfig, spawnFrom, spawn } from './spellbook';
 import { db } from '../db';
@@ -18,8 +17,6 @@ type Config = {
   PREPARED_SPELLS_CONFIG: UpgradeConfig;
   UPGRADE_COST_XP: number;
 };
-
-const logger = new Logger('Voodoo');
 
 type Server = {
   id: number;
@@ -235,7 +232,6 @@ interface Track {
 
 export type VoodooServer = {
   config: Config;
-  logger: Logger;
   servers: Server[];
   players: Players;
   spellbook: Spellbook;
@@ -274,8 +270,6 @@ export const createVoodooServer = (): VoodooServer => ({
     UPGRADE_COST_XP: 1000
   },
 
-  logger,
-
   servers: [],
 
   players: {},
@@ -306,7 +300,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players = { ...this.players, [accountId]: newPlayer };
 
-    logger.success(`[${serverName ?? serverId} | ${name}] added`);
+    console.log(`[${serverName ?? serverId} | ${name}] added`);
   },
 
   setPlayerClientStatus: function ({ accountId, isVoodooClient }) {
@@ -328,7 +322,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
   removePlayer: function ({ accountId }) {
     if (!this.players[accountId]) {
-      return logger.error(`Attempted to remove player ${accountId} but no such player found.`);
+      return console.error(`Attempted to remove player ${accountId} but no such player found.`);
     }
 
     const { name, serverId, serverName, isVoodooClient } = this.players[accountId];
@@ -344,7 +338,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     delete this.players[accountId];
 
-    logger.warn(`[${serverName ?? serverId} | ${name}] removed`);
+    console.warn(`[${serverName ?? serverId} | ${name}] removed`);
   },
 
   removePlayers: function ({ serverId }) {
@@ -354,7 +348,7 @@ export const createVoodooServer = (): VoodooServer => ({
       .filter(([_, player]) => player.serverId === serverId)
       .forEach(([accountId]) => delete this.players[Number(accountId)]);
 
-    logger.warn(`[${serverName ?? serverId}] removed all players`);
+    console.warn(`[${serverName ?? serverId}] removed all players`);
   },
 
   getPlayerDetailed: async function ({ accountId }) {
@@ -428,7 +422,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players[accountId].experience = experience;
 
-    logger.success(`[${serverName ?? serverId} | ${name}] gained ${amount} ${school} XP`);
+    console.log(`[${serverName ?? serverId} | ${name}] gained ${amount} ${school} XP`);
 
     this.track({
       accountId,
@@ -475,7 +469,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players[accountId].experience = experience;
 
-    logger.success(`[${serverName ?? serverId} | ${name}] upgraded ${spell} (${upgrade}) for ${UPGRADE_COST_XP} XP`);
+    console.log(`[${serverName ?? serverId} | ${name}] upgraded ${spell} (${upgrade}) for ${UPGRADE_COST_XP} XP`);
 
     this.track({
       accountId,
@@ -500,7 +494,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players = { ...this.players, [accountId]: { ...this.players[accountId], dexterity } };
 
-    logger.log(`[${serverName ?? serverId} | ${name}] changed dexterity to ${dexterity}`);
+    console.log(`[${serverName ?? serverId} | ${name}] changed dexterity to ${dexterity}`);
   },
 
   addIncantation: function ({ accountId, incantation }) {
@@ -515,7 +509,7 @@ export const createVoodooServer = (): VoodooServer => ({
       [accountId]: { ...player, incantations: newIncantations }
     };
 
-    logger.success(
+    console.log(
       `[${player.serverName ?? player.serverId} | ${
         player.name
       }] incanted "${incantation.verbalSpellComponent.toUpperCase()}" (${incantation.materialSpellComponent})`
@@ -531,7 +525,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     this.players = { ...this.players, [accountId]: { ...player, incantations: [] } };
 
-    logger.success(`[${player.serverName ?? player.serverId} | ${player.name}] cleared incantations`);
+    console.log(`[${player.serverName ?? player.serverId} | ${player.name}] cleared incantations`);
 
     return [];
   },
@@ -577,7 +571,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const result = await player.serverConnection.send(command);
 
-    logger.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
+    console.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
 
     return result;
   },
@@ -610,7 +604,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     await db.query(upsertPreparedSpells, [accountId, serverId, newPreparedSpells]);
 
-    logger.info(`[${serverName ?? serverId} | ${name}] prepared spell: ${spell.name}`);
+    console.info(`[${serverName ?? serverId} | ${name}] prepared spell: ${spell.name}`);
 
     this.track({
       accountId,
@@ -637,7 +631,7 @@ export const createVoodooServer = (): VoodooServer => ({
         })
         .send();
     } catch (error: unknown) {
-      this.logger.error((error as Error).message);
+      console.error((error as Error).message);
     }
   }
 });

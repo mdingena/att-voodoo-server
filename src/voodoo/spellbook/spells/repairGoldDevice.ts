@@ -34,5 +34,5 @@ export const repairGoldDevice: SpellFunction = async (voodoo, accountId, upgrade
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Gold Device`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Repair Gold Device`);
 };

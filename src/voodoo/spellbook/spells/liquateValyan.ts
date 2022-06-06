@@ -42,5 +42,5 @@ export const liquateValyan: SpellFunction = async (voodoo, accountId, upgradeCon
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Liquate Alloy (Valyan)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Liquate Alloy (Valyan)`);
 };

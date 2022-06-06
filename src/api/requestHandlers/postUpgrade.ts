@@ -50,7 +50,7 @@ export const postUpgrade =
 
       clientResponse.json({ ok: true, result: experience });
     } catch (error: unknown) {
-      voodoo.logger.error(error);
+      console.error(error);
       clientResponse.status(500).json({ ok: false, error: (error as Error).message });
     }
   };

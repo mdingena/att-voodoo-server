@@ -30,5 +30,5 @@ export const conjureWater: SpellFunction = async (voodoo, accountId, upgradeConf
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Conjure Water`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Conjure Water`);
 };

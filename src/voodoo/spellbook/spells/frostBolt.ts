@@ -51,5 +51,5 @@ export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs
   }
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Frost Bolt`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Frost Bolt`);
 };

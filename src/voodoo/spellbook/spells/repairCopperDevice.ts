@@ -34,5 +34,5 @@ export const repairCopperDevice: SpellFunction = async (voodoo, accountId, upgra
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Copper Device`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Repair Copper Device`);
 };

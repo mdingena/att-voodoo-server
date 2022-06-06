@@ -30,13 +30,13 @@ const heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
   await createBot(voodoo);
   createApi(voodoo);
 
-  voodoo.logger.success('Voodoo Server is online');
+  console.log('Voodoo Server is online');
 
   keepAwake(voodoo);
   regularlyPurgeSessions(voodoo);
 
   setTimeout(() => {
-    voodoo.logger.warn('Restarting Heroku dyno');
+    console.warn('Restarting Heroku dyno');
     heroku.delete('/apps/att-voodoo-server/dynos');
   }, FORCE_RESTART_DELAY);
 })();

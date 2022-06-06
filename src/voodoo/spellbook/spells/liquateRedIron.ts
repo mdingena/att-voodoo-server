@@ -42,5 +42,5 @@ export const liquateRedIron: SpellFunction = async (voodoo, accountId, upgradeCo
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Liquate Alloy (Red Iron)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Liquate Alloy (Red Iron)`);
 };

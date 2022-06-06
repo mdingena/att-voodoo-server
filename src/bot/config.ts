@@ -1,12 +1,8 @@
-type AltaApiConfig = {
-  client_id: string;
-  client_secret: string;
-  scope: string;
-};
+import { Config, Verbosity } from 'att-client';
 
-export const config: AltaApiConfig = {
-  client_id: process.env.ALTA_CLIENT_ID || '',
-  client_secret: process.env.ALTA_CLIENT_SECRET || '',
+export const config: Config = {
+  clientId: process.env.ALTA_CLIENT_ID || '',
+  clientSecret: process.env.ALTA_CLIENT_SECRET || '',
   scope: [
     'group.info',
     'group.invite',
@@ -21,5 +17,6 @@ export const config: AltaApiConfig = {
     'ws.group_invites',
     'ws.group_members',
     'ws.group_servers'
-  ].join(' ')
+  ],
+  logVerbosity: Verbosity.Debug
 };

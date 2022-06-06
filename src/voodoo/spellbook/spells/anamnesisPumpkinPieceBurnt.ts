@@ -10,5 +10,5 @@ export const anamnesisPumpkinPieceBurnt: SpellFunction = async (voodoo, accountI
   anamnesis(hash)(voodoo, accountId, upgradeConfigs);
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Anamnesis (burnt pumpkin piece)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Anamnesis (burnt pumpkin piece)`);
 };

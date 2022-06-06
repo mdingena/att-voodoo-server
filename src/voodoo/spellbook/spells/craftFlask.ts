@@ -27,5 +27,5 @@ export const craftFlask: SpellFunction = async (voodoo, accountId, upgradeConfig
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Craft Flask`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Craft Flask`);
 };

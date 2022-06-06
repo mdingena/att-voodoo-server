@@ -44,5 +44,5 @@ export const conjureCrystalPick: SpellFunction = async (voodoo, accountId, upgra
   }
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Conjure Crystal Pick`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Conjure Crystal Pick`);
 };

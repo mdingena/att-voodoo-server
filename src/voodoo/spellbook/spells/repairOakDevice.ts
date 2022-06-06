@@ -34,5 +34,5 @@ export const repairOakDevice: SpellFunction = async (voodoo, accountId, upgradeC
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Oak Device`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Repair Oak Device`);
 };

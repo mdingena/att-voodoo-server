@@ -26,5 +26,5 @@ export const craftSoulbond: SpellFunction = async (voodoo, accountId, upgradeCon
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Craft Soulbond`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Craft Soulbond`);
 };

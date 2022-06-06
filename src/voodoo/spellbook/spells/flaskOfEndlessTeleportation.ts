@@ -35,5 +35,5 @@ export const flaskOfEndlessTeleportation: SpellFunction = async (voodoo, account
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Flask of Endless Teleportation`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Flask of Endless Teleportation`);
 };

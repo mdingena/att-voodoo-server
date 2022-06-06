@@ -26,5 +26,5 @@ export const transmuteCopperToIron: SpellFunction = async (voodoo, accountId, up
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Transmute Copper To Iron`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Transmute Copper To Iron`);
 };

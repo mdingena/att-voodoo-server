@@ -34,5 +34,5 @@ export const repairIronDevice: SpellFunction = async (voodoo, accountId, upgrade
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Iron Device`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Repair Iron Device`);
 };

@@ -27,5 +27,5 @@ export const transmuteIronHandleShort: SpellFunction = async (voodoo, accountId,
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Transmute Iron Handle (short)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Transmute Iron Handle (short)`);
 };

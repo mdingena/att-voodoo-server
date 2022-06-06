@@ -1,6 +1,6 @@
 {
   "name": "att-voodoo-server",
-  "version": "1.0.0-beta.20",
+  "version": "1.0.0-beta.21",
   "description": "",
   "main": "build/index.js",
   "scripts": {
@@ -16,13 +16,13 @@
     "@sentry/node": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
     "@types/heroku-client": "^3.1.0",
+    "att-client": "^0.2.8",
     "att-string-transcoder": "^2.3.1",
     "att-voodoo-spellbook": "github:mdingena/att-voodoo-spellbook",
     "bitwise": "^2.1.0",
     "express": "^4.17.1",
     "heroku-client": "^3.1.0",
     "ieee754": "^1.2.1",
-    "js-tale": "^1.5.5",
     "nocache": "^3.0.0",
     "node-fetch": "^2.6.1",
     "pg": "^8.6.0",
@@ -52,6 +52,6 @@
     "**/*.{js,ts,jsx,tsx,json,css,html}": "prettier --write"
   },
   "engines": {
-    "npm": "6.x"
+    "node": ">=18.2.0"
   }
 }

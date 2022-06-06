@@ -34,5 +34,5 @@ export const repairPalladiumDevice: SpellFunction = async (voodoo, accountId, up
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Repair Palladium Device`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Repair Palladium Device`);
 };

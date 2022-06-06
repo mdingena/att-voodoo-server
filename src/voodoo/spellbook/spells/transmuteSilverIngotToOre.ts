@@ -42,5 +42,5 @@ export const transmuteSilverIngotToOre: SpellFunction = async (voodoo, accountId
   });
 
   const { name, serverId, serverName } = voodoo.players[accountId];
-  voodoo.logger.success(`[${serverName ?? serverId} | ${name}] cast Transmute Ingot To Ore (Silver)`);
+  console.log(`[${serverName ?? serverId} | ${name}] cast Transmute Ingot To Ore (Silver)`);
 };
