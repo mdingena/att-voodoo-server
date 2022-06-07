@@ -33,13 +33,6 @@ export const getSession =
         servers: [...voodoo.servers]
       };
 
-      voodoo.track({
-        accountId,
-        serverId,
-        category: TrackCategory.Sessions,
-        action: TrackAction.SessionCreated
-      });
-
       clientResponse.json({ ok: true, result: session });
     } catch (error: unknown) {
       console.error(error);
