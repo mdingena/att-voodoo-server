@@ -31,7 +31,7 @@ export const createBot = async (voodoo: VoodooServer): Promise<Client> => {
 
   bot.on('connect', handleServerConnectionOpened(voodoo));
 
-  bot.start();
+  await bot.start();
 
   return bot;
 };
