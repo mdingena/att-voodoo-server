@@ -1,4 +1,4 @@
-import { Config, Verbosity } from 'att-client';
+import { Config } from 'att-client';
 
 export const config: Config = {
   clientId: process.env.ALTA_CLIENT_ID || '',
@@ -18,5 +18,5 @@ export const config: Config = {
     'ws.group_members',
     'ws.group_servers'
   ],
-  logVerbosity: Verbosity.Debug
+  logVerbosity: Number(process.env.LOG_VERBOSITY ?? 3)
 };
