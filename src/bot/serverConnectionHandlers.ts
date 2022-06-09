@@ -22,7 +22,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
       players: connection.server.players.length
     });
 
-    console.warn(`Disconnected from ${name}`);
+    console.warn(`Disconnected from ${connection.server.name}`);
   };
 
   /* Server info updated event handler. */
