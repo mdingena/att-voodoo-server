@@ -50,11 +50,9 @@ export const trueStrike: SpellFunction = async (voodoo, accountId, upgradeConfig
     const damageDelta = buffedDamage - currentDamage;
 
     if (damageDelta > 0) {
-      const damageBuff = baseDamage * bonus;
-
       voodoo.command({
         accountId,
-        command: `player modify-stat ${playerId} damage ${damageBuff} ${duration} false`
+        command: `player modify-stat ${playerId} damage ${damageDelta} ${duration} false`
       });
     }
   }

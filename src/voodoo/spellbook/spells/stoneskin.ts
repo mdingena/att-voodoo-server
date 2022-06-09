@@ -58,11 +58,9 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
     const damageprotectionDelta = buffedDamageProtection - currentDamageProtection;
 
     if (damageprotectionDelta > 0) {
-      const damageprotectionBuff = baseDamageProtection * bonus;
-
       voodoo.command({
         accountId,
-        command: `player modify-stat ${playerId} damageprotection ${damageprotectionBuff} ${duration} false`
+        command: `player modify-stat ${playerId} damageprotection ${damageprotectionDelta} ${duration} false`
       });
     }
   }

@@ -50,11 +50,9 @@ export const haste: SpellFunction = async (voodoo, accountId, upgradeConfigs) =>
     const speedDelta = buffedSpeed - currentSpeed;
 
     if (speedDelta > 0) {
-      const speedBuff = baseSpeed * bonus;
-
       voodoo.command({
         accountId,
-        command: `player modify-stat ${playerId} speed ${speedBuff} ${duration} false`
+        command: `player modify-stat ${playerId} speed ${speedDelta} ${duration} false`
       });
     }
   }
