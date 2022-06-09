@@ -1,7 +1,9 @@
 import { pages, School, Upgrades } from 'att-voodoo-spellbook';
 import * as spells from './spells';
-import { Experience, TrackAction, TrackCategory, VoodooServer } from '../createVoodooServer';
+import { Experience, TrackCategory, VoodooServer } from '../createVoodooServer';
 import { xpGain } from './experience';
+import { spawn as voodooSpawn } from './spawn';
+import { spawnFrom } from './spawnFrom';
 
 export type Spell = {
   key: string;
@@ -9,6 +11,7 @@ export type Spell = {
   school: School;
   xp: (voodoo: VoodooServer, accountId: number) => Promise<Experience>;
   cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
+  spawn: (voodoo: VoodooServer, accountId: number) => Promise<void>;
   requiresPreparation: boolean;
   verbalTrigger?: string;
   upgrades: Upgrades;
@@ -26,7 +29,7 @@ export const spellbook: Spellbook = {
     Object.entries(spells)
       .filter(([spellKey]) => pages.hasOwnProperty(spellKey))
       .map(([spellKey, spell]) => {
-        const { incantations, school, upgrades } = pages[spellKey];
+        const { incantations, school, upgrades, spawn } = pages[spellKey];
 
         return [
           JSON.stringify(incantations),
@@ -44,6 +47,14 @@ export const spellbook: Spellbook = {
                 category: TrackCategory.SpellCast,
                 action: pages[spellKey].name
               });
+            },
+            spawn: async (voodoo, accountId) => {
+              if (typeof spawn === 'undefined') return;
+
+              const player = await voodoo.getPlayerDetailed({ accountId });
+              const { position, rotation } = spawnFrom(player, spawn.from, spawn.distance);
+
+              voodooSpawn(voodoo, accountId, spawn.prefabData(position, rotation));
             }
           }
         ];

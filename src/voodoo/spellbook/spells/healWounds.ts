@@ -1,31 +1,10 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
-import { spawnFrom } from '../spawnFrom';
-import { Prefab } from 'att-string-transcoder';
-import { spawn } from '../spawn';
 import { getNearbySoulbonds } from '../getNearbySoulbonds';
 
 export const healWounds: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const upgrades = voodoo.getSpellUpgrades({ accountId, spell: 'healWounds' });
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
-
-  const player = await voodoo.getPlayerDetailed({ accountId });
-  const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
-
-  spawn(voodoo, accountId, {
-    prefabObject: {
-      hash: Prefab.Potion_Medium.hash,
-      position,
-      rotation
-    },
-    components: {
-      NetworkRigidbody: {
-        position,
-        rotation
-      },
-      LiquidContainer: {}
-    }
-  });
 
   const heal = attributes.intensify / 4; // 0.25 equals one "heart"
   const searchRadius = attributes.projection;

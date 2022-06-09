@@ -10,28 +10,12 @@ export const stoneskin: SpellFunction = async (voodoo, accountId, upgradeConfigs
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
-  const rightHand = spawnFrom(player, 'rightPalm', 0.05);
-  const eyes = spawnFrom(player, 'eyes');
-
-  spawn(voodoo, accountId, {
-    prefabObject: {
-      hash: Prefab.Potion_Medium.hash,
-      position: rightHand.position,
-      rotation: rightHand.rotation
-    },
-    components: {
-      NetworkRigidbody: {
-        position: rightHand.position,
-        rotation: rightHand.rotation
-      },
-      LiquidContainer: {}
-    }
-  });
+  const { position } = spawnFrom(player, 'eyes');
 
   spawn(voodoo, accountId, {
     prefabObject: {
       hash: Prefab.Iron_Boulder_Parts.hash,
-      position: eyes.position
+      position: position
     }
   });
 
