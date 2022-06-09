@@ -578,7 +578,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const result = response.data;
 
-    console.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
+    // console.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
 
     return result;
   },
