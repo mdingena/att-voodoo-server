@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer, PreparedSpells } from '../../voodoo';
-import { selectSession, selectPreparedSpells, upsertPreparedSpells } from '../../db/sql';
+import { VoodooServer } from '../../voodoo';
+import { selectSession } from '../../db/sql';
 
 export const postUpgrade =
   (voodoo: VoodooServer): RequestHandler =>

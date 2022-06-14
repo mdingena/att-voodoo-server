@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import fetch from 'node-fetch';
-import { TrackAction, TrackCategory, VoodooServer } from '../../voodoo';
+import { VoodooServer } from '../../voodoo';
 import { db } from '../../db';
 import { upsertSession, upsertHeartbeat } from '../../db/sql';
 
