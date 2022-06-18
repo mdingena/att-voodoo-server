@@ -535,10 +535,11 @@ export const createVoodooServer = (): VoodooServer => ({
 
     if (!player) return;
 
+    const playerDetailed = await this.getPlayerDetailed({ accountId });
+    const { position, rotation } = spawnFrom(playerDetailed, 'eyes', 1);
+
     for (const incantation of player.incantations) {
       const { prefab } = incantation.decodedString;
-      const playerDetailed = await this.getPlayerDetailed({ accountId });
-      const { position, rotation } = spawnFrom(playerDetailed, 'eyes', 1);
 
       const respawn: PrefabData = {
         ...prefab,
