@@ -16,7 +16,7 @@
     "@sentry/node": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
     "@types/heroku-client": "^3.1.0",
-    "att-client": "^0.2.24",
+    "att-client": "^0.2.25",
     "att-string-transcoder": "^2.3.1",
     "att-voodoo-spellbook": "github:mdingena/att-voodoo-spellbook",
     "bitwise": "^2.1.0",
