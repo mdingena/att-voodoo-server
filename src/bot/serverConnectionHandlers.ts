@@ -5,11 +5,11 @@ type PlayerList = { id: number; username: string }[];
 
 export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (connection: ServerConnection) => {
   /* Do not connect to Quest servers. */
-  if (connection.server.fleet !== 'att-release') {
-    console.warn(`Server '${connection.server.name}' is not a PCVR server.`);
-    connection.server.disconnect();
-    return;
-  }
+  // if (connection.server.fleet !== 'att-release') {
+  //   console.warn(`Server '${connection.server.name}' is not a PCVR server.`);
+  //   connection.server.disconnect();
+  //   return;
+  // }
 
   /* Connection closed event handler. */
   const handleClosed = () => {

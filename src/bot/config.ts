@@ -18,5 +18,5 @@ export const config: Config = {
     'ws.group_members',
     'ws.group_servers'
   ],
-  logVerbosity: Number(process.env.LOG_VERBOSITY ?? 3)
+  logVerbosity: Number(process.env.LOG_VERBOSITY ?? 4)
 };
