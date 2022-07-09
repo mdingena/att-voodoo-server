@@ -1,7 +1,20 @@
 import ua, { Visitor } from 'universal-analytics';
 import { ServerConnection } from 'att-client';
 import { DecodedString, PrefabData } from 'att-string-transcoder';
-import { spellbook, Spellbook, Spell, School, upgradeAttribute, UpgradeConfig, spawnFrom, spawn } from './spellbook';
+import {
+  spellbook,
+  Spellbook,
+  Spell,
+  School,
+  upgradeAttribute,
+  UpgradeConfig,
+  spawnFrom,
+  spawn,
+  StudyFeedback,
+  SpellpageIncantation,
+  EvokeHandedness,
+  EvokeAngle
+} from './spellbook';
 import { db } from '../db';
 import {
   selectExperience,
@@ -26,15 +39,14 @@ type Server = {
   players: number;
 };
 
-export type Dexterity = 'left' | 'right';
+export type Dexterity = 'rightHand/palm' | 'rightHand/index' | 'leftHand/palm' | 'leftHand/index';
 
 type DockedIncantation = {
   verbalSpellComponent: string;
   materialSpellComponent: string;
   decodedString: DecodedString;
+  studyFeedback: StudyFeedback | undefined;
 };
-
-type SpellpageIncantation = [string, string];
 
 type Players = {
   [accountId: number]: {
@@ -69,7 +81,7 @@ export type Experience = {
 type PreparedSpell = {
   name: string;
   verbalTrigger: string;
-  incantations: [string, string][];
+  incantations: SpellpageIncantation[];
   charges: number;
 };
 
@@ -200,7 +212,7 @@ interface Command {
 
 interface PrepareSpell {
   accountId: number;
-  incantations: [string, string][];
+  incantations: SpellpageIncantation[];
   spell: Spell;
 }
 
@@ -293,7 +305,7 @@ export const createVoodooServer = (): VoodooServer => ({
       serverId,
       serverName,
       serverConnection,
-      dexterity: 'right' as Dexterity,
+      dexterity: 'rightHand/palm' as Dexterity,
       incantations: [],
       experience
     };
@@ -515,7 +527,11 @@ export const createVoodooServer = (): VoodooServer => ({
       }] incanted "${incantation.verbalSpellComponent.toUpperCase()}" (${incantation.materialSpellComponent})`
     );
 
-    return newIncantations.map(incantation => [incantation.verbalSpellComponent, incantation.materialSpellComponent]);
+    return newIncantations.map(incantation => [
+      incantation.verbalSpellComponent,
+      incantation.materialSpellComponent,
+      incantation.studyFeedback
+    ]);
   },
 
   clearIncantations: function ({ accountId }) {
@@ -536,7 +552,8 @@ export const createVoodooServer = (): VoodooServer => ({
     if (!player) return;
 
     const playerDetailed = await this.getPlayerDetailed({ accountId });
-    const { position, rotation } = spawnFrom(playerDetailed, 'eyes', 1);
+    const evokePreference = player.dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+    const { position, rotation } = spawnFrom(playerDetailed, 'eyes', evokePreference, 1);
 
     for (const incantation of player.incantations) {
       const { prefab } = incantation.decodedString;

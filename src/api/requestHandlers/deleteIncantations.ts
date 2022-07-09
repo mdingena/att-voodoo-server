@@ -3,6 +3,7 @@ import { db } from '../../db';
 import { VoodooServer, spawn, spawnFrom } from '../../voodoo';
 import { PrefabData } from 'att-string-transcoder';
 import { selectSession } from '../../db/sql';
+import { EvokeAngle, EvokeHandedness } from '../../voodoo/spellbook';
 
 export const deleteIncantations =
   (voodoo: VoodooServer): RequestHandler =>
@@ -27,7 +28,8 @@ export const deleteIncantations =
       if (voodoo.players[accountId].incantations[0]?.materialSpellComponent === 'hilted apparatus') {
         const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
         const player = await voodoo.getPlayerDetailed({ accountId });
-        const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
+        const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+        const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
         const respawn: PrefabData = {
           ...prefab,

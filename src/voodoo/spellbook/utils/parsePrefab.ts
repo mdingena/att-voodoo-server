@@ -476,7 +476,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     /**
      * SOULBOUND
      */
-    case Prefab.Spriggull_Feather_Green.hash:
+    case Prefab.DebugPlayerStone.hash:
       return 'soulbond';
 
     /**

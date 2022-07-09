@@ -1,6 +1,6 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
-import { spawnFrom } from '../spawnFrom';
+import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
 import { Prefab, LiquidContainer } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
@@ -14,7 +14,8 @@ export const flaskOfEndlessTeleportation: SpellFunction = async (voodoo, account
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
-  const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
+  const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+  const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
   spawn(voodoo, accountId, {
     prefabObject: {

@@ -1,7 +1,17 @@
+import { pages } from 'att-voodoo-spellbook';
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
-import { VoodooServer, PreparedSpells, parsePrefab, spawn, spawnFrom } from '../../voodoo';
+import {
+  VoodooServer,
+  PreparedSpells,
+  parsePrefab,
+  spawn,
+  spawnFrom,
+  StudyFeedback,
+  EvokeAngle,
+  EvokeHandedness
+} from '../../voodoo';
 import { PrefabData, decodeString } from 'att-string-transcoder';
 
 export const postIncantation =
@@ -45,8 +55,9 @@ export const postIncantation =
         });
       }
 
-      /* Get verbal spell component. */
-      const [verbalSpellComponent, oneOfMaterialSpellComponents]: [string, string[]] = clientRequest.body;
+      /* Get spell components. */
+      const [verbalSpellComponent, oneOfMaterialSpellComponents, studiedSpellKey]: [string, string[], string | null] =
+        clientRequest.body;
 
       /* Get material spell component. */
       const beltIndex = 3 - voodoo.players[accountId].incantations.length;
@@ -83,10 +94,32 @@ export const postIncantation =
       /* Destroy material spell component. */
       await voodoo.command({ accountId, command: `wacky destroy ${beltItemId}` });
 
+      /* Assign studied spell hint. */
+      let studyFeedback: StudyFeedback | undefined;
+      if (studiedSpellKey !== null) {
+        const studiedSpell = pages[studiedSpellKey];
+        const nextIncantationIndex = voodoo.players[accountId]?.incantations.length ?? 0;
+        const studiedSpellIncantation = studiedSpell?.incantations[nextIncantationIndex];
+        const studiedSpellVerbalComponent = studiedSpellIncantation?.[0] ?? ' of ';
+        const [studiedVerbalProperty, studiedVerbalSource] = studiedSpellVerbalComponent.split(' of ');
+        const [incantedVerbalProperty, incantedVerbalSource] = verbalSpellComponent.split(' of ');
+        const matchVerbalProperty = studiedVerbalProperty === incantedVerbalProperty;
+        const matchVerbalSource = studiedVerbalSource === incantedVerbalSource;
+        const matchMaterialComponent = studiedSpellIncantation?.[1] === materialSpellComponent;
+
+        if (matchVerbalProperty && matchVerbalSource && matchMaterialComponent) {
+          studyFeedback = StudyFeedback.Match;
+        } else if (matchVerbalProperty || matchVerbalSource || matchMaterialComponent) {
+          studyFeedback = StudyFeedback.Partial;
+        } else {
+          studyFeedback = StudyFeedback.Mismatch;
+        }
+      }
+
       /* Append to player's incantations. */
       let incantations = voodoo.addIncantation({
         accountId,
-        incantation: { verbalSpellComponent, materialSpellComponent, decodedString }
+        incantation: { verbalSpellComponent, materialSpellComponent, decodedString, studyFeedback }
       });
 
       /* Automatically seal the spell if player has 4 incancations now. */
@@ -114,7 +147,8 @@ export const postIncantation =
           if (incantations[0]?.[1] === 'hilted apparatus') {
             const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
             const player = await voodoo.getPlayerDetailed({ accountId });
-            const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
+            const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+            const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
             const respawn: PrefabData = {
               ...prefab,
@@ -172,7 +206,7 @@ export const postIncantation =
           ok: true,
           result: {
             experience: voodoo.players[accountId].experience,
-            incantations
+            incantations: incantations.map(incantation => [incantation[0], incantation[1], undefined])
           }
         });
       }

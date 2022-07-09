@@ -1,6 +1,6 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
-import { spawnFrom } from '../spawnFrom';
+import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
 import { composeTree, generateComposition, Prefab, SpeciesHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
@@ -13,7 +13,8 @@ export const raiseOakTree: SpellFunction = async (voodoo, accountId, upgradeConf
   const childPrefabs = composeTree(tree);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
-  const rightHand = spawnFrom(player, 'rightPalm', 1);
+  const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+  const rightHand = spawnFrom(player, 'mainHand', dexterity, 1);
 
   spawn(voodoo, accountId, {
     prefabObject: {

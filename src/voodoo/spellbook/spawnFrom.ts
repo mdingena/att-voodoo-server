@@ -1,24 +1,67 @@
+import type { Dexterity } from '../createVoodooServer';
 import { Vector3, Object3D } from 'three';
 import { parseVector } from './utils/parseVector';
 
-type Origin = 'eyes' | 'leftPalm' | 'rightPalm';
+type SpawnFrom = 'eyes' | 'mainHand' | 'offHand' | 'bothHands';
 
-export const spawnFrom = (player: any, from: Origin, distance: number = 0) => {
-  let position: Vector3, direction: Vector3, sign: 1 | -1;
+type Origin = 'eyes' | Dexterity;
+
+export type EvokeHandedness = 'rightHand' | 'leftHand';
+
+export type EvokeAngle = 'palm' | 'index';
+
+export const spawnFrom = (
+  player: any,
+  from: SpawnFrom,
+  evokePreference: [EvokeHandedness, EvokeAngle],
+  distance: number = 0
+) => {
+  if (from === 'bothHands') throw new Error("spawnFrom() should not be called with argument `from` = 'bothHands'.");
+
+  let origin: Origin;
 
   switch (from) {
-    case 'leftPalm':
-      position = parseVector(player['LeftHandPosition']);
-      direction = new Vector3().crossVectors(parseVector(player['LeftHandForward']), parseVector(player['LeftHandUp']));
-      sign = -1;
+    case 'mainHand':
+      origin = evokePreference.join('/') as Dexterity;
       break;
 
-    case 'rightPalm':
+    case 'offHand':
+      const [hand, angle] = evokePreference;
+      origin = `${hand === 'rightHand' ? 'leftHand' : 'rightHand'}/${angle}`;
+      break;
+
+    case 'eyes':
+    default:
+      origin = 'eyes';
+  }
+
+  let position: Vector3, direction: Vector3, sign: 1 | -1;
+
+  switch (origin) {
+    case 'rightHand/palm':
       position = parseVector(player['RightHandPosition']);
       direction = new Vector3().crossVectors(
         parseVector(player['RightHandForward']),
         parseVector(player['RightHandUp'])
       );
+      sign = 1;
+      break;
+
+    case 'rightHand/index':
+      position = parseVector(player['RightHandPosition']);
+      direction = parseVector(player['RightHandForward']);
+      sign = 1;
+      break;
+
+    case 'leftHand/palm':
+      position = parseVector(player['LeftHandPosition']);
+      direction = new Vector3().crossVectors(parseVector(player['LeftHandForward']), parseVector(player['LeftHandUp']));
+      sign = -1;
+      break;
+
+    case 'leftHand/index':
+      position = parseVector(player['LeftHandPosition']);
+      direction = parseVector(player['LeftHandForward']);
       sign = 1;
       break;
 

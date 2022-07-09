@@ -1,6 +1,6 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
-import { spawnFrom } from '../spawnFrom';
+import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
 import { spawnVelocity } from '../spawnVelocity';
 import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
@@ -48,19 +48,20 @@ export const anamnesis =
     const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
     const player = await voodoo.getPlayerDetailed({ accountId });
-    const rightHand = spawnFrom(player, 'rightPalm', 0.05);
+    const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+    const mainHand = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
     spawn(voodoo, accountId, {
       prefabObject: {
         hash: prefabObjectHash,
-        position: rightHand.position,
-        rotation: rightHand.rotation
+        position: mainHand.position,
+        rotation: mainHand.rotation
       },
       components: {
         NetworkRigidbody: {
-          position: rightHand.position,
-          rotation: rightHand.rotation,
-          velocity: spawnVelocity(rightHand.direction, attributes.velocity)
+          position: mainHand.position,
+          rotation: mainHand.rotation,
+          velocity: spawnVelocity(mainHand.direction, attributes.velocity)
         }
       }
     });

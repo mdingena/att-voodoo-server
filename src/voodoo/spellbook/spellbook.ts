@@ -3,7 +3,7 @@ import * as spells from './spells';
 import { Experience, TrackCategory, VoodooServer } from '../createVoodooServer';
 import { xpGain } from './experience';
 import { spawn as voodooSpawn } from './spawn';
-import { spawnFrom } from './spawnFrom';
+import { EvokeHandedness, EvokeAngle, spawnFrom } from './spawnFrom';
 
 export type Spell = {
   key: string;
@@ -17,12 +17,20 @@ export type Spell = {
   upgrades: Upgrades;
 };
 
+export type SpellpageIncantation = [string, string, StudyFeedback | undefined];
+
 export type Spellbook = {
   spells: Map<string, Spell>;
-  get: (incantations: [string, string][]) => Spell | undefined;
+  get: (incantations: SpellpageIncantation[]) => Spell | undefined;
 };
 
 export type SpellFunction = (voodoo: VoodooServer, accountId: number, upgrades: Upgrades) => Promise<void>;
+
+export enum StudyFeedback {
+  Match = 'MATCH',
+  Partial = 'PARTIAL',
+  Mismatch = 'MISMATCH'
+}
 
 export const spellbook: Spellbook = {
   spells: new Map(
@@ -52,7 +60,8 @@ export const spellbook: Spellbook = {
               if (typeof spawn === 'undefined') return;
 
               const player = await voodoo.getPlayerDetailed({ accountId });
-              const { position, rotation } = spawnFrom(player, spawn.from, spawn.distance);
+              const evokePreference = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+              const { position, rotation } = spawnFrom(player, spawn.from, evokePreference, spawn.distance);
 
               voodooSpawn(voodoo, accountId, spawn.prefabData(position, rotation));
             }
@@ -61,8 +70,9 @@ export const spellbook: Spellbook = {
       })
   ),
 
-  get: function (incantations: [string, string][]) {
-    const key = JSON.stringify(incantations);
+  get: function (incantations: SpellpageIncantation[]) {
+    const [verbalComponent, materialComponent] = incantations;
+    const key = JSON.stringify([verbalComponent, materialComponent]);
     return this.spells.get(key);
   }
 };

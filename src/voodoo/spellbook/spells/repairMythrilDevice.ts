@@ -1,6 +1,6 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
-import { spawnFrom } from '../spawnFrom';
+import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
 import { repairMaterial } from '../utils';
 import { PhysicalMaterialPartHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
@@ -12,7 +12,8 @@ export const repairMythrilDevice: SpellFunction = async (voodoo, accountId, upgr
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
-  const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
+  const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+  const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
   const repairAmount = attributes.reconstructor / 100;
   const repairedApparatus = repairMaterial(hiltedApparatus, PhysicalMaterialPartHash.Mythril, repairAmount);

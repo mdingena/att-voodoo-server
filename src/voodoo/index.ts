@@ -7,5 +7,13 @@ export {
   TrackCategory,
   TrackAction
 } from './createVoodooServer';
-export { parsePrefab, spawn, spawnFrom } from './spellbook';
+export {
+  parsePrefab,
+  spawn,
+  spawnFrom,
+  StudyFeedback,
+  EvokeAngle,
+  EvokeHandedness,
+  SpellpageIncantation
+} from './spellbook';
 export { gracefulShutdown } from './gracefulShutdown';

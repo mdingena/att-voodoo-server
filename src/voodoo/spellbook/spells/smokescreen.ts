@@ -1,6 +1,6 @@
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
-import { spawnFrom } from '../spawnFrom';
+import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
 import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
@@ -9,7 +9,8 @@ export const smokescreen: SpellFunction = async (voodoo, accountId, upgradeConfi
   // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
-  const { position } = spawnFrom(player, 'eyes');
+  const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+  const { position } = spawnFrom(player, 'eyes', dexterity);
 
   spawn(voodoo, accountId, {
     prefabObject: {

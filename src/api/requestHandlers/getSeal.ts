@@ -1,6 +1,14 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer, PreparedSpells, spawn, spawnFrom } from '../../voodoo';
+import {
+  VoodooServer,
+  PreparedSpells,
+  spawn,
+  spawnFrom,
+  SpellpageIncantation,
+  EvokeHandedness,
+  EvokeAngle
+} from '../../voodoo';
 import { PrefabData } from 'att-string-transcoder';
 import { selectSession } from '../../db/sql';
 
@@ -46,9 +54,13 @@ export const getSeal =
       }
 
       /* Get the player's current incantations. */
-      const incantations = voodoo.players[accountId].incantations.map(
-        ({ verbalSpellComponent, materialSpellComponent }) => [verbalSpellComponent, materialSpellComponent]
-      ) as [string, string][];
+      const incantations = voodoo.players[accountId].incantations.map<SpellpageIncantation>(
+        ({ verbalSpellComponent, materialSpellComponent, studyFeedback }) => [
+          verbalSpellComponent,
+          materialSpellComponent,
+          studyFeedback
+        ]
+      );
 
       /* Search for spell in spellbook matching player's incantations. */
       const spell = voodoo.spellbook.get(incantations);
@@ -73,7 +85,8 @@ export const getSeal =
         if (incantations[0]?.[1] === 'hilted apparatus') {
           const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
           const player = await voodoo.getPlayerDetailed({ accountId });
-          const { position, rotation } = spawnFrom(player, 'rightPalm', 0.05);
+          const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+          const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
           const respawn: PrefabData = {
             ...prefab,

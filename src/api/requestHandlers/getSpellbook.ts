@@ -8,11 +8,14 @@ export const getSpellbook = (): RequestHandler => {
     .reduce(
       (spells, [spellKey, spell]) => ({
         ...spells,
-        [spell.consolidateUpgradesAs?.key ?? spellKey]: {
-          name: spell.consolidateUpgradesAs?.name ?? spell.name,
+        [spellKey]: {
+          name: spell.name,
           school: spell.school,
+          description: spell.description,
+          castsFrom: spell.castsFrom,
           requiresPreparation: spell.requiresPreparation,
-          upgrades: spell.upgrades
+          upgrades: spell.upgrades,
+          incantations: spell.isDiscovered ? spell.incantations : undefined
         }
       }),
       {}
