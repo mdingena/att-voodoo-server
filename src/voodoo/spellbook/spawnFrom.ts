@@ -49,8 +49,8 @@ export const spawnFrom = (
 
     case 'rightHand/index':
       position = parseVector(player['RightHandPosition']);
-      direction = parseVector(player['RightHandForward']);
-      sign = 1;
+      direction = parseVector(player['RightHandUp']);
+      sign = -1;
       break;
 
     case 'leftHand/palm':
@@ -61,8 +61,8 @@ export const spawnFrom = (
 
     case 'leftHand/index':
       position = parseVector(player['LeftHandPosition']);
-      direction = parseVector(player['LeftHandForward']);
-      sign = 1;
+      direction = parseVector(player['LeftHandUp']);
+      sign = -1;
       break;
 
     case 'eyes':
