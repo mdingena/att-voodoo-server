@@ -71,8 +71,7 @@ export const spellbook: Spellbook = {
   ),
 
   get: function (incantations: SpellpageIncantation[]) {
-    const [verbalComponent, materialComponent] = incantations;
-    const key = JSON.stringify([verbalComponent, materialComponent]);
-    return this.spells.get(key);
+    const key = incantations.map(([verbalComponent, materialComponent]) => [verbalComponent, materialComponent]);
+    return this.spells.get(JSON.stringify(key));
   }
 };
