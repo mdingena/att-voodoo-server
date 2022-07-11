@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer, PreparedSpells, Experience } from '../../voodoo';
-import { selectSession, selectPreparedSpells, selectExperience } from '../../db/sql';
+import { VoodooServer, PreparedSpells, Experience, Dexterity } from '../../voodoo';
+import { selectSession, selectPreparedSpells, selectExperience, selectUser } from '../../db/sql';
 
 export const getPlayer =
   (voodoo: VoodooServer): RequestHandler =>
@@ -22,12 +22,14 @@ export const getPlayer =
       let player: {
         preparedSpells: PreparedSpells;
         experience: Experience;
+        dexterity: Dexterity;
       };
 
       if (accountId && serverId) {
-        const [preparedSpells, experience] = await Promise.all([
+        const [preparedSpells, experience, user] = await Promise.all([
           db.query(selectPreparedSpells, [accountId, serverId]),
-          db.query(selectExperience, [accountId, serverId])
+          db.query(selectExperience, [accountId, serverId]),
+          db.query(selectUser, [accountId])
         ]);
 
         player = {
@@ -42,7 +44,8 @@ export const getPlayer =
             evocationXpSpent: experience.rows[0]?.evocation_xp_spent ?? 0,
             transmutationXpTotal: experience.rows[0]?.transmutation_xp_total ?? 0,
             transmutationXpSpent: experience.rows[0]?.transmutation_xp_spent ?? 0
-          }
+          },
+          dexterity: user.rows[0]?.dexterity ?? 'rightHand/palm'
         };
       } else {
         player = {
@@ -57,7 +60,8 @@ export const getPlayer =
             evocationXpSpent: 0,
             transmutationXpTotal: 0,
             transmutationXpSpent: 0
-          }
+          },
+          dexterity: 'rightHand/palm'
         };
       }
 
