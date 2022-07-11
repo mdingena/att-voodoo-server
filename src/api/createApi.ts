@@ -12,7 +12,8 @@ import {
   postTrigger,
   getPlayer,
   getSpellbook,
-  postUpgrade
+  postUpgrade,
+  postSettings
 } from './requestHandlers';
 
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ export const createApi = (voodoo: VoodooServer) => {
   api.get('/player', getPlayer(voodoo));
   api.get('/spellbook', getSpellbook());
   api.post('/upgrade', postUpgrade(voodoo));
+  api.post('/settings', postSettings(voodoo));
 
   api.listen(port, () => {
     console.log(`API listening on port ${port}`);
