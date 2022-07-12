@@ -1,5 +1,6 @@
 export const selectExperience = `
 SELECT
+  free_resets,
   upgrades,
   abjuration_xp_total,
   abjuration_xp_spent,

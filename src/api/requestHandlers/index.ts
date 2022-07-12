@@ -1,4 +1,5 @@
 export { deleteIncantations } from './deleteIncantations';
+export { deleteUpgrades } from './deleteUpgrades';
 export { getHeartbeat } from './getHeartbeat';
 export { getInfo } from './getInfo';
 export { getPlayer } from './getPlayer';

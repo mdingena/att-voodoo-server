@@ -13,6 +13,7 @@ import {
   getPlayer,
   getSpellbook,
   postUpgrade,
+  deleteUpgrades,
   postSettings
 } from './requestHandlers';
 
@@ -35,6 +36,7 @@ export const createApi = (voodoo: VoodooServer) => {
   api.get('/player', getPlayer(voodoo));
   api.get('/spellbook', getSpellbook());
   api.post('/upgrade', postUpgrade(voodoo));
+  api.delete('/upgrade', deleteUpgrades(voodoo));
   api.post('/settings', postSettings(voodoo));
 
   api.listen(port, () => {

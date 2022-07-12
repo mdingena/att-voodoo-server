@@ -35,6 +35,7 @@ export const getPlayer =
         player = {
           preparedSpells: JSON.parse(preparedSpells.rows[0]?.prepared_spells ?? '[]'),
           experience: {
+            freeResets: experience.rows[0]?.free_resets ?? 0,
             upgrades: JSON.parse(experience.rows[0]?.upgrades ?? '{}'),
             abjurationXpTotal: experience.rows[0]?.abjuration_xp_total ?? 0,
             abjurationXpSpent: experience.rows[0]?.abjuration_xp_spent ?? 0,
@@ -51,6 +52,7 @@ export const getPlayer =
         player = {
           preparedSpells: [],
           experience: {
+            freeResets: 0,
             upgrades: {},
             abjurationXpTotal: 0,
             abjurationXpSpent: 0,

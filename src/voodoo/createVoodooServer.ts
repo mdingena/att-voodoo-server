@@ -67,6 +67,7 @@ type Upgrades = {
 };
 
 export type Experience = {
+  freeResets: number;
   upgrades: Upgrades;
   abjurationXpTotal: number;
   abjurationXpSpent: number;
@@ -411,6 +412,7 @@ export const createVoodooServer = (): VoodooServer => ({
     const storedExperience = await db.query(selectExperience, [accountId, serverId]);
 
     const experience: Experience = {
+      freeResets: storedExperience.rows[0]?.free_resets ?? 0,
       upgrades: JSON.parse(storedExperience.rows[0]?.upgrades ?? '{}'),
       abjurationXpTotal: storedExperience.rows[0]?.abjuration_xp_total ?? 0,
       abjurationXpSpent: storedExperience.rows[0]?.abjuration_xp_spent ?? 0,
