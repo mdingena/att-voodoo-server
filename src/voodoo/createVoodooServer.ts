@@ -589,18 +589,17 @@ export const createVoodooServer = (): VoodooServer => ({
 
     if (!player) throw Error('Player not found');
 
-    const response = await player.serverConnection.send(command);
+    try {
+      const response = await player.serverConnection.send(command);
 
-    if (typeof response === 'undefined') {
-      console.error('Something went wrong sending a console command.');
-      return;
+      const result = response.data;
+
+      // console.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
+
+      return result;
+    } catch (error) {
+      console.error((error as Error).message);
     }
-
-    const result = response.data;
-
-    // console.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
-
-    return result;
   },
 
   prepareSpell: async function ({ accountId, incantations, spell }) {

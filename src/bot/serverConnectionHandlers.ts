@@ -53,10 +53,14 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   };
 
   /* Register event handlers. */
-  connection.on('close', handleClosed);
-  connection.subscribe('PlayerJoined', handlePlayerJoined);
-  connection.subscribe('PlayerLeft', handlePlayerLeft);
-  connection.server.on('update', handleServerUpdate);
+  try {
+    connection.on('close', handleClosed);
+    connection.subscribe('PlayerJoined', handlePlayerJoined);
+    connection.subscribe('PlayerLeft', handlePlayerLeft);
+    connection.server.on('update', handleServerUpdate);
+  } catch (error) {
+    console.error((error as Error).message);
+  }
 
   /* Update server info immediately after connecting. */
   voodoo.updateServer({
@@ -71,11 +75,9 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
   try {
     const response = await connection.send<PlayerList>('player list');
 
-    if (typeof response === 'undefined') throw new Error("Couldn't get player list.");
+    const players = response.data.Result ?? [];
 
-    const players = response.data.Result;
-
-    players.map((player: any) =>
+    players.map(player =>
       voodoo.addPlayer({
         name: player.username,
         accountId: player.id,
@@ -84,7 +86,7 @@ export const handleServerConnectionOpened = (voodoo: VoodooServer) => async (con
       })
     );
   } catch (error) {
-    console.error(error);
+    console.error((error as Error).message);
   }
 
   console.log(`Connected to ${connection.server.name}`);

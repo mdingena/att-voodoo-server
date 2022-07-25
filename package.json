@@ -4,10 +4,12 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
+    "prepare": "husky install",
     "compile": "tsc --noEmit",
     "prebuild": "rimraf build/",
     "build": "tsc",
-    "dev": "ts-node -r dotenv/config ./src/index.ts",
+    "predev": "npm run build",
+    "dev": "node -r dotenv/config ./build/index.js",
     "start": "node ./build/index.js"
   },
   "author": "Marc Dingena",
@@ -16,12 +18,10 @@
     "@sentry/node": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
     "@types/heroku-client": "^3.1.0",
-    "att-client": "^0.2.25",
+    "att-client": "^0.4.2",
     "att-string-transcoder": "^2.3.1",
     "att-voodoo-spellbook": "github:mdingena/att-voodoo-spellbook",
-    "bitwise": "^2.1.0",
     "express": "^4.17.1",
-    "ieee754": "^1.2.1",
     "nocache": "^3.0.0",
     "node-fetch": "^2.6.1",
     "pg": "^8.6.0",
@@ -35,17 +35,11 @@
     "@types/three": "^0.128.0",
     "@types/universal-analytics": "^0.4.5",
     "dotenv": "^9.0.2",
-    "husky": "^6.0.0",
+    "husky": "^8.0.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "typescript": "^4.7.4"
   },
   "lint-staged": {
     "**/*.{js,ts,jsx,tsx,json,css,html}": "prettier --write"
