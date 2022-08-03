@@ -1,7 +1,7 @@
 import { SpellFunction } from '../spellbook';
 import { getSpellAttributes } from '../experience';
 import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
-import { composeTree, generateComposition, Prefab, SpeciesHash } from 'att-string-transcoder';
+import { createRandomTree, SpeciesHash } from 'att-string-transcoder';
 import { spawn } from '../spawn';
 
 export const raiseOakTree: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
@@ -9,29 +9,14 @@ export const raiseOakTree: SpellFunction = async (voodoo, accountId, upgradeConf
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const terminationRate = 1 / attributes.arborist;
-  const tree = generateComposition(terminationRate);
-  const childPrefabs = composeTree(tree);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
   const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
-  const rightHand = spawnFrom(player, 'mainHand', dexterity, 1);
+  const mainHand = spawnFrom(player, 'mainHand', dexterity, 0.5);
 
-  spawn(voodoo, accountId, {
-    prefabObject: {
-      hash: Prefab.Tree.hash,
-      position: rightHand.position
-    },
-    components: {
-      NetworkRigidbody: {
-        position: rightHand.position,
-        isKinematic: true
-      },
-      WoodcutTree: {
-        speciesHash: SpeciesHash.Oak
-      }
-    },
-    childPrefabs: [childPrefabs]
-  });
+  const tree = createRandomTree(SpeciesHash.Oak, terminationRate, mainHand.position);
+
+  spawn(voodoo, accountId, tree);
 
   voodoo.command({ accountId, command: 'select snap-ground' });
 
