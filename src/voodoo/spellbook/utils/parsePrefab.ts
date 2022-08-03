@@ -121,7 +121,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'redwood tree seed';
 
     case Prefab.Walnut_Tree_Seed.hash:
-      return 'wallnut tree seed';
+      return 'walnut tree seed';
 
     /**
      * MEAT
@@ -278,7 +278,7 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
      */
     case Prefab.Arrow_Shaft_Wooden.hash:
     case Prefab.Curled_Wooden_Handle.hash:
-    case Prefab.Gacha_Handle.hash:
+    case Prefab.Gacha_Handle_.hash:
     case Prefab.Handle_Bow.hash:
     case Prefab.Handle_Fist.hash:
     case Prefab.Handle_Large_Branch.hash:
