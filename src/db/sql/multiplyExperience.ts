@@ -2,6 +2,7 @@ export const multiplyExperience = (multiplier: number) => `
 UPDATE 
   experience
 SET
+  upgrades = '{}',
   abjuration_xp_total = experience.abjuration_xp_total * ${multiplier},
   abjuration_xp_spent = 0,
   conjuration_xp_total = experience.conjuration_xp_total * ${multiplier},
