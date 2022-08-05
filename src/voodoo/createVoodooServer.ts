@@ -19,6 +19,7 @@ import { db } from '../db';
 import {
   selectExperience,
   selectPreparedSpells,
+  selectUser,
   upsertExperience,
   upsertPreparedSpells,
   upsertUpgrade
@@ -87,6 +88,14 @@ type PreparedSpell = {
 };
 
 export type PreparedSpells = PreparedSpell[];
+
+type User = {
+  dexterity: Dexterity;
+};
+
+interface GetPlayer {
+  accountId: number;
+}
 
 interface AddPlayer {
   name: string;
@@ -249,6 +258,7 @@ export type VoodooServer = {
   players: Players;
   spellbook: Spellbook;
   updateServer: (server: Server) => void;
+  getPlayer: ({ accountId }: GetPlayer) => Promise<User>;
   addPlayer: ({ name, accountId, serverId, serverConnection }: AddPlayer) => Promise<void>;
   setPlayerClientStatus: ({ accountId, isVoodooClient }: PlayerClientStatus) => void;
   removePlayer: ({ accountId }: RemovePlayer) => void;
@@ -294,8 +304,21 @@ export const createVoodooServer = (): VoodooServer => ({
     this.servers = [...servers, server];
   },
 
+  getPlayer: async function ({ accountId }) {
+    const storedUser = await db.query(selectUser, [accountId]);
+
+    const user: User = {
+      dexterity: storedUser.rows[0]?.dexterity ?? 'rightHand/palm'
+    };
+
+    return user;
+  },
+
   addPlayer: async function ({ name, accountId, serverId, serverConnection }) {
-    const experience = await this.getExperience({ accountId, serverId });
+    const [experience, user] = await Promise.all([
+      this.getExperience({ accountId, serverId }),
+      this.getPlayer({ accountId })
+    ]);
 
     const { name: serverName } = this.servers.find(({ id }) => id === serverId) ?? {};
 
@@ -306,7 +329,7 @@ export const createVoodooServer = (): VoodooServer => ({
       serverId,
       serverName,
       serverConnection,
-      dexterity: 'rightHand/palm' as Dexterity,
+      dexterity: user.dexterity,
       incantations: [],
       experience
     };
