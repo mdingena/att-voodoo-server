@@ -1,3 +1,5 @@
+import { createHeartfruitIncantation } from './createHeartfruitIncantation';
+
 export {
   createVoodooServer,
   VoodooServer,
@@ -5,11 +7,14 @@ export {
   PreparedSpells,
   Experience,
   TrackCategory,
-  TrackAction
+  TrackAction,
+  SelectFindResponse
 } from './createVoodooServer';
 export {
+  destroyBloodConduits,
   parsePrefab,
   spawn,
+  spawnBloodConduits,
   spawnFrom,
   StudyFeedback,
   EvokeAngle,
@@ -17,3 +22,5 @@ export {
   SpellpageIncantation
 } from './spellbook';
 export { gracefulShutdown } from './gracefulShutdown';
+
+export const HEARTFRUIT_SECRET = createHeartfruitIncantation(3);

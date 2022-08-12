@@ -27,10 +27,16 @@ export const getSeal =
       const accountId = session.rows[0].account_id;
 
       /* Verify player is near a Spellcrafting Conduit. */
-      const { Result: nearbyPrefabs } = await voodoo.command({
+      const selectFindResponse = await voodoo.command<{ Result: { Name: string; Identifier: number }[] }>({
         accountId,
         command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
       });
+
+      if (typeof selectFindResponse === 'undefined') {
+        return clientResponse.status(500).json({ ok: false, error: 'No prefabs found' });
+      }
+
+      const { Result: nearbyPrefabs } = selectFindResponse;
 
       if ((nearbyPrefabs ?? []).length === 0) {
         voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
@@ -85,6 +91,14 @@ export const getSeal =
         if (incantations[0]?.[1] === 'hilted apparatus') {
           const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
           const player = await voodoo.getPlayerDetailed({ accountId });
+
+          if (typeof player === 'undefined') {
+            return clientResponse.status(404).json({
+              ok: false,
+              error: 'Player not found'
+            });
+          }
+
           const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
           const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
@@ -111,6 +125,9 @@ export const getSeal =
         // @todo somehow feedback that there was no spell associated
       }
 
+      /* Set Heartfruit casting state. */
+      voodoo.setCastingHeartfruit({ accountId, isCastingHeartfruit: spell?.key === 'conjureHeartfruit' });
+
       /* Clear player's incantations. */
       const newIncantations = voodoo.clearIncantations({ accountId });
 
@@ -127,7 +144,8 @@ export const getSeal =
           result: {
             experience: voodoo.players[accountId].experience,
             incantations,
-            preparedSpells
+            preparedSpells,
+            conjureHeartfruit: spell?.key === 'conjureHeartfruit'
           }
         });
       } else {
@@ -135,7 +153,8 @@ export const getSeal =
           ok: true,
           result: {
             experience: voodoo.players[accountId].experience,
-            incantations
+            incantations,
+            conjureHeartfruit: spell?.key === 'conjureHeartfruit'
           }
         });
       }

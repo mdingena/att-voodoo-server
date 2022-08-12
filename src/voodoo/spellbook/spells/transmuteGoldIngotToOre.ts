@@ -9,6 +9,9 @@ export const transmuteGoldIngotToOre: SpellFunction = async (voodoo, accountId, 
   // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
+
+  if (typeof player === 'undefined') return;
+
   const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
   const offHand = spawnFrom(player, 'offHand', [dexterity[0], 'palm'], 0.05);
   const mainHand = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);

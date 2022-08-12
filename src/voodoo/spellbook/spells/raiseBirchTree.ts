@@ -11,6 +11,9 @@ export const raiseBirchTree: SpellFunction = async (voodoo, accountId, upgradeCo
   const terminationRate = 1 / attributes.arborist;
 
   const player = await voodoo.getPlayerDetailed({ accountId });
+
+  if (typeof player === 'undefined') return;
+
   const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
   const mainHand = spawnFrom(player, 'mainHand', dexterity, 0.5);
 

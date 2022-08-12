@@ -9,6 +9,9 @@ export const smokescreen: SpellFunction = async (voodoo, accountId, upgradeConfi
   // const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
+
+  if (typeof player === 'undefined') return;
+
   const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
   const { position } = spawnFrom(player, 'eyes', dexterity);
 

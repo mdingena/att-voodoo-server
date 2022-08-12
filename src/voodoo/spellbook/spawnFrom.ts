@@ -1,4 +1,4 @@
-import type { Dexterity } from '../createVoodooServer';
+import type { Dexterity, PlayerDetailed } from '../createVoodooServer';
 import { Vector3, Object3D } from 'three';
 import { parseVector } from './utils/parseVector';
 
@@ -11,7 +11,7 @@ export type EvokeHandedness = 'rightHand' | 'leftHand';
 export type EvokeAngle = 'palm' | 'index';
 
 export const spawnFrom = (
-  player: any,
+  player: PlayerDetailed,
   from: SpawnFrom,
   evokePreference: [EvokeHandedness, EvokeAngle],
   distance: number = 0

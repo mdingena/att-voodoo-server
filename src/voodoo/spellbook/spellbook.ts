@@ -1,9 +1,13 @@
 import { pages, School, Upgrades } from 'att-voodoo-spellbook';
-import * as spells from './spells';
+import { hiddenSpells } from 'att-voodoo-book-of-blood';
+import * as knownSpells from './spells';
 import { Experience, TrackCategory, VoodooServer } from '../createVoodooServer';
 import { xpGain } from './experience';
 import { spawn as voodooSpawn } from './spawn';
 import { EvokeHandedness, EvokeAngle, spawnFrom } from './spawnFrom';
+import { spawnVelocity } from './spawnVelocity';
+import { getNearbySoulbonds } from './getNearbySoulbonds';
+import { parseVector } from './utils';
 
 export type Spell = {
   key: string;
@@ -31,6 +35,24 @@ export enum StudyFeedback {
   Partial = 'PARTIAL',
   Mismatch = 'MISMATCH'
 }
+
+const decodedSpells = Object.fromEntries(
+  Object.entries(hiddenSpells).map(([key, value]) => [
+    key,
+    value({
+      getNearbySoulbonds,
+      parseVector: parseVector,
+      spawnFrom,
+      spawn: voodooSpawn,
+      spawnVelocity
+    })
+  ])
+);
+
+const spells = {
+  ...decodedSpells,
+  ...knownSpells
+};
 
 export const spellbook: Spellbook = {
   spells: new Map(
@@ -60,6 +82,9 @@ export const spellbook: Spellbook = {
               if (typeof spawn === 'undefined') return;
 
               const player = await voodoo.getPlayerDetailed({ accountId });
+
+              if (typeof player === 'undefined') return;
+
               const evokePreference = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
               const { position, rotation } = spawnFrom(player, spawn.from, evokePreference, spawn.distance);
 

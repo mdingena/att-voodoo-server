@@ -10,8 +10,11 @@ export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs
   const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
   const player = await voodoo.getPlayerDetailed({ accountId });
+
+  if (typeof player === 'undefined') return;
+
   const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
-  const rightHand = spawnFrom(player, 'mainHand', dexterity, 0.3);
+  const rightHand = spawnFrom(player, 'mainHand', dexterity, 0.5);
 
   if (attributes.burst > 1) voodoo.command({ accountId, command: `repeat ${attributes.burst} 0.2` });
 
@@ -31,7 +34,7 @@ export const frostBolt: SpellFunction = async (voodoo, accountId, upgradeConfigs
   });
 
   if (attributes.ambidextrous === 2) {
-    const leftHand = spawnFrom(player, 'offHand', dexterity, 0.3);
+    const leftHand = spawnFrom(player, 'offHand', dexterity, 0.5);
 
     if (attributes.burst > 1) voodoo.command({ accountId, command: `repeat ${attributes.burst} 0.2` });
 

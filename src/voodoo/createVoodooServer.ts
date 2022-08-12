@@ -13,7 +13,8 @@ import {
   StudyFeedback,
   SpellpageIncantation,
   EvokeHandedness,
-  EvokeAngle
+  EvokeAngle,
+  BloodConduits
 } from './spellbook';
 import { db } from '../db';
 import {
@@ -24,6 +25,7 @@ import {
   upsertPreparedSpells,
   upsertUpgrade
 } from '../db/sql';
+import { Vector3Tuple } from 'three';
 
 type Config = {
   CONDUIT_DISTANCE: number;
@@ -60,6 +62,8 @@ type Players = {
     dexterity: Dexterity;
     incantations: DockedIncantation[];
     experience: Experience;
+    isCastingHeartfruit: boolean;
+    bloodConduits?: BloodConduits;
   };
 };
 
@@ -136,6 +140,10 @@ interface GetPlayerCheckStatCurrent {
   stat: string;
 }
 
+interface GetPlayerInventory {
+  accountId: number;
+}
+
 type PotentialVectorResponse = string | number[];
 
 export type PlayerDetailed = {
@@ -174,6 +182,30 @@ type PlayerStat = {
   current?: number;
 };
 
+export type SelectFindResponse = { Result: { Name: string; Identifier: number }[] };
+
+type PlayerInventoryResponse = {
+  Result?: PlayerInventory[];
+};
+
+type InventoryItem = {
+  Position: Vector3Tuple;
+  Rotation: Vector3Tuple;
+  Name: string;
+  Identifier: number;
+  RootIdentifier: number;
+  PrefabHash: number;
+  ChunkingParent: number;
+};
+
+type PlayerInventory = {
+  LeftHand?: InventoryItem;
+  RightHand?: InventoryItem;
+  Belt: [InventoryItem | null, InventoryItem | null, InventoryItem | null, InventoryItem | null];
+  Back: [InventoryItem | null];
+  All: InventoryItem[];
+};
+
 interface GetExperience {
   accountId: number;
   serverId: number;
@@ -197,9 +229,27 @@ interface AddUpgrade {
   upgrade: string;
 }
 
+interface GetDexterity {
+  accountId: number;
+}
+
+interface ParseDexterity {
+  dexterity: Dexterity;
+}
+
 interface SetDexterity {
   accountId: number;
   dexterity: Dexterity;
+}
+
+interface SetCastingHeartfruit {
+  accountId: number;
+  isCastingHeartfruit: boolean;
+}
+
+interface SetBloodConduits {
+  accountId: number;
+  bloodConduits: BloodConduits | undefined;
 }
 
 interface AddIncantation {
@@ -267,15 +317,20 @@ export type VoodooServer = {
   getPlayerCheckStat: ({ accountId, stat }: GetPlayerCheckStat) => Promise<PlayerStat>;
   getPlayerCheckStatBase: ({ accountId, stat }: GetPlayerCheckStatBase) => Promise<number | undefined>;
   getPlayerCheckStatCurrent: ({ accountId, stat }: GetPlayerCheckStatCurrent) => Promise<number | undefined>;
+  getPlayerInventory: ({ accountId }: GetPlayerInventory) => Promise<PlayerInventory | undefined>;
   getExperience: ({ accountId, serverId }: GetExperience) => Promise<Experience>;
   addExperience: ({ accountId, school, amount }: AddExperience) => Promise<Experience>;
   getSpellUpgrades: ({ accountId, spell }: GetSpellUpgrades) => { [key: string]: number };
   addUpgrade: ({ accountId, school, spell, upgrade }: AddUpgrade) => Promise<false | Experience>;
+  getDexterity: ({ accountId }: GetDexterity) => Dexterity;
+  parseDexterity: ({ dexterity }: ParseDexterity) => [EvokeHandedness, EvokeAngle];
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
+  setCastingHeartfruit: ({ accountId, isCastingHeartfruit }: SetCastingHeartfruit) => void;
+  setBloodConduits: ({ accountId, bloodConduits }: SetBloodConduits) => void;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
   returnMaterials: ({ accountId }: ReturnMaterials) => void;
-  command: ({ accountId, command }: Command) => Promise<any>;
+  command: <T = void>({ accountId, command }: Command) => Promise<T | undefined>;
   prepareSpell: ({ accountId, incantations, spell }: PrepareSpell) => Promise<PreparedSpells>;
   track: ({ accountId, serverId, category, action, value }: Track) => void;
 };
@@ -283,7 +338,7 @@ export type VoodooServer = {
 export const createVoodooServer = (): VoodooServer => ({
   config: {
     CONDUIT_DISTANCE: 10,
-    CONDUIT_PREFABS: /^Green_Crystal_cluster_03.*|^Puzzle Orb 1.*/i,
+    CONDUIT_PREFABS: /^Green_Crystal_cluster_03.*/i,
     PREPARED_SPELLS_CONFIG: {
       isStepFunction: true,
       min: 10,
@@ -331,7 +386,8 @@ export const createVoodooServer = (): VoodooServer => ({
       serverConnection,
       dexterity: user.dexterity,
       incantations: [],
-      experience
+      experience,
+      isCastingHeartfruit: false
     };
 
     this.players = { ...this.players, [accountId]: newPlayer };
@@ -361,7 +417,7 @@ export const createVoodooServer = (): VoodooServer => ({
       return console.error(`Attempted to remove player ${accountId} but no such player found.`);
     }
 
-    const { name, serverId, serverName, isVoodooClient } = this.players[accountId];
+    const { name, serverId, serverName, isVoodooClient, bloodConduits } = this.players[accountId];
 
     if (isVoodooClient) {
       this.track({
@@ -370,6 +426,18 @@ export const createVoodooServer = (): VoodooServer => ({
         category: TrackCategory.Players,
         action: TrackAction.PlayerRemoved
       });
+    }
+
+    if (typeof bloodConduits !== 'undefined') {
+      try {
+        Promise.all(
+          Object.values(bloodConduits).map(({ id }) => {
+            this.command({ accountId, command: `wacky destroy ${id}` });
+          })
+        );
+      } catch (error) {
+        console.error(`Can't remove blood conduits on closed connection for server ${serverId} (${serverName}).`);
+      }
     }
 
     delete this.players[accountId];
@@ -389,10 +457,10 @@ export const createVoodooServer = (): VoodooServer => ({
 
   getPlayerDetailed: async function ({ accountId }) {
     try {
-      const { Result: player }: PlayerDetailedResponse = await this.command({
+      const { Result: player } = (await this.command({
         accountId,
         command: `player detailed ${accountId}`
-      });
+      })) as PlayerDetailedResponse;
 
       return player;
     } catch (error) {
@@ -402,10 +470,10 @@ export const createVoodooServer = (): VoodooServer => ({
 
   getPlayerCheckStat: async function ({ accountId, stat }) {
     try {
-      const checkStatResponse: PlayerCheckStatResponse = await this.command({
+      const checkStatResponse = (await this.command({
         accountId,
         command: `player check-stat ${accountId} ${stat}`
-      });
+      })) as PlayerCheckStatResponse;
 
       return {
         base: checkStatResponse.Result?.Base,
@@ -429,6 +497,19 @@ export const createVoodooServer = (): VoodooServer => ({
     const playerStat = await this.getPlayerCheckStat({ accountId, stat });
 
     return playerStat.current;
+  },
+
+  getPlayerInventory: async function ({ accountId }) {
+    try {
+      const playerInventoryResponse = (await this.command({
+        accountId,
+        command: `player inventory ${accountId}`
+      })) as PlayerInventoryResponse;
+
+      return playerInventoryResponse.Result?.[0];
+    } catch (error) {
+      return;
+    }
   },
 
   getExperience: async function ({ accountId, serverId }) {
@@ -526,12 +607,40 @@ export const createVoodooServer = (): VoodooServer => ({
     return newExperience;
   },
 
+  getDexterity: function ({ accountId }) {
+    const { dexterity } = this.players[accountId];
+
+    return dexterity as Dexterity;
+  },
+
+  parseDexterity: function ({ dexterity }) {
+    return dexterity.split('/') as [EvokeHandedness, EvokeAngle];
+  },
+
   setDexterity: function ({ accountId, dexterity }) {
     const { name, serverId, serverName } = this.players[accountId];
 
     this.players = { ...this.players, [accountId]: { ...this.players[accountId], dexterity } };
 
     console.log(`[${serverName ?? serverId} | ${name}] changed dexterity to ${dexterity}`);
+  },
+
+  setCastingHeartfruit: function ({ accountId, isCastingHeartfruit }) {
+    const player = this.players[accountId];
+
+    this.players = {
+      ...this.players,
+      [accountId]: { ...player, isCastingHeartfruit }
+    };
+  },
+
+  setBloodConduits: function ({ accountId, bloodConduits }) {
+    const player = this.players[accountId];
+
+    this.players = {
+      ...this.players,
+      [accountId]: { ...player, bloodConduits }
+    };
   },
 
   addIncantation: function ({ accountId, incantation }) {
@@ -577,6 +686,9 @@ export const createVoodooServer = (): VoodooServer => ({
     if (!player) return;
 
     const playerDetailed = await this.getPlayerDetailed({ accountId });
+
+    if (typeof playerDetailed === 'undefined') return;
+
     const evokePreference = player.dexterity.split('/') as [EvokeHandedness, EvokeAngle];
     const { position, rotation } = spawnFrom(playerDetailed, 'eyes', evokePreference, 1);
 
@@ -607,7 +719,7 @@ export const createVoodooServer = (): VoodooServer => ({
     this.clearIncantations({ accountId });
   },
 
-  command: async function ({ accountId, command }) {
+  command: async function <T = void>({ accountId, command }: Command) {
     const player = this.players[accountId];
 
     if (!player) throw Error('Player not found');
@@ -619,7 +731,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
       // console.log(`[${player.serverName ?? player.serverId} | ${player.name}] ${command}`);
 
-      return result;
+      return result as T;
     } catch (error) {
       console.error((error as Error).message);
     }

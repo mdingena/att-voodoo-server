@@ -28,6 +28,14 @@ export const deleteIncantations =
       if (voodoo.players[accountId].incantations[0]?.materialSpellComponent === 'hilted apparatus') {
         const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
         const player = await voodoo.getPlayerDetailed({ accountId });
+
+        if (typeof player === 'undefined') {
+          return clientResponse.status(404).json({
+            ok: false,
+            error: 'Player not found'
+          });
+        }
+
         const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
         const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 

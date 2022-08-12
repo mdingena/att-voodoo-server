@@ -480,6 +480,12 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'soulbond';
 
     /**
+     * BLOOD MAGIC
+     */
+    case Prefab.Heart_Receptacle.hash:
+      return 'heartfruit';
+
+    /**
      * UNRECOGNISED
      */
     default:
