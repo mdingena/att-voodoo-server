@@ -9,5 +9,5 @@ export const destroyBloodConduits = async (voodoo: VoodooServer, accountId: numb
     voodoo.command({ accountId, command: `wacky destroy ${id}` });
   }
 
-  voodoo.setBloodConduits({ accountId, bloodConduits: undefined });
+  voodoo.setBloodConduits({ accountId, bloodConduits: undefined, heartfruit: undefined });
 };

@@ -485,6 +485,12 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
     case Prefab.Heart_Receptacle.hash:
       return 'heartfruit';
 
+    case Prefab.Puzzle_Orb_1.hash:
+      return 'active blood conduit';
+
+    case Prefab.Puzzle_Orb_2.hash:
+      return 'inactive blood conduit';
+
     /**
      * UNRECOGNISED
      */

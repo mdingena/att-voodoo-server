@@ -4,7 +4,7 @@ import { selectSession } from '../../db/sql';
 import { VoodooServer, parsePrefab, destroyBloodConduits, spawnBloodConduits } from '../../voodoo';
 import { decodeString } from 'att-string-transcoder';
 
-export const getBloodMagic =
+export const getBloodIncantation =
   (voodoo: VoodooServer): RequestHandler =>
   async (clientRequest, clientResponse) => {
     const auth = clientRequest.headers.authorization ?? '';

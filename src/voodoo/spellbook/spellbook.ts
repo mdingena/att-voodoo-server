@@ -67,6 +67,10 @@ export const spellbook: Spellbook = {
             ...pages[spellKey],
             key: spellKey,
             xp: (voodoo, accountId) => {
+              if (school === 'sanguinem magicae') {
+                return Promise.resolve(voodoo.players[accountId].experience);
+              }
+
               const amount = xpGain(incantations.length);
               return voodoo.addExperience({ accountId, school, amount });
             },

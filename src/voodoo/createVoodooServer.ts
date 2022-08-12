@@ -14,7 +14,9 @@ import {
   SpellpageIncantation,
   EvokeHandedness,
   EvokeAngle,
-  BloodConduits
+  BloodConduits,
+  destroyBloodConduits,
+  spawnBloodConduits
 } from './spellbook';
 import { db } from '../db';
 import {
@@ -64,6 +66,7 @@ type Players = {
     experience: Experience;
     isCastingHeartfruit: boolean;
     bloodConduits?: BloodConduits;
+    heartfruit?: PrefabData;
   };
 };
 
@@ -86,6 +89,7 @@ export type Experience = {
 
 type PreparedSpell = {
   name: string;
+  school: string;
   verbalTrigger: string;
   incantations: SpellpageIncantation[];
   charges: number;
@@ -250,6 +254,12 @@ interface SetCastingHeartfruit {
 interface SetBloodConduits {
   accountId: number;
   bloodConduits: BloodConduits | undefined;
+  heartfruit: PrefabData | undefined;
+}
+
+interface ActivateBloodConduit {
+  accountId: number;
+  conduitId: number;
 }
 
 interface AddIncantation {
@@ -326,7 +336,8 @@ export type VoodooServer = {
   parseDexterity: ({ dexterity }: ParseDexterity) => [EvokeHandedness, EvokeAngle];
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   setCastingHeartfruit: ({ accountId, isCastingHeartfruit }: SetCastingHeartfruit) => void;
-  setBloodConduits: ({ accountId, bloodConduits }: SetBloodConduits) => void;
+  setBloodConduits: ({ accountId, bloodConduits, heartfruit }: SetBloodConduits) => void;
+  activateBloodConduit: ({ accountId, conduitId }: ActivateBloodConduit) => Promise<string | undefined>;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
   returnMaterials: ({ accountId }: ReturnMaterials) => void;
@@ -634,13 +645,65 @@ export const createVoodooServer = (): VoodooServer => ({
     };
   },
 
-  setBloodConduits: function ({ accountId, bloodConduits }) {
+  setBloodConduits: function ({ accountId, bloodConduits, heartfruit }) {
     const player = this.players[accountId];
 
     this.players = {
       ...this.players,
-      [accountId]: { ...player, bloodConduits }
+      [accountId]: { ...player, bloodConduits, heartfruit }
     };
+  },
+
+  activateBloodConduit: async function ({ accountId, conduitId }) {
+    const player = this.players[accountId];
+
+    if (
+      typeof player.heartfruit === 'undefined' ||
+      typeof player.bloodConduits === 'undefined' ||
+      typeof player.bloodConduits[conduitId] === 'undefined'
+    ) {
+      return;
+    }
+
+    const conduits = {
+      ...player.bloodConduits,
+      [conduitId]: {
+        ...player.bloodConduits[conduitId],
+        isActivated: true
+      }
+    };
+
+    const key = player.bloodConduits[conduitId].key;
+    const heartfruit = player.heartfruit;
+
+    const activated = Object.values(conduits)
+      .filter(({ isActivated }) => isActivated)
+      .map(({ key }) => {
+        switch (key) {
+          case 'Zephyrus':
+            return 0;
+          case 'Corus':
+            return 1;
+          case 'Caecias':
+            return 2;
+          case 'Subsolanus':
+            return 3;
+          case 'Vulturnus':
+            return 4;
+          case 'Africus':
+            return 5;
+          default:
+            return -1;
+        }
+      });
+
+    await destroyBloodConduits(this, accountId);
+
+    if (activated.length < 4) {
+      await spawnBloodConduits(this, accountId, heartfruit, activated);
+    }
+
+    return key;
   },
 
   addIncantation: function ({ accountId, incantation }) {
@@ -755,6 +818,7 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const preparedSpell: PreparedSpell = {
       name: spell.name,
+      school: spell.school,
       verbalTrigger: spell.verbalTrigger ?? '',
       incantations,
       charges

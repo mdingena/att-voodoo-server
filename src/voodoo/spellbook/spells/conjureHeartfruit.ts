@@ -2,11 +2,11 @@ import { SpellFunction } from '../spellbook';
 import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
 import { Prefab } from 'att-string-transcoder';
 import { spawn } from '../spawn';
+import { HEART } from 'att-voodoo-book-of-blood';
 
-const ONE_HEART = 0.25;
-const MAX_HEALTH_REDUCTION = ONE_HEART;
-const CURRENT_HEALTH_REDUCTION = 3 * ONE_HEART;
-const MINIMUM_MAX_HEALTH = 4 * ONE_HEART;
+const MAX_HEALTH_REDUCTION = HEART;
+const CURRENT_HEALTH_REDUCTION = 3 * HEART;
+const MINIMUM_MAX_HEALTH = 4 * HEART;
 
 export const conjureHeartfruit: SpellFunction = async (voodoo, accountId, upgradeConfigs) => {
   const [health, maxHealth] = await Promise.all([

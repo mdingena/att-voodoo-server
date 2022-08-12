@@ -17,7 +17,7 @@ type SpawnResult = {
   Name: string;
 };
 
-const HEX_RADIUS = 0.25;
+const HEX_RADIUS = 0.3;
 
 function hexCorner(i: number) {
   var angleDeg = 60 * i;
@@ -37,18 +37,20 @@ export const spawnBloodConduits = async (
 ) => {
   if (typeof heartfruit.prefabObject.position === 'undefined') return;
 
-  const player = await voodoo.getPlayerDetailed({ accountId });
+  const [player, inventory] = await Promise.all([
+    voodoo.getPlayerDetailed({ accountId }),
+    voodoo.getPlayerInventory({ accountId })
+  ]);
 
-  if (typeof player === 'undefined') return;
+  if (typeof player === 'undefined' || typeof inventory === 'undefined') return;
 
   const playerHeadPosition = parseVector(player.HeadPosition);
-  const playerHeadForward = parseVector(player.HeadForward);
   const heartfruitPosition = parseVector(Object.values(heartfruit.prefabObject.position));
 
   const conduitOrigin = new Object3D();
-  conduitOrigin.position.add(heartfruitPosition).setY(playerHeadPosition.y);
+  conduitOrigin.position.add(heartfruitPosition).setY(heartfruitPosition.y + 1);
 
-  const conduitFacing = new Vector3().add(conduitOrigin.position).add(playerHeadForward);
+  const conduitFacing = new Vector3().add(playerHeadPosition);
   conduitOrigin.lookAt(conduitFacing);
 
   const conduitStrings: string[] = [];
@@ -67,7 +69,7 @@ export const spawnBloodConduits = async (
         prefabObject: {
           hash: activated.includes(i) ? Prefab.Puzzle_Orb_1.hash : Prefab.Puzzle_Orb_2.hash,
           position: { x, y, z },
-          scale: 0.1
+          scale: 0.5
         },
         components: {
           NetworkRigidbody: {
@@ -80,59 +82,66 @@ export const spawnBloodConduits = async (
     );
   }
 
-  const [zero, one, two, three, four, five] = await Promise.all(
-    conduitStrings.map(string => voodoo.command<SpawnResult>({ accountId, command: `spawn string-raw ${string}` }))
+  const [zephyrus, corus, caecias, subsolanus, vulturnus, africus] = await Promise.all(
+    conduitStrings.map(async string => {
+      const response = await voodoo.command<{ Result?: SpawnResult }>({
+        accountId,
+        command: `spawn string-raw ${string}`
+      });
+
+      return response?.Result?.Identifier;
+    })
   );
 
   if (
-    typeof zero === 'undefined' ||
-    typeof one === 'undefined' ||
-    typeof two === 'undefined' ||
-    typeof three === 'undefined' ||
-    typeof four === 'undefined' ||
-    typeof five === 'undefined'
+    typeof zephyrus === 'undefined' ||
+    typeof corus === 'undefined' ||
+    typeof caecias === 'undefined' ||
+    typeof subsolanus === 'undefined' ||
+    typeof vulturnus === 'undefined' ||
+    typeof africus === 'undefined'
   ) {
     console.error("Error: One or more blood conduits didn't spawn.");
 
-    for (const result of [zero, one, two, three, four, five]) {
-      typeof result !== 'undefined' && voodoo.command({ accountId, command: `wacky destroy ${result.Identifier}` });
+    for (const id of [zephyrus, corus, caecias, subsolanus, vulturnus, africus]) {
+      typeof id !== 'undefined' && voodoo.command({ accountId, command: `wacky destroy ${id}` });
     }
 
     return;
   }
 
   const conduits: BloodConduits = {
-    [zero.Identifier]: {
-      id: zero.Identifier,
-      key: 'zero',
+    [zephyrus]: {
+      id: zephyrus,
+      key: 'Zephyrus',
       isActivated: activated.includes(0)
     },
-    [one.Identifier]: {
-      id: one.Identifier,
-      key: 'one',
+    [corus]: {
+      id: corus,
+      key: 'Corus',
       isActivated: activated.includes(1)
     },
-    [two.Identifier]: {
-      id: two.Identifier,
-      key: 'two',
+    [caecias]: {
+      id: caecias,
+      key: 'Caecias',
       isActivated: activated.includes(2)
     },
-    [three.Identifier]: {
-      id: three.Identifier,
-      key: 'three',
+    [subsolanus]: {
+      id: subsolanus,
+      key: 'Subsolanus',
       isActivated: activated.includes(3)
     },
-    [four.Identifier]: {
-      id: four.Identifier,
-      key: 'four',
+    [vulturnus]: {
+      id: vulturnus,
+      key: 'Vulturnus',
       isActivated: activated.includes(4)
     },
-    [five.Identifier]: {
-      id: five.Identifier,
-      key: 'five',
+    [africus]: {
+      id: africus,
+      key: 'Africus',
       isActivated: activated.includes(5)
     }
   };
 
-  voodoo.setBloodConduits({ accountId, bloodConduits: conduits });
+  voodoo.setBloodConduits({ accountId, bloodConduits: conduits, heartfruit });
 };
