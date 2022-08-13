@@ -66,6 +66,7 @@ type Players = {
     experience: Experience;
     isCastingHeartfruit: boolean;
     bloodConduits?: BloodConduits;
+    bloodConduitsTimeout?: NodeJS.Timeout;
     heartfruit?: PrefabData;
   };
 };
@@ -254,6 +255,7 @@ interface SetCastingHeartfruit {
 interface SetBloodConduits {
   accountId: number;
   bloodConduits: BloodConduits | undefined;
+  bloodConduitsTimeout: NodeJS.Timeout | undefined;
   heartfruit: PrefabData | undefined;
 }
 
@@ -336,7 +338,7 @@ export type VoodooServer = {
   parseDexterity: ({ dexterity }: ParseDexterity) => [EvokeHandedness, EvokeAngle];
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   setCastingHeartfruit: ({ accountId, isCastingHeartfruit }: SetCastingHeartfruit) => void;
-  setBloodConduits: ({ accountId, bloodConduits, heartfruit }: SetBloodConduits) => void;
+  setBloodConduits: ({ accountId, bloodConduits, bloodConduitsTimeout, heartfruit }: SetBloodConduits) => void;
   activateBloodConduit: ({ accountId, conduitId }: ActivateBloodConduit) => Promise<string | undefined>;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
   clearIncantations: ({ accountId }: ClearIncantations) => SpellpageIncantation[];
@@ -645,12 +647,17 @@ export const createVoodooServer = (): VoodooServer => ({
     };
   },
 
-  setBloodConduits: function ({ accountId, bloodConduits, heartfruit }) {
+  setBloodConduits: function ({ accountId, bloodConduits, bloodConduitsTimeout, heartfruit }) {
     const player = this.players[accountId];
 
     this.players = {
       ...this.players,
-      [accountId]: { ...player, bloodConduits, heartfruit }
+      [accountId]: {
+        ...player,
+        bloodConduits,
+        bloodConduitsTimeout,
+        heartfruit
+      }
     };
   },
 

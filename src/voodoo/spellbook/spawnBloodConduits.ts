@@ -2,6 +2,7 @@ import { createString, Prefab, PrefabData } from 'att-string-transcoder';
 import type { VoodooServer } from '../createVoodooServer';
 import { Object3D, Vector3 } from 'three';
 import { parseVector } from './utils';
+import { destroyBloodConduits } from './destroyBloodConduits';
 
 export type BloodConduits = Record<
   number,
@@ -55,6 +56,7 @@ export const spawnBloodConduits = async (
 
   const conduitStrings: string[] = [];
 
+  /* Create Blood Conduits strings. */
   for (let i = 0; i < 6; ++i) {
     const conduit = conduitOrigin.clone();
     const offset = hexCorner(i);
@@ -82,6 +84,7 @@ export const spawnBloodConduits = async (
     );
   }
 
+  /* Spawn Blood Conduits. */
   const [zephyrus, corus, caecias, subsolanus, vulturnus, africus] = await Promise.all(
     conduitStrings.map(async string => {
       const response = await voodoo.command<{ Result?: SpawnResult }>({
@@ -93,6 +96,7 @@ export const spawnBloodConduits = async (
     })
   );
 
+  /* Abort if spawning failed. */
   if (
     typeof zephyrus === 'undefined' ||
     typeof corus === 'undefined' ||
@@ -110,7 +114,7 @@ export const spawnBloodConduits = async (
     return;
   }
 
-  const conduits: BloodConduits = {
+  const bloodConduits: BloodConduits = {
     [zephyrus]: {
       id: zephyrus,
       key: 'Zephyrus',
@@ -143,5 +147,9 @@ export const spawnBloodConduits = async (
     }
   };
 
-  voodoo.setBloodConduits({ accountId, bloodConduits: conduits, heartfruit });
+  const bloodConduitsTimeout = setTimeout(() => {
+    destroyBloodConduits(voodoo, accountId);
+  }, 10000);
+
+  voodoo.setBloodConduits({ accountId, bloodConduits, bloodConduitsTimeout, heartfruit });
 };
