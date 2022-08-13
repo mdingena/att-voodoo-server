@@ -145,7 +145,7 @@ export const getSeal =
             experience: voodoo.players[accountId].experience,
             incantations,
             preparedSpells,
-            conjureHeartfruit: spell?.key === 'conjureHeartfruit'
+            isCastingHeartfruit: spell?.key === 'conjureHeartfruit'
           }
         });
       } else {
@@ -154,7 +154,7 @@ export const getSeal =
           result: {
             experience: voodoo.players[accountId].experience,
             incantations,
-            conjureHeartfruit: spell?.key === 'conjureHeartfruit'
+            isCastingHeartfruit: spell?.key === 'conjureHeartfruit'
           }
         });
       }
