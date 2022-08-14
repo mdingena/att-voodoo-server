@@ -20,7 +20,7 @@ if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID) {
   const voodoo = createVoodooServer();
 
   /* Enable graceful shutdown. */
-  process.on('SIGTERM', gracefulShutdown(voodoo));
+  process.on('SIGTERM', await gracefulShutdown(voodoo));
 
   await createBot(voodoo);
   createApi(voodoo);
