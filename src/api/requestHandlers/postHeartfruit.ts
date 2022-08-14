@@ -1,17 +1,8 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
-import {
-  VoodooServer,
-  parsePrefab,
-  spawnBloodConduits,
-  HEARTFRUIT_SECRET,
-  spawnFrom,
-  EvokeHandedness,
-  EvokeAngle,
-  spawn
-} from '../../voodoo';
-import { decodeString, Prefab } from 'att-string-transcoder';
+import { VoodooServer, HEARTFRUIT_SECRET, spawnFrom, EvokeHandedness, EvokeAngle, spawn } from '../../voodoo';
+import { Prefab } from 'att-string-transcoder';
 import { Object3D, Vector3 } from 'three';
 
 export const postHeartfruit =
