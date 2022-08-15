@@ -10,6 +10,7 @@ export { getSession } from './getSession';
 export { getSpellbook } from './getSpellbook';
 export { postBloodIncantation } from './postBloodIncantation';
 export { postIncantation } from './postIncantation';
+export { postHeartfruit } from './postHeartfruit';
 export { postSettings } from './postSettings';
 export { postTrigger } from './postTrigger';
 export { postUpgrade } from './postUpgrade';

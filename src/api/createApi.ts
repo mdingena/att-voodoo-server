@@ -11,6 +11,7 @@ import {
   postIncantation,
   deleteBloodIncantations,
   deleteIncantations,
+  postHeartfruit,
   getSeal,
   postTrigger,
   getPlayer,
@@ -37,6 +38,7 @@ export const createApi = (voodoo: VoodooServer) => {
   api.get('/blood-incantation', getBloodIncantation(voodoo));
   api.post('/blood-incantation', postBloodIncantation(voodoo));
   api.delete('/blood-incantation', deleteBloodIncantations(voodoo));
+  api.post('/heartfruit', postHeartfruit(voodoo));
   api.get('/seal', getSeal(voodoo));
   api.post('/trigger', postTrigger(voodoo));
   api.get('/player', getPlayer(voodoo));
