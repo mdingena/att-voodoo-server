@@ -74,19 +74,21 @@ export const getSeal =
       let preparedSpells: PreparedSpells = [];
 
       if (spell) {
-        if (spell.requiresPreparation) {
-          /* Store the spell with a trigger. */
-          preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
-        } else {
-          /* Cast the spell immediately. */
-          await spell.cast(voodoo, accountId);
+        if (spell.key !== 'conjureHeartfruit') {
+          if (spell.requiresPreparation) {
+            /* Store the spell with a trigger. */
+            preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
+          } else {
+            /* Cast the spell immediately. */
+            await spell.cast(voodoo, accountId);
+          }
+
+          /* Spawn any "side-effect prefabs", such as returning an empty flask for Abjuration spells. */
+          await spell.spawn(voodoo, accountId);
+
+          /* Award XP. */
+          await spell.xp(voodoo, accountId);
         }
-
-        /* Spawn any "side-effect prefabs", such as returning an empty flask for Abjuration spells. */
-        await spell.spawn(voodoo, accountId);
-
-        /* Award XP. */
-        await spell.xp(voodoo, accountId);
       } else {
         if (incantations[0]?.[1] === 'hilted apparatus') {
           const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
