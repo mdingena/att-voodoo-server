@@ -17,6 +17,7 @@ export type Spell = {
   cast: (voodoo: VoodooServer, accountId: number) => Promise<void>;
   spawn: (voodoo: VoodooServer, accountId: number) => Promise<void>;
   requiresPreparation: boolean;
+  preparationHeartCost?: [number, number];
   verbalTrigger?: string;
   upgrades: Upgrades;
 };
