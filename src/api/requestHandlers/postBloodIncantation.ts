@@ -135,8 +135,10 @@ export const postBloodIncantation =
           /* Spawn any "side-effect prefabs", such as returning an empty flask for Abjuration spells. */
           await spell.spawn(voodoo, accountId);
 
-          /* Award XP. */
-          await spell.xp(voodoo, accountId);
+          /* Pay casting cost. */
+          if (typeof spell.preparationHeartCost !== 'undefined') {
+            reduceHealth(voodoo, accountId, spell.preparationHeartCost);
+          }
         }
 
         /* Clear player's incantations. */
