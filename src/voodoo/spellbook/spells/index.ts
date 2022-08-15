@@ -36,6 +36,7 @@ export { aptitude } from './aptitude';
 export { conjureCrystalLance } from './conjureCrystalLance';
 export { conjureCrystalPick } from './conjureCrystalPick';
 export { conjureCrystalSword } from './conjureCrystalSword';
+export { conjureHeartfruit } from './conjureHeartfruit';
 export { conjureWater } from './conjureWater';
 export { craftFlask } from './craftFlask';
 export { craftSoulbond } from './craftSoulbond';
