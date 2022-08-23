@@ -29,42 +29,44 @@ export const postIncantation =
 
       const accountId = session.rows[0].account_id;
 
-      /* Verify player is near a Spellcrafting Conduit. */
-      const selectFindResponse = await voodoo.command<SelectFindResponse>({
-        accountId,
-        command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
-      });
-
-      if (typeof selectFindResponse === 'undefined') {
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit'
-        });
-      }
-
-      const nearbyPrefabs = selectFindResponse.Result;
-
-      if ((nearbyPrefabs ?? []).length === 0) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit',
-          nearbyPrefabs
-        });
-      }
-
-      const nearConduit = nearbyPrefabs.find(({ Name }) => voodoo.config.CONDUIT_PREFABS.test(Name));
-
-      if (!nearConduit) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({ ok: false, error: 'Not near a Spellcrafting Conduit' });
-      }
-
       /* Get spell components. */
       const [verbalSpellComponent, oneOfMaterialSpellComponents, studiedSpellKey]: [string, string[], string | null] =
         clientRequest.body;
+
+      if (verbalSpellComponent !== process.env.CONJURE_HEARTFRUIT_INCANTATION) {
+        /* Verify player is near a Spellcrafting Conduit. */
+        const selectFindResponse = await voodoo.command<SelectFindResponse>({
+          accountId,
+          command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
+        });
+
+        if (typeof selectFindResponse === 'undefined') {
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit'
+          });
+        }
+
+        const nearbyPrefabs = selectFindResponse.Result;
+
+        if ((nearbyPrefabs ?? []).length === 0) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit',
+            nearbyPrefabs
+          });
+        }
+
+        const nearConduit = nearbyPrefabs.find(({ Name }) => voodoo.config.CONDUIT_PREFABS.test(Name));
+
+        if (!nearConduit) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({ ok: false, error: 'Not near a Spellcrafting Conduit' });
+        }
+      }
 
       /* Get material spell component. */
       const beltIndex = 3 - voodoo.players[accountId].incantations.length;

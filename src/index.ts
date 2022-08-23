@@ -11,7 +11,7 @@ if (!!process.env.SENTRY_DSN) {
   });
 }
 
-if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID) {
+if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID || !process.env.CONJURE_HEARTFRUIT_INCANTATION) {
   throw new Error('Missing required environment variables.');
 }
 
