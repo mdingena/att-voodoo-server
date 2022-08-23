@@ -26,39 +26,6 @@ export const getSeal =
 
       const accountId = session.rows[0].account_id;
 
-      /* Verify player is near a Spellcrafting Conduit. */
-      const selectFindResponse = await voodoo.command<{ Result: { Name: string; Identifier: number }[] }>({
-        accountId,
-        command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
-      });
-
-      if (typeof selectFindResponse === 'undefined') {
-        return clientResponse.status(500).json({ ok: false, error: 'No prefabs found' });
-      }
-
-      const { Result: nearbyPrefabs } = selectFindResponse;
-
-      if ((nearbyPrefabs ?? []).length === 0) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit',
-          nearbyPrefabs
-        });
-      }
-
-      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => voodoo.config.CONDUIT_PREFABS.test(Name));
-
-      if (!nearConduit) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit'
-        });
-      }
-
       /* Get the player's current incantations. */
       const incantations = voodoo.players[accountId].incantations.map<SpellpageIncantation>(
         ({ verbalSpellComponent, materialSpellComponent, studyFeedback }) => [
@@ -67,6 +34,43 @@ export const getSeal =
           studyFeedback
         ]
       );
+
+      if (incantations.length !== 1 || incantations[0][0] !== process.env.CONJURE_HEARTFRUIT_INCANTATION) {
+        /* Verify player is near a Spellcrafting Conduit. */
+        const selectFindResponse = await voodoo.command<{ Result: { Name: string; Identifier: number }[] }>({
+          accountId,
+          command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
+        });
+
+        if (typeof selectFindResponse === 'undefined') {
+          return clientResponse.status(500).json({ ok: false, error: 'No prefabs found' });
+        }
+
+        const { Result: nearbyPrefabs } = selectFindResponse;
+
+        if ((nearbyPrefabs ?? []).length === 0) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit',
+            nearbyPrefabs
+          });
+        }
+
+        const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) =>
+          voodoo.config.CONDUIT_PREFABS.test(Name)
+        );
+
+        if (!nearConduit) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit'
+          });
+        }
+      }
 
       /* Search for spell in spellbook matching player's incantations. */
       const spell = voodoo.spellbook.get(incantations);
