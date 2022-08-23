@@ -4,3 +4,5 @@ export { spellbook, Spellbook, Spell, SpellpageIncantation, StudyFeedback } from
 export { spawn } from './spawn';
 export { EvokeHandedness, EvokeAngle, spawnFrom } from './spawnFrom';
 export { upgradeAttribute, UpgradeConfig } from './experience';
+export { BloodConduits, spawnBloodConduits } from './spawnBloodConduits';
+export { destroyBloodConduits } from './destroyBloodConduits';

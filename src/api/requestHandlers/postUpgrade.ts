@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { db } from '../../db';
-import { VoodooServer } from '../../voodoo';
+import { SelectFindResponse, VoodooServer } from '../../voodoo';
 import { selectSession } from '../../db/sql';
 
 export const postUpgrade =
@@ -18,10 +18,19 @@ export const postUpgrade =
       const accountId = session.rows[0].account_id;
 
       /* Verify player is near a Spellcrafting Conduit. */
-      const { Result: nearbyPrefabs } = await voodoo.command({
+      const selectFindResponse = await voodoo.command<SelectFindResponse>({
         accountId,
         command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
       });
+
+      if (typeof selectFindResponse === 'undefined') {
+        return clientResponse.status(406).json({
+          ok: false,
+          error: 'Not near a Spellcrafting Conduit'
+        });
+      }
+
+      const nearbyPrefabs = selectFindResponse.Result;
 
       if ((nearbyPrefabs ?? []).length === 0) {
         voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });

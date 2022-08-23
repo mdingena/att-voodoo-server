@@ -48,6 +48,9 @@ export const anamnesis =
     const attributes = getSpellAttributes(upgrades, upgradeConfigs);
 
     const player = await voodoo.getPlayerDetailed({ accountId });
+
+    if (typeof player === 'undefined') return;
+
     const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
     const mainHand = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 

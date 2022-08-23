@@ -1,6 +1,6 @@
 {
   "name": "att-voodoo-server",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "",
   "main": "build/index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "@types/heroku-client": "^3.1.0",
     "att-client": "^0.4.4",
     "att-string-transcoder": "^2.4.3",
+    "att-voodoo-book-of-blood": "github:mdingena/att-voodoo-book-of-blood",
     "att-voodoo-spellbook": "github:mdingena/att-voodoo-spellbook",
     "express": "^4.17.1",
     "nocache": "^3.0.0",

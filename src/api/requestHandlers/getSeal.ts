@@ -26,33 +26,6 @@ export const getSeal =
 
       const accountId = session.rows[0].account_id;
 
-      /* Verify player is near a Spellcrafting Conduit. */
-      const { Result: nearbyPrefabs } = await voodoo.command({
-        accountId,
-        command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
-      });
-
-      if ((nearbyPrefabs ?? []).length === 0) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit',
-          nearbyPrefabs
-        });
-      }
-
-      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => voodoo.config.CONDUIT_PREFABS.test(Name));
-
-      if (!nearConduit) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit'
-        });
-      }
-
       /* Get the player's current incantations. */
       const incantations = voodoo.players[accountId].incantations.map<SpellpageIncantation>(
         ({ verbalSpellComponent, materialSpellComponent, studyFeedback }) => [
@@ -62,29 +35,76 @@ export const getSeal =
         ]
       );
 
+      if (incantations.length !== 1 || incantations[0][0] !== process.env.CONJURE_HEARTFRUIT_INCANTATION) {
+        /* Verify player is near a Spellcrafting Conduit. */
+        const selectFindResponse = await voodoo.command<{ Result: { Name: string; Identifier: number }[] }>({
+          accountId,
+          command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
+        });
+
+        if (typeof selectFindResponse === 'undefined') {
+          return clientResponse.status(500).json({ ok: false, error: 'No prefabs found' });
+        }
+
+        const { Result: nearbyPrefabs } = selectFindResponse;
+
+        if ((nearbyPrefabs ?? []).length === 0) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit',
+            nearbyPrefabs
+          });
+        }
+
+        const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) =>
+          voodoo.config.CONDUIT_PREFABS.test(Name)
+        );
+
+        if (!nearConduit) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit'
+          });
+        }
+      }
+
       /* Search for spell in spellbook matching player's incantations. */
       const spell = voodoo.spellbook.get(incantations);
 
       let preparedSpells: PreparedSpells = [];
 
       if (spell) {
-        if (spell.requiresPreparation) {
-          /* Store the spell with a trigger. */
-          preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
-        } else {
-          /* Cast the spell immediately. */
-          await spell.cast(voodoo, accountId);
+        if (spell.key !== 'conjureHeartfruit') {
+          if (spell.requiresPreparation) {
+            /* Store the spell with a trigger. */
+            preparedSpells = await voodoo.prepareSpell({ accountId, incantations, spell });
+          } else {
+            /* Cast the spell immediately. */
+            await spell.cast(voodoo, accountId);
+          }
+
+          /* Spawn any "side-effect prefabs", such as returning an empty flask for Abjuration spells. */
+          await spell.spawn(voodoo, accountId);
+
+          /* Award XP. */
+          await spell.xp(voodoo, accountId);
         }
-
-        /* Spawn any "side-effect prefabs", such as returning an empty flask for Abjuration spells. */
-        await spell.spawn(voodoo, accountId);
-
-        /* Award XP. */
-        await spell.xp(voodoo, accountId);
       } else {
         if (incantations[0]?.[1] === 'hilted apparatus') {
           const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
           const player = await voodoo.getPlayerDetailed({ accountId });
+
+          if (typeof player === 'undefined') {
+            return clientResponse.status(404).json({
+              ok: false,
+              error: 'Player not found'
+            });
+          }
+
           const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
           const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
@@ -111,6 +131,9 @@ export const getSeal =
         // @todo somehow feedback that there was no spell associated
       }
 
+      /* Set Heartfruit casting state. */
+      voodoo.setCastingHeartfruit({ accountId, isCastingHeartfruit: spell?.key === 'conjureHeartfruit' });
+
       /* Clear player's incantations. */
       const newIncantations = voodoo.clearIncantations({ accountId });
 
@@ -127,7 +150,8 @@ export const getSeal =
           result: {
             experience: voodoo.players[accountId].experience,
             incantations,
-            preparedSpells
+            preparedSpells,
+            isCastingHeartfruit: spell?.key === 'conjureHeartfruit'
           }
         });
       } else {
@@ -135,7 +159,8 @@ export const getSeal =
           ok: true,
           result: {
             experience: voodoo.players[accountId].experience,
-            incantations
+            incantations,
+            isCastingHeartfruit: spell?.key === 'conjureHeartfruit'
           }
         });
       }

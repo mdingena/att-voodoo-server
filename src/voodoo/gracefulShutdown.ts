@@ -1,4 +1,4 @@
-import { VoodooServer } from '.';
+import { destroyBloodConduits, VoodooServer } from '.';
 
 /* Heroku grace period is 30 seconds. */
 let timeLeft = 30;
@@ -35,16 +35,23 @@ const tick = (voodoo: VoodooServer) => {
 /**
  * Gracefully shutdown by messaging players after receiving SIGTERM.
  */
-export const gracefulShutdown = (voodoo: VoodooServer) => () => {
+export const gracefulShutdown = (voodoo: VoodooServer) => async () => {
   console.warn('SIGTERM received, beginning graceful shutdown.');
 
   setInterval(() => tick(voodoo), 970);
   tick(voodoo);
 
-  /* Return all consumed spell materials for unfinished incantations. */
-  for (const key in voodoo.players) {
-    const accountId = Number(key);
+  await Promise.all(
+    Object.keys(voodoo.players).map(async key => {
+      const accountId = Number(key);
 
-    voodoo.returnMaterials({ accountId });
-  }
+      return Promise.all([
+        /* Return all consumed spell materials for unfinished incantations. */
+        voodoo.returnMaterials({ accountId }),
+
+        /* Destroy any spawned Blood Conduits. */
+        destroyBloodConduits(voodoo, accountId)
+      ]);
+    })
+  );
 };

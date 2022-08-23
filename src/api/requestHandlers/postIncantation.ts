@@ -10,7 +10,8 @@ import {
   spawnFrom,
   StudyFeedback,
   EvokeAngle,
-  EvokeHandedness
+  EvokeHandedness,
+  SelectFindResponse
 } from '../../voodoo';
 import { PrefabData, decodeString } from 'att-string-transcoder';
 
@@ -28,43 +29,54 @@ export const postIncantation =
 
       const accountId = session.rows[0].account_id;
 
-      /* Verify player is near a Spellcrafting Conduit. */
-      const { Result: nearbyPrefabs } = await voodoo.command({
-        accountId,
-        command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
-      });
-
-      if ((nearbyPrefabs ?? []).length === 0) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit',
-          nearbyPrefabs
-        });
-      }
-
-      const nearConduit = nearbyPrefabs.find(({ Name }: { Name: string }) => voodoo.config.CONDUIT_PREFABS.test(Name));
-
-      if (!nearConduit) {
-        voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
-
-        return clientResponse.status(406).json({
-          ok: false,
-          error: 'Not near a Spellcrafting Conduit'
-        });
-      }
-
       /* Get spell components. */
       const [verbalSpellComponent, oneOfMaterialSpellComponents, studiedSpellKey]: [string, string[], string | null] =
         clientRequest.body;
 
+      if (verbalSpellComponent !== process.env.CONJURE_HEARTFRUIT_INCANTATION) {
+        /* Verify player is near a Spellcrafting Conduit. */
+        const selectFindResponse = await voodoo.command<SelectFindResponse>({
+          accountId,
+          command: `select find ${accountId} ${voodoo.config.CONDUIT_DISTANCE}`
+        });
+
+        if (typeof selectFindResponse === 'undefined') {
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit'
+          });
+        }
+
+        const nearbyPrefabs = selectFindResponse.Result;
+
+        if ((nearbyPrefabs ?? []).length === 0) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({
+            ok: false,
+            error: 'Not near a Spellcrafting Conduit',
+            nearbyPrefabs
+          });
+        }
+
+        const nearConduit = nearbyPrefabs.find(({ Name }) => voodoo.config.CONDUIT_PREFABS.test(Name));
+
+        if (!nearConduit) {
+          voodoo.command({ accountId, command: `player message ${accountId} "Not near a Spellcrafting Conduit" 2` });
+
+          return clientResponse.status(406).json({ ok: false, error: 'Not near a Spellcrafting Conduit' });
+        }
+      }
+
       /* Get material spell component. */
       const beltIndex = 3 - voodoo.players[accountId].incantations.length;
-      const {
-        Result: [{ Belt: inventory }]
-      } = await voodoo.command({ accountId, command: `player inventory ${accountId}` });
-      const beltItemId: number = inventory[beltIndex]?.Identifier ?? 0;
+      const playerInventory = await voodoo.getPlayerInventory({ accountId });
+
+      if (typeof playerInventory === 'undefined') {
+        return clientResponse.status(404).json({ ok: false, error: 'Inventory not found' });
+      }
+
+      const beltItemId: number = playerInventory.Belt[beltIndex]?.Identifier ?? 0;
 
       if (beltItemId === 0) {
         return clientResponse.json({
@@ -75,10 +87,16 @@ export const postIncantation =
 
       /* Get belt item prefab string. */
       voodoo.command({ accountId, command: `select ${beltItemId}` });
-      const { ResultString: encodedPrefab }: { ResultString: string } = await voodoo.command({
+      const selectTostringResponse = await voodoo.command<{ ResultString: string }>({
         accountId,
         command: 'select tostring'
       });
+
+      if (typeof selectTostringResponse === 'undefined') {
+        return clientResponse.status(404).json({ ok: false, error: 'Save string not found' });
+      }
+
+      const encodedPrefab = selectTostringResponse.ResultString;
 
       /* Decode and parse the prefab string. */
       const decodedString = decodeString(encodedPrefab);
@@ -147,6 +165,11 @@ export const postIncantation =
           if (incantations[0]?.[1] === 'hilted apparatus') {
             const { prefab } = voodoo.players[accountId].incantations[0].decodedString;
             const player = await voodoo.getPlayerDetailed({ accountId });
+
+            if (typeof player === 'undefined') {
+              return clientResponse.status(404).json({ ok: false, error: 'Player not found' });
+            }
+
             const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
             const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 

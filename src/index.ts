@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import { createVoodooServer, gracefulShutdown } from './voodoo';
+import { createVoodooServer, gracefulShutdown, HEARTFRUIT_SECRET } from './voodoo';
 import { createBot } from './bot';
 import { createApi, keepAwake } from './api';
 import { regularlyPurgeSessions } from './db';
@@ -11,7 +11,7 @@ if (!!process.env.SENTRY_DSN) {
   });
 }
 
-if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID) {
+if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID || !process.env.CONJURE_HEARTFRUIT_INCANTATION) {
   throw new Error('Missing required environment variables.');
 }
 
@@ -20,12 +20,24 @@ if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID) {
   const voodoo = createVoodooServer();
 
   /* Enable graceful shutdown. */
-  process.on('SIGTERM', gracefulShutdown(voodoo));
+  process.on('SIGTERM', await gracefulShutdown(voodoo));
 
   await createBot(voodoo);
   createApi(voodoo);
 
   console.log('Voodoo Server is online');
+
+  if (process.env.DISCORD_ARCANUM_VERBUM_WEBHOOK_URL) {
+    try {
+      fetch(process.env.DISCORD_ARCANUM_VERBUM_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: `||${HEARTFRUIT_SECRET.join(' ')}||` })
+      });
+    } catch (error) {
+      console.error((error as Error).message);
+    }
+  }
 
   keepAwake(voodoo);
   regularlyPurgeSessions(voodoo);
