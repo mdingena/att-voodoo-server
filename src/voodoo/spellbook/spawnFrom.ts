@@ -73,7 +73,7 @@ export const spawnFrom = (
   }
 
   const prefab = new Object3D();
-  prefab.lookAt(direction);
+  prefab.lookAt(new Vector3(direction.x * sign, direction.y * sign, direction.z * sign));
 
   return {
     position: {
