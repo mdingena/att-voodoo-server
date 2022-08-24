@@ -91,6 +91,10 @@ export const postBloodIncantation =
       /* Get verbal spell component. */
       const [verbalSpellComponent]: [SanguinemMagicaeWord] = clientRequest.body;
 
+      if (typeof HEART_COST[verbalSpellComponent] === 'undefined') {
+        return clientResponse.status(406).json({ ok: false, error: 'Invalid incantation' });
+      }
+
       /* Pay cost of verbal component. */
       const reducedHealth = reduceHealth(voodoo, accountId, HEART_COST[verbalSpellComponent]);
 

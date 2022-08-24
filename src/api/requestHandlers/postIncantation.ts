@@ -14,6 +14,7 @@ import {
   SelectFindResponse
 } from '../../voodoo';
 import { PrefabData, decodeString } from 'att-string-transcoder';
+import { HEART_COST, SanguinemMagicaeWord } from 'att-voodoo-book-of-blood';
 
 export const postIncantation =
   (voodoo: VoodooServer): RequestHandler =>
@@ -32,6 +33,10 @@ export const postIncantation =
       /* Get spell components. */
       const [verbalSpellComponent, oneOfMaterialSpellComponents, studiedSpellKey]: [string, string[], string | null] =
         clientRequest.body;
+
+      if (typeof HEART_COST[verbalSpellComponent as SanguinemMagicaeWord] !== 'undefined') {
+        return clientResponse.status(406).json({ ok: false, error: 'Invalid incantation' });
+      }
 
       if (verbalSpellComponent !== process.env.CONJURE_HEARTFRUIT_INCANTATION) {
         /* Verify player is near a Spellcrafting Conduit. */

@@ -1,7 +1,11 @@
 import type { VoodooServer } from '../createVoodooServer';
 
 export const destroyBloodConduits = async (voodoo: VoodooServer, accountId: number) => {
-  const conduits = voodoo.players[accountId].bloodConduits;
+  const player = voodoo.players[accountId];
+
+  if (typeof player === 'undefined') return;
+
+  const conduits = player.bloodConduits;
 
   if (typeof conduits === 'undefined') return;
 
