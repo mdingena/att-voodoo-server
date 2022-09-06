@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import { createVoodooServer, gracefulShutdown, HEARTFRUIT_SECRET } from './voodoo';
+import { createVoodooServer, gracefulShutdown, HEARTFRUIT_SECRET, topupPatrons } from './voodoo';
 import { createBot } from './bot';
 import { createApi, keepAwake } from './api';
 import { regularlyPurgeSessions } from './db';
@@ -16,6 +16,9 @@ if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID || !process.env.C
 }
 
 (async () => {
+  /* Top up Patrons in database. */
+  await topupPatrons();
+
   /* Create Voodoo server. */
   const voodoo = createVoodooServer();
 
