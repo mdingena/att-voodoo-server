@@ -23,6 +23,7 @@ export const getPlayer =
         preparedSpells: PreparedSpells;
         experience: Experience;
         dexterity: Dexterity;
+        patreonTier: number;
       };
 
       if (accountId && serverId) {
@@ -46,7 +47,8 @@ export const getPlayer =
             transmutationXpTotal: experience.rows[0]?.transmutation_xp_total ?? 0,
             transmutationXpSpent: experience.rows[0]?.transmutation_xp_spent ?? 0
           },
-          dexterity: user.rows[0]?.dexterity ?? 'rightHand/palm'
+          dexterity: user.rows[0]?.dexterity ?? 'rightHand/palm',
+          patreonTier: user.rows[0]?.patreon_tier ?? 0
         };
       } else {
         player = {
@@ -63,7 +65,8 @@ export const getPlayer =
             transmutationXpTotal: 0,
             transmutationXpSpent: 0
           },
-          dexterity: 'rightHand/palm'
+          dexterity: 'rightHand/palm',
+          patreonTier: 0
         };
       }
 

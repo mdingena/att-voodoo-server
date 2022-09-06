@@ -22,5 +22,6 @@ export {
   SpellpageIncantation
 } from './spellbook';
 export { gracefulShutdown } from './gracefulShutdown';
+export { topupPatrons } from './topupPatrons';
 
 export const HEARTFRUIT_SECRET = createHeartfruitIncantation(3);

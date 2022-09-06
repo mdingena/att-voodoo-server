@@ -100,6 +100,7 @@ export type PreparedSpells = PreparedSpell[];
 
 type User = {
   dexterity: Dexterity;
+  patreonTier: number;
 };
 
 interface GetPlayer {
@@ -376,7 +377,8 @@ export const createVoodooServer = (): VoodooServer => ({
     const storedUser = await db.query(selectUser, [accountId]);
 
     const user: User = {
-      dexterity: storedUser.rows[0]?.dexterity ?? 'rightHand/palm'
+      dexterity: storedUser.rows[0]?.dexterity ?? 'rightHand/palm',
+      patreonTier: storedUser.rows[0]?.patreon_tier ?? 0
     };
 
     return user;
@@ -809,13 +811,18 @@ export const createVoodooServer = (): VoodooServer => ({
 
   prepareSpell: async function ({ accountId, incantations, spell }) {
     const { name, serverId, serverName, experience } = this.players[accountId];
-    const storedSpells = await db.query(selectPreparedSpells, [accountId, serverId]);
+    const [storedSpells, user] = await Promise.all([
+      db.query(selectPreparedSpells, [accountId, serverId]),
+      this.getPlayer({ accountId })
+    ]);
+
     const preparedSpells: PreparedSpells = JSON.parse(storedSpells.rows[0]?.prepared_spells ?? '[]');
 
     const { abjurationXpTotal, conjurationXpTotal, evocationXpTotal, transmutationXpTotal, upgrades } = experience;
 
     const xpTotal = abjurationXpTotal + conjurationXpTotal + evocationXpTotal + transmutationXpTotal;
-    const maxPreparedSpells = upgradeAttribute(xpTotal, this.config.PREPARED_SPELLS_CONFIG);
+    const maxPreparedSpellsFromXp = upgradeAttribute(xpTotal, this.config.PREPARED_SPELLS_CONFIG);
+    const maxPreparedSpells = maxPreparedSpellsFromXp + user.patreonTier * 5;
 
     const upgradeLevel = upgrades[spell.key]?.eidetic ?? 0;
     const upgradeConfig: UpgradeConfig | undefined = spell.upgrades.eidetic;
