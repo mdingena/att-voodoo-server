@@ -33,13 +33,16 @@ export const topupPatrons = async () => {
           const matchingPreparedSpells = Object.values(preparedSpells).filter(
             preparedSpell => preparedSpell.name === spellName
           );
+
+          if (matchingPreparedSpells.length === 0) continue;
+
           let charges = 0;
 
           for (const preparedSpell of matchingPreparedSpells) {
             charges += preparedSpell.charges;
           }
 
-          if (charges < maxCharges) {
+          if (charges > 0 && charges < maxCharges) {
             const firstPreparedSpell = matchingPreparedSpells[0];
             const filteredSpells = Object.values(preparedSpells).filter(
               preparedSpell => preparedSpell.name !== spellName
