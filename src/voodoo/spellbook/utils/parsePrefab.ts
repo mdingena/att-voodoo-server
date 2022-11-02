@@ -465,6 +465,18 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return parseLeather(decoded.prefab);
 
     /**
+     * CLOTH
+     */
+    case Prefab.Thin_Cloth_Medium_Square.hash:
+      return 'cloth';
+
+    /**
+     * ROPE
+     */
+    case Prefab.Rope_Clump.hash:
+      return 'rope';
+
+    /**
      * GOTERA
      */
     case Prefab.Gotera_Seedling_Orb.hash:
