@@ -53,6 +53,7 @@ export { liquatePalladium } from './liquatePalladium';
 export { liquateRedIron } from './liquateRedIron';
 export { liquateValyan } from './liquateValyan';
 export { liquateViridium } from './liquateViridium';
+export { pocketDimension } from './pocketDimension';
 export { raiseAshTree } from './raiseAshTree';
 export { raiseBirchTree } from './raiseBirchTree';
 export { raiseOakTree } from './raiseOakTree';
