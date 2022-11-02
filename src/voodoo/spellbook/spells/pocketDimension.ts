@@ -19,6 +19,8 @@ export const pocketDimension: SpellFunction = async (voodoo, accountId, upgradeC
 
   if (typeof player === 'undefined' || typeof inventory === 'undefined') return;
 
+  const { name, serverId, serverName } = voodoo.players[accountId];
+
   /* Remember current position and orientation. */
   const dexterity = voodoo.getDexterity({ accountId }).split('/') as [EvokeHandedness, EvokeAngle];
   const mainHand = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
@@ -49,15 +51,23 @@ export const pocketDimension: SpellFunction = async (voodoo, accountId, upgradeC
     }
   }
 
-  db.query(upsertUserSetting('pocket_dimension'), [accountId, encodedPrefab]);
+  let pockets = JSON.parse(user.pocketDimension);
+  const pocket: string | null = pockets[serverId];
+
+  pockets = JSON.stringify({
+    ...pockets,
+    [serverId]: encodedPrefab
+  });
+
+  db.query(upsertUserSetting('pocket_dimension'), [accountId, pockets]);
 
   if (encodedPrefab !== null) {
     await voodoo.command({ accountId, command: `wacky destroy ${mainHandItemId}` });
   }
 
   /* Spawn pocketed item in hand. */
-  if (user.pocketDimension !== null) {
-    const pocketItem = decodeString(user.pocketDimension);
+  if (pocket !== null) {
+    const pocketItem = decodeString(pocket);
 
     spawn(voodoo, accountId, {
       ...pocketItem.prefab,
@@ -82,6 +92,5 @@ export const pocketDimension: SpellFunction = async (voodoo, accountId, upgradeC
     });
   }
 
-  const { name, serverId, serverName } = voodoo.players[accountId];
   console.log(`[${serverName ?? serverId} | ${name}] cast Pocket Dimension`);
 };
