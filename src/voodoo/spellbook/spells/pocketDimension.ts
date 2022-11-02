@@ -1,3 +1,4 @@
+import { QueryResult } from 'pg';
 import { SpellFunction } from '../spellbook';
 // import { getSpellAttributes } from '../experience';
 import { EvokeAngle, EvokeHandedness, spawnFrom } from '../spawnFrom';
@@ -48,8 +49,10 @@ export const pocketDimension: SpellFunction = async (voodoo, accountId, upgradeC
     }
   }
 
+  db.query(upsertUserSetting('pocket_dimension'), [accountId, encodedPrefab]);
+
   if (encodedPrefab !== null) {
-    db.query(upsertUserSetting('pocket_dimension'), [accountId, encodedPrefab]);
+    await voodoo.command({ accountId, command: `wacky destroy ${mainHandItemId}` });
   }
 
   /* Spawn pocketed item in hand. */
