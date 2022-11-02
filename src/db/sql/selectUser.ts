@@ -1,7 +1,8 @@
 export const selectUser = `
 SELECT
   dexterity,
-  patreon_tier
+  patreon_tier,
+  pocket_dimension
 FROM
   users
 WHERE
