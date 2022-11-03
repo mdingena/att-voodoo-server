@@ -101,6 +101,7 @@ export type PreparedSpells = PreparedSpell[];
 type User = {
   dexterity: Dexterity;
   patreonTier: number;
+  pocketDimension: string;
 };
 
 interface GetPlayer {
@@ -150,19 +151,17 @@ interface GetPlayerInventory {
   accountId: number;
 }
 
-type PotentialVectorResponse = string | number[];
-
 export type PlayerDetailed = {
-  Position: PotentialVectorResponse;
-  HeadPosition: PotentialVectorResponse;
-  HeadForward: PotentialVectorResponse;
-  HeadUp: PotentialVectorResponse;
-  LeftHandPosition: PotentialVectorResponse;
-  LeftHandForward: PotentialVectorResponse;
-  LeftHandUp: PotentialVectorResponse;
-  RightHandPosition: PotentialVectorResponse;
-  RightHandForward: PotentialVectorResponse;
-  RightHandUp: PotentialVectorResponse;
+  Position: number[];
+  HeadPosition: number[];
+  HeadForward: number[];
+  HeadUp: number[];
+  LeftHandPosition: number[];
+  LeftHandForward: number[];
+  LeftHandUp: number[];
+  RightHandPosition: number[];
+  RightHandForward: number[];
+  RightHandUp: number[];
   Chunk: string;
   Body: {
     Identifier: number;
@@ -378,7 +377,8 @@ export const createVoodooServer = (): VoodooServer => ({
 
     const user: User = {
       dexterity: storedUser.rows[0]?.dexterity ?? 'rightHand/palm',
-      patreonTier: storedUser.rows[0]?.patreon_tier ?? 0
+      patreonTier: storedUser.rows[0]?.patreon_tier ?? 0,
+      pocketDimension: storedUser.rows[0]?.pocket_dimension ?? '{}'
     };
 
     return user;

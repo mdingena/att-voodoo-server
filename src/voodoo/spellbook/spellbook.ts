@@ -42,7 +42,7 @@ const decodedSpells = Object.fromEntries(
     key,
     value({
       getNearbySoulbonds,
-      parseVector: parseVector,
+      parseVector,
       spawnFrom,
       spawn: voodooSpawn,
       spawnVelocity
