@@ -35,11 +35,13 @@ export const repairPalladiumDevice: SpellFunction = async (voodoo, accountId, up
 
   if (mainHandItem !== 'hilted apparatus') return;
 
-  /* Repair weapon. */
+  /* Repair device. */
   const hiltedApparatus = decodedString.prefab;
   const repairAmount = attributes.reconstructor / 100;
   const repairedApparatus = repairMaterial(hiltedApparatus, PhysicalMaterialPartHash.CarsiAlloy, repairAmount);
 
+  /* Replace device. */
+  voodoo.command({ accountId, command: `wacky destroy ${mainHandItemId}` });
   spawn(voodoo, accountId, {
     ...repairedApparatus,
     components: {
