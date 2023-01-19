@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/node';
-import { createVoodooServer, gracefulShutdown, HEARTFRUIT_SECRET, topupPatrons } from './voodoo';
+import { discordBot } from 'att-voodoo-book-of-blood';
+import { createVoodooServer, gracefulShutdown, topupPatrons } from './voodoo';
 import { createBot } from './bot';
 import { createApi, keepAwake } from './api';
 import { regularlyPurgeSessions } from './db';
@@ -30,13 +31,9 @@ if (!process.env.ALTA_CLIENT_ID || !process.env.GA_TRACKING_ID || !process.env.C
 
   console.log('Voodoo Server is online');
 
-  if (process.env.DISCORD_ARCANUM_VERBUM_WEBHOOK_URL) {
+  if (process.env.DISCORD_ARCANUM_VERBUM_TOKEN) {
     try {
-      fetch(process.env.DISCORD_ARCANUM_VERBUM_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: `||${HEARTFRUIT_SECRET.join(' ')}||` })
-      });
+      await discordBot.login(process.env.DISCORD_ARCANUM_VERBUM_TOKEN);
     } catch (error) {
       console.error((error as Error).message);
     }

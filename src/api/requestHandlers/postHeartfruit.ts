@@ -1,7 +1,9 @@
+import type { ConjureHeartfruitWord } from 'att-voodoo-book-of-blood';
+import { HEARTFRUIT_SECRET, verifyHeartfruitIncantation } from 'att-voodoo-book-of-blood';
 import { RequestHandler } from 'express';
 import { db } from '../../db';
 import { selectSession } from '../../db/sql';
-import { VoodooServer, HEARTFRUIT_SECRET } from '../../voodoo';
+import { VoodooServer } from '../../voodoo';
 import { conjureHeartfruit } from '../../voodoo/spellbook/spells/conjureHeartfruit';
 
 export const postHeartfruit =
@@ -26,17 +28,15 @@ export const postHeartfruit =
 
       voodoo.setCastingHeartfruit({ accountId, isCastingHeartfruit: false });
 
-      const incantation: string[] = clientRequest.body;
+      const incantation: ConjureHeartfruitWord[] = clientRequest.body;
 
-      if (incantation.length !== HEARTFRUIT_SECRET.length) {
+      const verifiedIncantation = verifyHeartfruitIncantation(incantation, HEARTFRUIT_SECRET);
+
+      if (!verifiedIncantation) {
         return clientResponse.status(412).json({ ok: false, error: 'Incorrect incantations' });
       }
 
-      for (let i = 0; i < incantation.length; ++i) {
-        if (incantation[i] !== HEARTFRUIT_SECRET[i]) {
-          return clientResponse.status(403).json({ ok: false, error: 'Incorrect incantations' });
-        }
-      }
+      console.log(`Heartfruit verified for ${voodoo.players[accountId].name} using ${verifiedIncantation}.`);
 
       conjureHeartfruit(voodoo, accountId, {});
 
