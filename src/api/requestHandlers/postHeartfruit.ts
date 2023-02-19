@@ -1,4 +1,4 @@
-import type { ConjureHeartfruitWord } from 'att-voodoo-book-of-blood';
+import { ConjureHeartfruitWord, HEART, reduceHealth } from 'att-voodoo-book-of-blood';
 import { HEARTFRUIT_SECRET, verifyHeartfruitIncantation } from 'att-voodoo-book-of-blood';
 import { RequestHandler } from 'express';
 import { db } from '../../db';
@@ -27,12 +27,39 @@ export const postHeartfruit =
       }
 
       voodoo.setCastingHeartfruit({ accountId, isCastingHeartfruit: false });
+      const cooldownRemaining = voodoo.setHeartfruitCastTime({ accountId });
+
+      if (cooldownRemaining > 0) {
+        const hungerResponse = await voodoo.command<{ data: { Result?: { Value: number } } }>({
+          accountId,
+          command: `player check-stat ${accountId} hunger`
+        });
+
+        const currentHunger = hungerResponse?.data.Result?.Value ?? 0.15;
+        const targetHunger = Math.min(currentHunger, 0.15);
+
+        reduceHealth(voodoo, accountId, [HEART, 0]);
+        voodoo.command({ accountId, command: `player set-stat ${accountId} fullness 5` });
+        voodoo.command({ accountId, command: `player set-stat ${accountId} hunger ${targetHunger}` });
+        voodoo.command({ accountId, command: `player message ${accountId} "You feel exhausted." 3` });
+
+        return clientResponse
+          .status(429)
+          .set('Retry-After', Math.ceil(cooldownRemaining / 1000).toString())
+          .json({ ok: false, error: 'Rate limiting' });
+      }
 
       const incantation: ConjureHeartfruitWord[] = clientRequest.body;
 
       const verifiedIncantation = verifyHeartfruitIncantation(incantation, HEARTFRUIT_SECRET);
 
       if (!verifiedIncantation) {
+        reduceHealth(voodoo, accountId, [HEART, 0]);
+        voodoo.command({
+          accountId,
+          command: `player message ${accountId} "Your words failed to attune the weave." 3`
+        });
+
         return clientResponse.status(412).json({ ok: false, error: 'Incorrect incantations' });
       }
 

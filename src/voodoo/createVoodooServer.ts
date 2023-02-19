@@ -32,6 +32,7 @@ import { Vector3Tuple } from 'three';
 type Config = {
   CONDUIT_DISTANCE: number;
   CONDUIT_PREFABS: RegExp;
+  HEARTFRUIT_COOLDOWN: number;
   PREPARED_SPELLS_CONFIG: UpgradeConfig;
   UPGRADE_COST_XP: number;
 };
@@ -65,6 +66,7 @@ type Players = {
     incantations: DockedIncantation[];
     experience: Experience;
     isCastingHeartfruit: boolean;
+    heartfruitCastTime: number;
     bloodConduits?: BloodConduits;
     bloodConduitsTimeout?: NodeJS.Timeout;
     heartfruit?: PrefabData;
@@ -252,6 +254,10 @@ interface SetCastingHeartfruit {
   isCastingHeartfruit: boolean;
 }
 
+interface SetHeartfruitCastTime {
+  accountId: number;
+}
+
 interface SetBloodConduits {
   accountId: number;
   bloodConduits: BloodConduits | undefined;
@@ -338,6 +344,7 @@ export type VoodooServer = {
   parseDexterity: ({ dexterity }: ParseDexterity) => [EvokeHandedness, EvokeAngle];
   setDexterity: ({ accountId, dexterity }: SetDexterity) => void;
   setCastingHeartfruit: ({ accountId, isCastingHeartfruit }: SetCastingHeartfruit) => void;
+  setHeartfruitCastTime: ({ accountId }: SetHeartfruitCastTime) => number;
   setBloodConduits: ({ accountId, bloodConduits, bloodConduitsTimeout, heartfruit }: SetBloodConduits) => void;
   activateBloodConduit: ({ accountId, conduitId }: ActivateBloodConduit) => Promise<string | undefined>;
   addIncantation: ({ accountId, incantation }: AddIncantation) => SpellpageIncantation[];
@@ -352,6 +359,7 @@ export const createVoodooServer = (): VoodooServer => ({
   config: {
     CONDUIT_DISTANCE: 10,
     CONDUIT_PREFABS: /^Green_Crystal_cluster_03.*/i,
+    HEARTFRUIT_COOLDOWN: 90000,
     PREPARED_SPELLS_CONFIG: {
       isStepFunction: true,
       min: 10,
@@ -402,7 +410,8 @@ export const createVoodooServer = (): VoodooServer => ({
       dexterity: user.dexterity,
       incantations: [],
       experience,
-      isCastingHeartfruit: false
+      isCastingHeartfruit: false,
+      heartfruitCastTime: 0
     };
 
     this.players = { ...this.players, [accountId]: newPlayer };
@@ -643,10 +652,39 @@ export const createVoodooServer = (): VoodooServer => ({
   setCastingHeartfruit: function ({ accountId, isCastingHeartfruit }) {
     const player = this.players[accountId];
 
+    const now = Date.now();
+    const elapsed = now - (player.heartfruitCastTime ?? this.config.HEARTFRUIT_COOLDOWN);
+    const isCoolingDown = elapsed < this.config.HEARTFRUIT_COOLDOWN;
+
     this.players = {
       ...this.players,
-      [accountId]: { ...player, isCastingHeartfruit }
+      [accountId]: {
+        ...player,
+        isCastingHeartfruit,
+        heartfruitCastTime: !isCoolingDown && isCastingHeartfruit ? now : player.heartfruitCastTime
+      }
     };
+  },
+
+  setHeartfruitCastTime: function ({ accountId }) {
+    const player = this.players[accountId];
+
+    const now = Date.now();
+    const elapsed = Date.now() - player.heartfruitCastTime;
+    const remaining = this.config.HEARTFRUIT_COOLDOWN - elapsed;
+    const isCoolingDown = elapsed < this.config.HEARTFRUIT_COOLDOWN;
+
+    if (isCoolingDown) return remaining;
+
+    this.players = {
+      ...this.players,
+      [accountId]: {
+        ...player,
+        heartfruitCastTime: now
+      }
+    };
+
+    return 0;
   },
 
   setBloodConduits: function ({ accountId, bloodConduits, bloodConduitsTimeout, heartfruit }) {
