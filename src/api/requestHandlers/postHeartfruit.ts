@@ -30,12 +30,12 @@ export const postHeartfruit =
       const cooldownRemaining = voodoo.setHeartfruitCastTime({ accountId });
 
       if (cooldownRemaining > 0) {
-        const hungerResponse = await voodoo.command<{ data: { Result?: { Value: number } } }>({
+        const hungerResponse = await voodoo.command<{ Result?: { Value: number } }>({
           accountId,
           command: `player check-stat ${accountId} hunger`
         });
 
-        const currentHunger = hungerResponse?.data.Result?.Value ?? 0.15;
+        const currentHunger = hungerResponse?.Result?.Value ?? 0.15;
         const targetHunger = Math.min(currentHunger, 0.15);
 
         reduceHealth(voodoo, accountId, [HEART, 0]);
