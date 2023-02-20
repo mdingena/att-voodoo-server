@@ -7,7 +7,7 @@ const topupConfig = {
     'Fire': 5
   },
   tier2: {
-    'Fire': 5,
+    'Fire': 10,
     'Haste': 6,
     'Heal Wounds': 6,
     'Conjure Crystal Pick': 3
