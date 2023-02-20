@@ -670,9 +670,9 @@ export const createVoodooServer = (): VoodooServer => ({
     const player = this.players[accountId];
 
     const now = Date.now();
-    const elapsed = Date.now() - player.heartfruitCastTime;
+    const elapsed = now - player.heartfruitCastTime;
     const remaining = this.config.HEARTFRUIT_COOLDOWN - elapsed;
-    const isCoolingDown = elapsed < this.config.HEARTFRUIT_COOLDOWN;
+    const isCoolingDown = remaining > 0;
 
     if (isCoolingDown) return remaining;
 
