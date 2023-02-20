@@ -20,7 +20,7 @@ export const transmuteTeleportationPotion: SpellFunction = async (voodoo, accoun
   const dexterity = voodoo.players[accountId].dexterity.split('/') as [EvokeHandedness, EvokeAngle];
   const { position, rotation } = spawnFrom(player, 'mainHand', [dexterity[0], 'palm'], 0.05);
 
-  return spawn(voodoo, accountId, {
+  spawn(voodoo, accountId, {
     prefabObject: {
       hash: Prefab.Potion_Medium.hash,
       position,
@@ -37,4 +37,7 @@ export const transmuteTeleportationPotion: SpellFunction = async (voodoo, accoun
       }
     }
   });
+
+  const { name, serverId, serverName } = voodoo.players[accountId];
+  console.log(`[${serverName ?? serverId} | ${name}] cast Transmute Teleportation Potion`);
 };
