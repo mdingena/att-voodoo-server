@@ -652,16 +652,11 @@ export const createVoodooServer = (): VoodooServer => ({
   setCastingHeartfruit: function ({ accountId, isCastingHeartfruit }) {
     const player = this.players[accountId];
 
-    const now = Date.now();
-    const elapsed = now - (player.heartfruitCastTime ?? this.config.HEARTFRUIT_COOLDOWN);
-    const isCoolingDown = elapsed < this.config.HEARTFRUIT_COOLDOWN;
-
     this.players = {
       ...this.players,
       [accountId]: {
         ...player,
-        isCastingHeartfruit,
-        heartfruitCastTime: !isCoolingDown && isCastingHeartfruit ? now : player.heartfruitCastTime
+        isCastingHeartfruit
       }
     };
   },
