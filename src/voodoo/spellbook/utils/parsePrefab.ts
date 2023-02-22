@@ -486,6 +486,12 @@ export const parsePrefab = (decoded: DecodedString): string | undefined => {
       return 'redwood gotera core';
 
     /**
+     * TURABADA
+     */
+    case Prefab.Explosive_Spike.hash:
+      return 'turabada eye';
+
+    /**
      * SOULBOUND
      */
     case Prefab.DebugPlayerStone.hash:
